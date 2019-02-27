@@ -1,6 +1,5 @@
 ﻿[
   {
-    "UsuarioID": 0,
     "FirstName": "Miguel",
     "SecondName": null,
     "FirstLastName": "Tenorio",
@@ -9,7 +8,6 @@
     "Password": "1234"
   },
   {
-    "UsuarioID": 1,
     "FirstName": "Juan",
     "SecondName": "David",
     "FirstLastName": "Menendez",
