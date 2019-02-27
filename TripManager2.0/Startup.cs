@@ -36,7 +36,7 @@ namespace TripManager2._0
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<EfCoreContext>(options => options.UseSqlServer(connection,
+            services.AddDbContext<EfCoreContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connection,
                 b => b.MigrationsAssembly("DataLayer")));
 
             services.AddScoped<IUnitOfWork, EfCoreContext>();

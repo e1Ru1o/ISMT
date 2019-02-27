@@ -12,15 +12,8 @@ namespace TripManager2._0.Controllers
 {
     public class AccountController : Controller
     {
-        //private readonly RegisterService _registerService;
-        //private readonly LoginService _loginService;
         private readonly IUnitOfWork _context;
 
-        //public AccountController(RegisterService registeSservice, LoginService loginService)
-        //{
-        //    _registerService = registeSservice;
-        //    _loginService = loginService;
-        //}
         public AccountController(IUnitOfWork context)
         {
             _context = context;
