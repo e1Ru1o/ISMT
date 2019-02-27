@@ -41,6 +41,8 @@ namespace TripManager2._0
 
             services.AddScoped<IUnitOfWork, EfCoreContext>();
 
+            services.AddTransient<EfSeeder>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -68,6 +70,16 @@ namespace TripManager2._0
                     name: "default",
                     template: "{controller=Account}/{action=Login}");
             });
+
+            if (env.IsDevelopment())
+            {
+                //Seed the database
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var seeder = scope.ServiceProvider.GetService<EfSeeder>();
+                    seeder.Seed();
+                }
+            }
         }
     }
 }
