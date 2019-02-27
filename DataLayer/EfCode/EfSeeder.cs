@@ -26,27 +26,20 @@ namespace DataLayer.EfCode
 
             if (!_ctx.Usuarios.Any())
             {
-                // Need to create sample data
-                var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/art.json");
-                var json = File.ReadAllText(filepath);
-                var products = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(json);
-                _ctx.Usuarios.AddRange(products);
 
                 var raul = new Usuario()
                 {
-                    UsuarioID = 3,
                     FirstName = "Lazaro",
                     SecondName = "Raul",
                     FirstLastName = "Iglesias",
                     SecondLastName = "Vera",
                     Email = "raul@gmail.com",
-                    Password = "asdf"
+                    Password = "asdf",
+                    Pasaportes = new List<Pasaporte>()
                 };
 
                 var pasaporte_raul = new Pasaporte()
                 {
-                    PasaporteID = 10,
-                    UsuarioID = 3,
                     UsuarioCI = 97022206986,
                     FechaCreacion = new DateTime(2019, 1, 1),
                     FechaVencimiento = new DateTime(2019, 12, 31),
@@ -62,6 +55,16 @@ namespace DataLayer.EfCode
 
                 _ctx.SaveChanges();
 
+            }
+
+            if (!_ctx.Usuarios.Where(x => x.FirstLastName == "Tenorio").Any())
+            {
+                var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/usuarios.json");
+                var json = File.ReadAllText(filepath);
+                var usuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(json);
+                _ctx.Usuarios.AddRange(usuarios);
+
+                _ctx.SaveChanges();
             }
         }
     }
