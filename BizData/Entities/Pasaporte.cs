@@ -6,14 +6,14 @@ namespace BizData.Entities
 {
     public enum PasaporteTipo
     {
-
+        Europeo,Americano
     }
 
     public class Pasaporte
     {
         public int PasaporteID { get; set; }
         public int UsuarioID { get; set; }
-        public int UsuarioCI { get; set; }
+        public long UsuarioCI { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaVencimiento { get; set; }
         public int Actualizaciones { get; set; }
