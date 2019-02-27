@@ -10,7 +10,7 @@ namespace BizData.Entities
         public int PaisID { get; set; }
         public int ViajeID { get; set; }
 
-        public Pais Pais { get; set; }
-        public Viaje Viaje { get; set; }
+        public virtual Pais Pais { get; set; }
+        public virtual Viaje Viaje { get; set; }
     }
 }

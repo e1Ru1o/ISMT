@@ -64,13 +64,6 @@ namespace TripManager2._0
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Account}/{action=Login}");
-            });
-
             if (env.IsDevelopment())
             {
                 //Seed the database
@@ -80,6 +73,14 @@ namespace TripManager2._0
                     seeder.Seed();
                 }
             }
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Account}/{action=Login}");
+            });
+
         }
     }
 }

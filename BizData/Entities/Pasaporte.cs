@@ -19,7 +19,7 @@ namespace BizData.Entities
         public int Actualizaciones { get; set; }
         public PasaporteTipo Tipo { get; set; }
 
-        public Usuario Usuario { get; set; }
+        public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Pasaporte_Visa> Visas { get; set; }
     }
 }
