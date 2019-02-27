@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using DataLayer.EfCode;
+using BizDbAccess.GenericInterfaces;
 
 namespace TripManager2._0
 {
@@ -31,6 +34,14 @@ namespace TripManager2._0
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            var connection = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<EfCoreContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connection,
+                b => b.MigrationsAssembly("DataLayer")));
+
+            services.AddScoped<IUnitOfWork, EfCoreContext>();
+
+            services.AddTransient<EfSeeder>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -53,12 +64,23 @@ namespace TripManager2._0
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            if (env.IsDevelopment())
+            {
+                //Seed the database
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var seeder = scope.ServiceProvider.GetService<EfSeeder>();
+                    seeder.Seed();
+                }
+            }
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Login}");
             });
+
         }
     }
 }

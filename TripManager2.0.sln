@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripManager2.0", "TripManager2.0\TripManager2.0.csproj", "{9526DFBC-EDA2-4A8A-B2B4-F1D0FD3C77CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripManager2.0", "TripManager2.0\TripManager2.0.csproj", "{9526DFBC-EDA2-4A8A-B2B4-F1D0FD3C77CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BizData", "BizData\BizData.csproj", "{C291F42F-1878-40C1-86A6-63847F3FBAEA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{ED2E3485-5359-476C-A47F-B2481E24B70F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizLogic", "BizLogic\BizLogic.csproj", "{CD0AF50A-FDA1-4C29-85FF-84D17CCE833B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizDbAccess", "BizDbAccess\BizDbAccess.csproj", "{66AF6157-D766-49DB-957E-465F99E27442}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{BA392EE8-D920-4FCA-AC42-C5A9405C9E36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,26 @@ Global
 		{9526DFBC-EDA2-4A8A-B2B4-F1D0FD3C77CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9526DFBC-EDA2-4A8A-B2B4-F1D0FD3C77CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9526DFBC-EDA2-4A8A-B2B4-F1D0FD3C77CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C291F42F-1878-40C1-86A6-63847F3FBAEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C291F42F-1878-40C1-86A6-63847F3FBAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C291F42F-1878-40C1-86A6-63847F3FBAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C291F42F-1878-40C1-86A6-63847F3FBAEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED2E3485-5359-476C-A47F-B2481E24B70F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED2E3485-5359-476C-A47F-B2481E24B70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED2E3485-5359-476C-A47F-B2481E24B70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED2E3485-5359-476C-A47F-B2481E24B70F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD0AF50A-FDA1-4C29-85FF-84D17CCE833B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD0AF50A-FDA1-4C29-85FF-84D17CCE833B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD0AF50A-FDA1-4C29-85FF-84D17CCE833B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD0AF50A-FDA1-4C29-85FF-84D17CCE833B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66AF6157-D766-49DB-957E-465F99E27442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66AF6157-D766-49DB-957E-465F99E27442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66AF6157-D766-49DB-957E-465F99E27442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66AF6157-D766-49DB-957E-465F99E27442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA392EE8-D920-4FCA-AC42-C5A9405C9E36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA392EE8-D920-4FCA-AC42-C5A9405C9E36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA392EE8-D920-4FCA-AC42-C5A9405C9E36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA392EE8-D920-4FCA-AC42-C5A9405C9E36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
