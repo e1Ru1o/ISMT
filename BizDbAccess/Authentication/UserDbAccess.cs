@@ -20,7 +20,7 @@ namespace BizDbAccess.Authentication
 
         public Usuario LoginUsuario(string email, string password)
         {
-            return _context.Usuarios.Where(u => u.Email == email && u.Password == password).Select(u => new Usuario()).SingleOrDefault();
+            return _context.Usuarios.Where(u => u.Email == email && u.Password == password).Select(u => new Usuario()).Single();
         }
 
         public void Add(Usuario entity)
