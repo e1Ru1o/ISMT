@@ -1,0 +1,20 @@
+﻿[
+  {
+    "UsuarioID": 0,
+    "FirstName": "Miguel",
+    "SecondName": null,
+    "FirstLastName": "Tenorio",
+    "SecondLastName": "Potrony",
+    "Email": "mtp@gmail.com",
+    "Password": "1234"
+  },
+  {
+    "UsuarioID": 1,
+    "FirstName": "Juan",
+    "SecondName": "David",
+    "FirstLastName": "Menendez",
+    "SecondLastName": "del Cueto",
+    "Email": "jdm@gmail.com",
+    "Password": "qwerty"
+  }
+]
