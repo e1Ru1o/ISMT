@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.EfCode;
 using BizDbAccess.GenericInterfaces;
+using Microsoft.AspNetCore.Routing;
 
 namespace TripManager2._0
 {
@@ -74,13 +75,13 @@ namespace TripManager2._0
                 }
             }
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Account}/{action=Login}");
-            });
+            app.UseMvc(ConfigureRoutes);
 
+        }
+
+        private void ConfigureRoutes(IRouteBuilder routeBuilder)
+        {
+            routeBuilder.MapRoute("Default", "{controller=Account}/{action=Login}");
         }
     }
 }

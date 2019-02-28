@@ -34,7 +34,7 @@ namespace TripManager2._0.Controllers
                 {
                     var _registerService = new RegisterService(_context);
                     var id = _registerService.RegisterUsuario(cmd);
-                    return RedirectToAction("Index", "Home");
+                    return View("Welcome", cmd);
                 }
             }
             catch (Exception)
