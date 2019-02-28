@@ -15,7 +15,6 @@ namespace DataLayer.EfCode
         }
 
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Permiso> Permisos { get; set; }
         public DbSet<Institucion> Instituciones { get; set; }
         public DbSet<Ciudad> Ciudades { get; set; }
 

@@ -5,7 +5,8 @@
     "FirstLastName": "Tenorio",
     "SecondLastName": "Potrony",
     "Email": "mtp@gmail.com",
-    "Password": "1234"
+    "Password": "1234",
+    "Permission": "2"
   },
   {
     "FirstName": "Juan",
@@ -13,6 +14,7 @@
     "FirstLastName": "Menendez",
     "SecondLastName": "del Cueto",
     "Email": "jdm@gmail.com",
-    "Password": "qwerty"
+    "Password": "1234",
+    "Permission": "1"
   }
 ]
