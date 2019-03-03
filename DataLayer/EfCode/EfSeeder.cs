@@ -34,7 +34,7 @@ namespace DataLayer.EfCode
                     FirstLastName = "Iglesias",
                     SecondLastName = "Vera",
                     Email = "raul@gmail.com",
-                    Password = "asdf",
+                    Password = "1234",
                     Pasaportes = new List<Pasaporte>(),
                     Permission = PermisoTipo.admin
                 };

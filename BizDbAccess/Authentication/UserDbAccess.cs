@@ -20,7 +20,7 @@ namespace BizDbAccess.Authentication
 
         public Usuario LoginUsuario(string email, string password)
         {
-            return _context.Usuarios.Where(u => u.Email == email && u.Password == password).Select(u => new Usuario()).Single();
+            return _context.Usuarios.Where(u => u.Email == email && u.Password == password).Single();
         }
 
         public void Add(Usuario entity)
@@ -35,6 +35,7 @@ namespace BizDbAccess.Authentication
 
         public IEnumerable<Usuario> GetAll()
         {
+            //_context.(tabla cuyo id es el dbSet declarado en EfCoreContex).consultaLinq.(generador e.g toList(), Single()...)
             throw new System.NotImplementedException();
         }
 
