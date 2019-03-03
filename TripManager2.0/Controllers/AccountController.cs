@@ -1,4 +1,5 @@
-﻿using BizDbAccess.GenericInterfaces;
+﻿using BizData.Entities;
+using BizDbAccess.GenericInterfaces;
 using BizLogic.Authentication;
 using DataLayer.EfCode;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TripManager2._0.ViewModels;
 
 namespace TripManager2._0.Controllers
 {
@@ -34,7 +36,8 @@ namespace TripManager2._0.Controllers
                 {
                     var _registerService = new RegisterService(_context);
                     var id = _registerService.RegisterUsuario(cmd);
-                    return View("Welcome", cmd);
+                    var user = new UserViewModel() { FirstName = cmd.FirstName, Email = cmd.Email, SecondName = cmd.SecondName };
+                    return RedirectToAction("Welcome", "User", user);
                 }
             }
             catch (Exception)
@@ -63,9 +66,11 @@ namespace TripManager2._0.Controllers
             var _loginService = new LoginService(_context);
             try
             {
-                if (ModelState.IsValid && _loginService.LoginUsuario(lvm))
+                Usuario user;
+                if (ModelState.IsValid && _loginService.TryLoginUsuario(lvm, out user))
                 {
-                    return RedirectToAction("Index", "Home");
+                    var userView = new UserViewModel() { FirstName = user.FirstName, Email = user.Email, SecondName = user.SecondName };
+                    return RedirectToAction("Welcome", "User", userView);
                 }
             }
             catch (Exception)
