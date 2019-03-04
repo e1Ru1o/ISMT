@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BizLogic.Authentication
 {
-    public class RegisterUsuarioCommand : RegisterUsuarioViewModel
+    public class RegisterUsuarioCommand : RegisterUsuarioViewModel  
     {
         public Usuario ToUsuario()
         {
@@ -18,6 +18,17 @@ namespace BizLogic.Authentication
                 Email = Email,
                 Password = Password
             };
+        }
+
+        public void User(Usuario u)
+        {
+            FirstName = u.FirstName;
+            SecondName = u.SecondName;
+            FirstLastName = u.FirstLastName;
+            SecondLastName = u.SecondLastName;
+            Email = u.Email;
+            Password = u.Password;
+            ConfirmPassword = Password;
         }
     }
 }

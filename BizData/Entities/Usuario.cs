@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BizData.Entities
 {
@@ -13,9 +11,9 @@ namespace BizData.Entities
         public string SecondLastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public PermisoTipo Permission { get; set; }
 
         public virtual ICollection<Pasaporte> Pasaportes { get; set; }
         public virtual ICollection<Viaje> Viajes { get; set; }
-        public virtual ICollection<Usuario_Permiso> Permisos { get; set; }
     }
 }

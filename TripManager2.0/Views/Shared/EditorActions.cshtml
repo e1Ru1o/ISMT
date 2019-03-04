@@ -1,0 +1,10 @@
+﻿@using TripManager2._0.ViewModels
+@model UserViewModel
+
+@Html.Partial("CommonActions", Model)
+<h1>Editor habilities</h1>
+<div style="text-decoration-color:red">Some worflow's stages</div>
+<div><a asp-action="Edit" asp-controller="Account" asp-route-email="@Model.Email">Accept trips</a></div>
+<div><a asp-action="Edit" asp-controller="Account" asp-route-email="@Model.Email">Check passports</a></div>
+<div><a asp-action="Edit" asp-controller="Account" asp-route-email="@Model.Email">Give auhoritation</a></div>
+<div><a asp-action="Edit" asp-controller="Account" asp-route-email="@Model.Email">Other examples ...</a></div>
