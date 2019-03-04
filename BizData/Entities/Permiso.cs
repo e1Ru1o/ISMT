@@ -6,7 +6,6 @@ namespace BizData.Entities
 {
     public enum PermisoTipo
     {
-        none,
         comun, 
         editor,
         admin

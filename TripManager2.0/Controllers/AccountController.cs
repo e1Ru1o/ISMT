@@ -22,6 +22,20 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpGet]
+        public IActionResult Edit(string email)
+        {
+            var _loginService = new LoginService(_context);
+            Usuario user;
+            var lvm = new LoginViewModel();
+            lvm.Email = email;
+            lvm.Password = "1234";
+            _loginService.TryLoginUsuario(lvm, out user);
+            var cmd = new RegisterUsuarioCommand();
+            cmd.User(user);
+            return View(cmd);
+        }
+
+        [HttpGet]
         public IActionResult Register()
         {
             return View(new RegisterUsuarioCommand());
@@ -36,7 +50,8 @@ namespace TripManager2._0.Controllers
                 {
                     var _registerService = new RegisterService(_context);
                     var id = _registerService.RegisterUsuario(cmd);
-                    var user = new UserViewModel() { FirstName = cmd.FirstName, Email = cmd.Email, SecondName = cmd.SecondName };
+                    var user = new UserViewModel()
+                    { FirstName = cmd.FirstName, Email = cmd.Email, SecondName = cmd.SecondName, per = PermisoTipo.comun };
                     return RedirectToAction("Welcome", "User", user);
                 }
             }
@@ -69,7 +84,8 @@ namespace TripManager2._0.Controllers
                 Usuario user;
                 if (ModelState.IsValid && _loginService.TryLoginUsuario(lvm, out user))
                 {
-                    var userView = new UserViewModel() { FirstName = user.FirstName, Email = user.Email, SecondName = user.SecondName };
+                    var userView = new UserViewModel()
+                    { FirstName = user.FirstName, Email = user.Email, SecondName = user.SecondName, per = user.Permission };
                     return RedirectToAction("Welcome", "User", userView);
                 }
             }
