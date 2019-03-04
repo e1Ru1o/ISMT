@@ -20,7 +20,7 @@ namespace BizLogic.Authentication
             };
         }
 
-        public void User(Usuario u)
+        public void SetViewModel(Usuario u)
         {
             FirstName = u.FirstName;
             SecondName = u.SecondName;

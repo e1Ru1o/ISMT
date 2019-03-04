@@ -23,6 +23,11 @@ namespace BizDbAccess.Authentication
             return _context.Usuarios.Where(u => u.Email == email && u.Password == password).Single();
         }
 
+        public Usuario GetUserByEmail(string email)
+        {
+            return _context.Usuarios.Where(u => u.Email == email).Single();
+        }
+
         public void Add(Usuario entity)
         {
             _context.Usuarios.Add(entity);
