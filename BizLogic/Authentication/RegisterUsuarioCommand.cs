@@ -5,8 +5,10 @@ using System.Text;
 
 namespace BizLogic.Authentication
 {
-    public class RegisterUsuarioCommand : RegisterUsuarioViewModel  
+    public class RegisterUsuarioCommand : RegisterUsuarioViewModel
     {
+        public long UsuarioID { get; set;}
+
         public Usuario ToUsuario()
         {
             return new Usuario
@@ -16,7 +18,8 @@ namespace BizLogic.Authentication
                 FirstLastName = FirstLastName,
                 SecondLastName = SecondLastName,
                 Email = Email,
-                Password = Password
+                Password = Password,
+                UsuarioID = UsuarioID
             };
         }
 
@@ -29,6 +32,7 @@ namespace BizLogic.Authentication
             Email = u.Email;
             Password = u.Password;
             ConfirmPassword = Password;
+            UsuarioID = u.UsuarioID;
         }
     }
 }

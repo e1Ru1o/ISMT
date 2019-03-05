@@ -28,7 +28,9 @@ namespace TripManager2._0.Controllers
             Usuario user;
             _loginService.TryGetUserByEmail(email, out user);
             var cmd = new RegisterUsuarioCommand();
-            cmd.SetViewModel(user);
+            //cmd.SetViewModel(user);
+            ///cmd.SecondName = "Daniel";
+            //_loginService.EditUser(cmd);
             return View(cmd);
         }
 
