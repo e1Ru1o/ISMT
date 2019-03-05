@@ -26,12 +26,11 @@ namespace TripManager2._0.Controllers
         {
             var _loginService = new LoginService(_context);
             Usuario user;
-            var lvm = new LoginViewModel();
-            lvm.Email = email;
-            lvm.Password = "1234";
-            _loginService.TryLoginUsuario(lvm, out user);
+            _loginService.TryGetUserByEmail(email, out user);
             var cmd = new RegisterUsuarioCommand();
-            cmd.User(user);
+            //cmd.SetViewModel(user);
+            ///cmd.SecondName = "Daniel";
+            //_loginService.EditUser(cmd);
             return View(cmd);
         }
 

@@ -23,6 +23,11 @@ namespace BizDbAccess.Authentication
             return _context.Usuarios.Where(u => u.Email == email && u.Password == password).Single();
         }
 
+        public Usuario GetUserByEmail(string email)
+        {
+            return _context.Usuarios.Where(u => u.Email == email).Single();
+        }
+
         public void Add(Usuario entity)
         {
             _context.Usuarios.Add(entity);
@@ -35,13 +40,22 @@ namespace BizDbAccess.Authentication
 
         public IEnumerable<Usuario> GetAll()
         {
-            //_context.(tabla cuyo id es el dbSet declarado en EfCoreContex).consultaLinq.(generador e.g toList(), Single()...)
-            throw new System.NotImplementedException();
+            return _context.Usuarios.ToList();
         }
 
         public void Update(Usuario entity)
         {
-            throw new System.NotImplementedException();
+            var user = _context.Usuarios.Find(entity.UsuarioID);
+            if (user == null)
+                throw new Exception("User to be updated no exist");
+
+            //just for sure that the fields of the viewModel are not null
+            //null-coalescing is used
+            user.FirstName = entity.FirstName ?? user.FirstName; ;
+            user.FirstLastName = entity.FirstLastName ?? user.FirstLastName;
+            user.SecondName = entity.SecondName ?? user.SecondName;
+            user.Email = entity.Email ?? user.Email;
+            user.Password = entity.Password ?? user.Password;
         }
     }
 }
