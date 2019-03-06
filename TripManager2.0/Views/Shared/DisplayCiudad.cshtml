@@ -1,0 +1,24 @@
+﻿@using @using BizData.Entities
+@model ICollection<Ciudad>
+
+<table border="0">
+
+    <caption><h3>Ciudades</h3></caption>
+    <th>
+       ID
+    </th>
+    <th>
+        Nombre
+    </th>
+    <th>
+        Pais
+    </th>
+    @foreach(var item in Model)
+    {
+        <tr>
+            @Html.Partial("Ciudad", item)
+        </tr>
+
+    }
+
+</table>
