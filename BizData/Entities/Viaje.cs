@@ -12,7 +12,6 @@ namespace BizData.Entities
     public class Viaje
     {
         public int ViajeID { get; set; }
-        public int UsuarioID { get; set; }
         public virtual ICollection<Ciudad> Ciudades { get; set; }
         public virtual ICollection<Institucion> Instituciones { get; set; }
         public MotivoViaje MotivoViaje { get; set; }

@@ -1,0 +1,11 @@
+﻿@using TripManager2._0.ViewModels
+@using BizData.Entities
+@model TableUserViewModel
+
+@Html.Partial("EditorActions", Model)
+<h1>Admin powers</h1>
+<form asp-action="Print" method="post">
+    <button type="submit" class="btn btn-default">View All</button>
+    <select asp-for="@Model.Table" asp-items="@Html.GetEnumSelectList<TableName>()"></select>
+</form>
+

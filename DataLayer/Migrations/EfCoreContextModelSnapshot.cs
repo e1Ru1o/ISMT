@@ -77,17 +77,15 @@ namespace DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("PaisID");
+                    b.Property<string>("PaisID");
 
-                    b.Property<string>("PaisID1");
-
-                    b.Property<int>("ViajeID");
+                    b.Property<int?>("ViajeID");
 
                     b.Property<int?>("VisaID");
 
                     b.HasKey("Pais_VisaID");
 
-                    b.HasIndex("PaisID1");
+                    b.HasIndex("PaisID");
 
                     b.HasIndex("ViajeID");
 
@@ -112,13 +110,11 @@ namespace DataLayer.Migrations
 
                     b.Property<long>("UsuarioCI");
 
-                    b.Property<int>("UsuarioID");
-
-                    b.Property<long?>("UsuarioID1");
+                    b.Property<long?>("UsuarioID");
 
                     b.HasKey("PasaporteID");
 
-                    b.HasIndex("UsuarioID1");
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("Pasaporte");
                 });
@@ -129,9 +125,9 @@ namespace DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("PasaporteID");
+                    b.Property<int?>("PasaporteID");
 
-                    b.Property<int>("VisaID");
+                    b.Property<int?>("VisaID");
 
                     b.HasKey("Pasaporte_VisaID");
 
@@ -140,19 +136,6 @@ namespace DataLayer.Migrations
                     b.HasIndex("VisaID");
 
                     b.ToTable("Pasaporte_Visa");
-                });
-
-            modelBuilder.Entity("BizData.Entities.Permiso", b =>
-                {
-                    b.Property<int>("PermisoID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Tipo");
-
-                    b.HasKey("PermisoID");
-
-                    b.ToTable("Permisos");
                 });
 
             modelBuilder.Entity("BizData.Entities.Usuario", b =>
@@ -169,6 +152,8 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Password");
 
+                    b.Property<int>("Permission");
+
                     b.Property<string>("SecondLastName");
 
                     b.Property<string>("SecondName");
@@ -176,25 +161,6 @@ namespace DataLayer.Migrations
                     b.HasKey("UsuarioID");
 
                     b.ToTable("Usuarios");
-                });
-
-            modelBuilder.Entity("BizData.Entities.Usuario_Permiso", b =>
-                {
-                    b.Property<int>("Usuario_PermisoID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PermisoID");
-
-                    b.Property<long>("UsuarioID");
-
-                    b.HasKey("Usuario_PermisoID");
-
-                    b.HasIndex("PermisoID");
-
-                    b.HasIndex("UsuarioID");
-
-                    b.ToTable("Usuario_Permiso");
                 });
 
             modelBuilder.Entity("BizData.Entities.Viaje", b =>
@@ -211,13 +177,11 @@ namespace DataLayer.Migrations
 
                     b.Property<int>("MotivoViaje");
 
-                    b.Property<int>("UsuarioID");
-
-                    b.Property<long?>("UsuarioID1");
+                    b.Property<long?>("UsuarioID");
 
                     b.HasKey("ViajeID");
 
-                    b.HasIndex("UsuarioID1");
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("Viaje");
                 });
@@ -264,12 +228,11 @@ namespace DataLayer.Migrations
                 {
                     b.HasOne("BizData.Entities.Pais", "Pais")
                         .WithMany("Visas")
-                        .HasForeignKey("PaisID1");
+                        .HasForeignKey("PaisID");
 
                     b.HasOne("BizData.Entities.Viaje", "Viaje")
                         .WithMany()
-                        .HasForeignKey("ViajeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ViajeID");
 
                     b.HasOne("BizData.Entities.Visa")
                         .WithMany("Paises")
@@ -280,40 +243,25 @@ namespace DataLayer.Migrations
                 {
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
                         .WithMany("Pasaportes")
-                        .HasForeignKey("UsuarioID1");
+                        .HasForeignKey("UsuarioID");
                 });
 
             modelBuilder.Entity("BizData.Entities.Pasaporte_Visa", b =>
                 {
                     b.HasOne("BizData.Entities.Pasaporte", "Pasaporte")
                         .WithMany("Visas")
-                        .HasForeignKey("PasaporteID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PasaporteID");
 
                     b.HasOne("BizData.Entities.Visa", "Visa")
                         .WithMany("Pasaportes")
-                        .HasForeignKey("VisaID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("BizData.Entities.Usuario_Permiso", b =>
-                {
-                    b.HasOne("BizData.Entities.Permiso", "Permiso")
-                        .WithMany("Usuarios")
-                        .HasForeignKey("PermisoID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany("Permisos")
-                        .HasForeignKey("UsuarioID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("VisaID");
                 });
 
             modelBuilder.Entity("BizData.Entities.Viaje", b =>
                 {
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
                         .WithMany("Viajes")
-                        .HasForeignKey("UsuarioID1");
+                        .HasForeignKey("UsuarioID");
                 });
 #pragma warning restore 612, 618
         }

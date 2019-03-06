@@ -21,10 +21,22 @@ namespace ServiceLayer.AccountServices
             _dbAccess = new UserDbAccess(_context);
         }
 
-        public bool LoginUsuario(LoginViewModel lvm)
+        public bool TryLoginUsuario(LoginViewModel lvm, out Usuario user)
         {
-            _dbAccess.LoginUsuario(lvm.Email, lvm.Password);
+            user = _dbAccess.LoginUsuario(lvm.Email, lvm.Password);
             return true;
+        }
+
+        public bool TryGetUserByEmail(string email, out Usuario user)
+        {
+            user = _dbAccess.GetUserByEmail(email);
+            return true;
+        }
+
+        public void EditUser(RegisterUsuarioCommand cmd)
+        {
+            _dbAccess.Update(cmd.ToUsuario());
+            _context.Commit();
         }
     }
 }
