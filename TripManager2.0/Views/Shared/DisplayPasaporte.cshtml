@@ -1,0 +1,28 @@
+﻿@using BizData.Entities
+@model ICollection<Pasaporte>
+
+<table border="0">
+
+    <caption><h3>Pasaportes</h3></caption>
+    <th>
+        ID
+    </th>
+    <th>
+        Creacion
+    </th>
+    <th>
+        Vencimiento
+    </th>
+    <th>
+        Usuario
+    </th>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @Html.Partial("Pasaporte", item)
+        </tr>
+
+    }
+
+</table>
