@@ -7,9 +7,6 @@ namespace BizLogic.Authentication
 {
     public class RegisterUsuarioCommand : RegisterUsuarioViewModel
     {
-        public long UsuarioID { get; set; }
-        public PermisoTipo Permission { get; set; }
-
         public Usuario ToUsuario()
         {
             return new Usuario
@@ -19,9 +16,7 @@ namespace BizLogic.Authentication
                 FirstLastName = FirstLastName,
                 SecondLastName = SecondLastName,
                 Email = Email,
-                Password = Password,
-                UsuarioID = UsuarioID,
-                Permission = Permission
+                UserName = Email
             };
         }
 
@@ -32,10 +27,6 @@ namespace BizLogic.Authentication
             FirstLastName = u.FirstLastName;
             SecondLastName = u.SecondLastName;
             Email = u.Email;
-            Password = u.Password;
-            ConfirmPassword = Password;
-            UsuarioID = u.UsuarioID;
-            Permission = u.Permission;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace BizLogic.Authentication
         [Required, StringLength(100), DisplayName("Segundo Apellido")]
         public string SecondLastName { get; set; }
 
-        [Required, StringLength(100)]
+        [Required, StringLength(100), EmailAddress]
         public string Email { get; set; }
 
         [Required, StringLength(100)]

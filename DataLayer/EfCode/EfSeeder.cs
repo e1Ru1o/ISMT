@@ -1,10 +1,12 @@
 ﻿using BizData.Entities;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 namespace DataLayer.EfCode
@@ -13,20 +15,22 @@ namespace DataLayer.EfCode
     {
         private readonly EfCoreContext _ctx;
         private readonly IHostingEnvironment _hosting;
+        private readonly UserManager<Usuario> _userManager;
 
-        public EfSeeder(EfCoreContext ctx, IHostingEnvironment hosting)
+        public EfSeeder(EfCoreContext ctx, IHostingEnvironment hosting,
+            UserManager<Usuario> userManager)
         {
             _ctx = ctx;
             _hosting = hosting;
+            _userManager = userManager;
         }
 
         public void Seed()
         {
             _ctx.Database.EnsureCreated();
 
-            if (!_ctx.Usuarios.Any())
+            if (_userManager.FindByEmailAsync("raul@gmail.com").Result == null)
             {
-
                 var raul = new Usuario()
                 {
                     FirstName = "Lazaro",
@@ -34,9 +38,8 @@ namespace DataLayer.EfCode
                     FirstLastName = "Iglesias",
                     SecondLastName = "Vera",
                     Email = "raul@gmail.com",
-                    Password = "1234",
                     Pasaportes = new List<Pasaporte>(),
-                    Permission = PermisoTipo.admin
+                    UserName = "raul@gmail.com"
                 };
 
                 var pasaporte_raul = new Pasaporte()
@@ -51,22 +54,23 @@ namespace DataLayer.EfCode
 
                 raul.Pasaportes.Add(pasaporte_raul);
 
-                _ctx.Add(raul);
+                _userManager.CreateAsync(raul, "T3n!");
                 _ctx.Add(pasaporte_raul);
 
-                _ctx.SaveChanges();
-
-            }
-
-            if (!_ctx.Usuarios.Where(x => x.FirstLastName == "Tenorio").Any())
-            {
-                var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/usuarios.json");
+                /*var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/usuarios.json");
                 var json = File.ReadAllText(filepath);
                 var usuarios = JsonConvert.DeserializeObject<IEnumerable<Usuario>>(json);
-                _ctx.Usuarios.AddRange(usuarios);
+
+                foreach (var user in usuarios)
+                {
+                    _userManager.CreateAsync(user, "1234");
+                   // _userManager.AddClaimAsync(user, new Claim("Permission", "common"));
+                }*/
 
                 _ctx.SaveChanges();
+                _userManager.AddClaimAsync(raul, new Claim("Permission", "admin"));
             }
+   
         }
     }
 }
