@@ -78,7 +78,7 @@ namespace TripManager2._0.Controllers
                     var claim = new Claim("Permission", "common");
                     await _userManager.AddClaimAsync(user, claim);
 
-                    await _signInManager.SignInAsync(cmd.ToUsuario(), false);
+                    await _signInManager.SignInAsync(user, false);
 
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
