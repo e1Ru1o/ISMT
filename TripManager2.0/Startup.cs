@@ -13,21 +13,53 @@ using Microsoft.EntityFrameworkCore;
 using DataLayer.EfCode;
 using BizDbAccess.GenericInterfaces;
 using Microsoft.AspNetCore.Routing;
+using BizData.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace TripManager2._0
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<Usuario, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequiredLength = 4;
+            })
+            .AddEntityFrameworkStores<EfCoreContext>();
+
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Configuration["Tokens:Issuer"],
+                        ValidAudience = Configuration["Tokens:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                    };
+
+                });
+
+            services.AddAuthorization(cfg =>
+            {
+                cfg.AddPolicy("Common", policyBuilder => policyBuilder.
+                    RequireClaim("Permission", "common"));
+            });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -44,7 +76,13 @@ namespace TripManager2._0
 
             services.AddTransient<EfSeeder>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(opt =>
+            {
+                if (Env.IsProduction())
+                {
+                    opt.Filters.Add(new RequireHttpsAttribute());
+                }
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +103,8 @@ namespace TripManager2._0
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 //Seed the database
@@ -76,7 +116,6 @@ namespace TripManager2._0
             }
 
             app.UseMvc(ConfigureRoutes);
-
         }
 
         private void ConfigureRoutes(IRouteBuilder routeBuilder)
