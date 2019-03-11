@@ -38,6 +38,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Edit(string email)
         {
             /*Edit Post
@@ -111,9 +112,9 @@ namespace TripManager2._0.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(lvm.Email,
-                lvm.Password,
-                lvm.RememberMe,
-                false);
+                                                                lvm.Password,
+                                                                lvm.RememberMe,
+                                                                false);
 
                 if (result.Succeeded)
                 {

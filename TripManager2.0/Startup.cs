@@ -17,6 +17,7 @@ using BizData.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TripManager2._0.Policies;
 
 namespace TripManager2._0
 {
@@ -54,10 +55,26 @@ namespace TripManager2._0
 
                 });
 
+            Dictionary<string, int> levels = new Dictionary<string, int>
+                {
+                   { "common", 1 },
+                   { "edit",  2  },
+                   { "admin", 3  }
+                };
+
             services.AddAuthorization(cfg =>
             {
-                cfg.AddPolicy("Common", policyBuilder => policyBuilder.
-                    RequireClaim("Permission", "common"));
+                cfg.AddPolicy(
+                    "LevelTwoAuth",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new LevelAuthRequirement(levels, "Permission", 2)
+                        ));
+
+                cfg.AddPolicy(
+                    "LevelThreeAuth",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new LevelAuthRequirement(levels, "Permission", 3)
+                        ));
             });
 
             services.Configure<CookiePolicyOptions>(options =>
