@@ -1,0 +1,16 @@
+﻿@using BizData.Entities
+@model Viaje
+
+<td>
+    @Model.ViajeID
+</td>
+
+<td>
+    @Model.FechaInicio
+</td>
+<td>
+    @Model.FechaFin
+</td>
+@Html.Partial("Usuario", Model.Usuario)
+
+

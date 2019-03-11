@@ -1,0 +1,17 @@
+﻿@using BizData.Entities
+@model Pasaporte
+
+<td>
+    ID  @Model.PasaporteID
+</td>
+
+<td>
+    @Model.FechaCreacion
+</td>
+<td>
+    @Model.FechaVencimiento
+</td>
+
+    @Html.Partial("Usuario",Model.Usuario)
+
+

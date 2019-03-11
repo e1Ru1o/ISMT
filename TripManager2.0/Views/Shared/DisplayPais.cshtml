@@ -1,0 +1,19 @@
+﻿@using BizData.Entities
+@model ICollection<Pais>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+    <table border="0">
+
+        <caption><h3>Pais</h3></caption>
+        <th>
+            ID
+        </th>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @Html.Partial("Pais", item)
+            </tr>
+
+        }
+</body>
+</html>
