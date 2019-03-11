@@ -4,30 +4,32 @@ using BizDbAccess.GenericInterfaces;
 using BizLogic.Authentication;
 using BizLogic.Authentication.Concrete;
 using DataLayer.EfCode;
+using Microsoft.AspNetCore.Identity;
 using ServiceLayer.BizRunners;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ServiceLayer.AccountServices
 {
     public class RegisterService
     {
-        private readonly RunnerWriteDb<RegisterUsuarioCommand, Usuario> _runner;
+        private readonly RegisterUserAction _runner;
 
-        public RegisterService(IUnitOfWork context)
+        public RegisterService(IUnitOfWork context, SignInManager<Usuario> signInManager,
+            UserManager<Usuario> userManager)
         {
-            _runner = new RunnerWriteDb<RegisterUsuarioCommand, Usuario>(
-                new RegisterUserAction(new UserDbAccess(context)), context);
+            _runner = new RegisterUserAction(new UserDbAccess(context, signInManager, userManager));
         }
 
-        public long RegisterUsuario(RegisterUsuarioCommand cmd)
+        public async Task<IdentityResult> RegisterUsuarioAsync(Usuario user, string password)
         {
-            var user = _runner.RunAction(cmd);
+            var result = await _runner.action(user, password);
+           
+            if (_runner.HasErrors) return null;
 
-            if (_runner.HasErrors) return 0;
-
-            return user.UsuarioID;
+            return result;
         }
     }
 }
