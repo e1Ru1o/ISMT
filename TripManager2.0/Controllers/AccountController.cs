@@ -2,11 +2,18 @@
 using BizDbAccess.GenericInterfaces;
 using BizLogic.Authentication;
 using DataLayer.EfCode;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using ServiceLayer.AccountServices;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using TripManager2._0.ViewModels;
 
@@ -15,118 +22,177 @@ namespace TripManager2._0.Controllers
     public class AccountController : Controller
     {
         private readonly IUnitOfWork _context;
+        private readonly UserManager<Usuario> _userManager;
+        private readonly SignInManager<Usuario> _signInManager;
+        private readonly IConfiguration _config;
 
-        public AccountController(IUnitOfWork context)
+        public AccountController(IUnitOfWork context,
+            SignInManager<Usuario> signInManager,
+            UserManager<Usuario> userManager,
+            IConfiguration config)
         {
             _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _config = config;
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Edit(string email)
         {
-            var _loginService = new LoginService(_context);
-            Usuario user;
-            _loginService.TryGetUserByEmail(email, out user);
-            //porque al enviarselo al html y editarlo pierdo el id y los permisos
-            var cmd = new RegisterUsuarioCommand();
-            cmd.SetViewModel(user);
-            return View(cmd);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(RegisterUsuarioCommand cmd)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var _loginService = new LoginService(_context);
-                    _loginService.EditUser(cmd);
-                    var user = new UserViewModel()
-                    { FirstName = cmd.FirstName, Email = cmd.Email, SecondName = cmd.SecondName, per = cmd.Permission };
-                    return RedirectToAction("Welcome", "User", user);
-                }
-            }
-            catch (Exception)
-            {
-                // TODO: Log error
-                // Add a model-level error by using an empty string key
-                ModelState.AddModelError(
-                    string.Empty,
-                    "An error occured trying to update the user"
-                    );
-            }
-
-            //If we got to here, something went wrong
-            return View(cmd);
+            /*Edit Post
+             * You can do two things:
+             * 1-> take a email parameter and in the post method take the current user
+             *      by :  var result = await _loginService.GetUserByEmail(email);
+             *      and pass to the _loginService.EditUser(...) a RegisterUsuarioCommand
+             *      builded from this result.Result user
+             *      
+             * 2-> Make Edit parameterless and in the post method take the current user
+             *     by : var principal = await _userManager.GetUserAsync(User);
+             *     and pass to the _loginService.EditUser(...) a RegisterUsuarioCommand
+             *     builded from this principal user, i think that this is a better way ;)
+            */
+            return View();
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View(new RegisterUsuarioCommand());
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterUsuarioCommand cmd)
-        {
-            try
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterUsuarioCommand cmd)
+        {  
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var _registerService = new RegisterService(_context, _signInManager, _userManager);
+                var user = cmd.ToUsuario();
+                var result = await _registerService.RegisterUsuarioAsync(user, cmd.Password);
+
+                if (result.Succeeded)
                 {
-                    var _registerService = new RegisterService(_context);
-                    var id = _registerService.RegisterUsuario(cmd);
-                    var user = new UserViewModel()
-                    { FirstName = cmd.FirstName, Email = cmd.Email, SecondName = cmd.SecondName, per = cmd.Permission };
-                    return RedirectToAction("Welcome", "User", user);
+                    var claim = new Claim("Permission", "common");
+                    await _userManager.AddClaimAsync(user, claim);
+
+                    await _signInManager.SignInAsync(user, false);
+
+                    if (Request.Query.Keys.Contains("ReturnUrl"))
+                    {
+                        return Redirect(Request.Query["ReturnUrl"].First());
+                    }
+                    else
+                    {
+                        return RedirectToAction("Welcome", "User");
+                    }
                 }
-            }
-            catch (Exception)
-            {
-                // TODO: Log error
-                // Add a model-level error by using an empty string key
-                ModelState.AddModelError(
-                    string.Empty,
-                    "An error occured trying to register the user"
-                    );
+                AddErrors(result);
             }
 
+            ModelState.AddModelError(string.Empty, "An error occured trying to register the user");
+            
             //If we got to here, something went wrong
             return View(cmd);
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View(new LoginViewModel());
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel lvm)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel lvm)
         {
-            var _loginService = new LoginService(_context);
-            try
+            if (ModelState.IsValid)
             {
-                Usuario user;
-                if (ModelState.IsValid && _loginService.TryLoginUsuario(lvm, out user))
+                var result = await _signInManager.PasswordSignInAsync(lvm.Email,
+                                                                lvm.Password,
+                                                                lvm.RememberMe,
+                                                                false);
+
+                if (result.Succeeded)
                 {
-                    var userView = new UserViewModel()
-                    { FirstName = user.FirstName, Email = user.Email, SecondName = user.SecondName, per = user.Permission };
-                    return RedirectToAction("Welcome", "User", userView);
+                    if (Request.Query.Keys.Contains("ReturnUrl"))
+                    {
+                        return Redirect(Request.Query["ReturnUrl"].First());
+                    }
+                    else
+                    {
+                        return RedirectToAction("Welcome", "User");
+                    }
                 }
             }
-            catch (Exception)
-            {
-                // TODO: Log error
-                // Add a model-level error by using an empty string key
-                ModelState.AddModelError(
-                    string.Empty,
-                    "An error occured trying to login"
-                    );
-            }
+
+            ModelState.AddModelError(string.Empty, "An error occured trying to login");
 
             //If we got to here, something went wrong
             return View(lvm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.Email);
+
+                if (user != null)
+                {
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+                    if (result.Succeeded)
+                    {
+                        // Create the token
+                        var claims = new[]
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                        };
+                        
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                        var token = new JwtSecurityToken(
+                            _config["Tokens:Issuer"],
+                            _config["Tokens:Audience"],
+                            claims,
+                            expires: DateTime.Now.AddMinutes(30),
+                            signingCredentials: creds);
+
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        };
+
+                        return Created("", results);
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
         }
     }
 }

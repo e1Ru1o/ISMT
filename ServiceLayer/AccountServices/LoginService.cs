@@ -3,10 +3,12 @@ using BizDbAccess.Authentication;
 using BizDbAccess.GenericInterfaces;
 using BizLogic.Authentication;
 using DataLayer.EfCode;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ServiceLayer.AccountServices
 {
@@ -15,28 +17,21 @@ namespace ServiceLayer.AccountServices
         private readonly IUnitOfWork _context;
         private readonly UserDbAccess _dbAccess;
 
-        public LoginService(IUnitOfWork context)
+        public LoginService(IUnitOfWork context, SignInManager<Usuario> signInManager,
+            UserManager<Usuario> userManager)
         {
             _context = context;
-            _dbAccess = new UserDbAccess(_context);
+            _dbAccess = new UserDbAccess(_context, signInManager, userManager);
         }
 
-        public bool TryLoginUsuario(LoginViewModel lvm, out Usuario user)
+        public async Task<Usuario> GetUserByEmailAsync(string email)
         {
-            user = _dbAccess.LoginUsuario(lvm.Email, lvm.Password);
-            return true;
+            return await _dbAccess.GetUserByEmailAsync(email);
         }
 
-        public bool TryGetUserByEmail(string email, out Usuario user)
+        public async void EditUserAsync(RegisterUsuarioCommand cmd, string email)
         {
-            user = _dbAccess.GetUserByEmail(email);
-            return true;
-        }
-
-        public void EditUser(RegisterUsuarioCommand cmd)
-        {
-            _dbAccess.Update(cmd.ToUsuario());
-            _context.Commit();
+            await _dbAccess.UpdateAsync(cmd.ToUsuario(), email);
         }
     }
 }

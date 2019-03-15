@@ -1,51 +1,58 @@
 ﻿using BizData.Entities;
 using BizDbAccess.GenericInterfaces;
 using DataLayer.EfCode;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BizDbAccess.Authentication
 {
     public class UserDbAccess : IEntityDbAccess<Usuario>
     {
         private readonly EfCoreContext _context;
+        private readonly SignInManager<Usuario> _signInManager;
+        private readonly UserManager<Usuario> _userManager;
 
-        public UserDbAccess(IUnitOfWork context)
+        public UserDbAccess(IUnitOfWork context, SignInManager<Usuario> signInManager,
+            UserManager<Usuario> userManager)
         {
             _context = (EfCoreContext)context;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
-        public Usuario LoginUsuario(string email, string password)
+        public async Task<IdentityResult> RegisterUsuarioAsync(Usuario user, string password)
         {
-            return _context.Usuarios.Where(u => u.Email == email && u.Password == password).Single();
+            return await _userManager.CreateAsync(user, password);
         }
 
-        public Usuario GetUserByEmail(string email)
+        public async Task<Usuario> GetUserByEmailAsync(string email)
         {
-            return _context.Usuarios.Where(u => u.Email == email).Single();
+            return await _userManager.FindByEmailAsync(email);
         }
 
         public void Add(Usuario entity)
         {
-            _context.Usuarios.Add(entity);
+            throw new NotImplementedException();
         }
 
         public void Delete(Usuario entity)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IEnumerable<Usuario> GetAll()
         {
-            return _context.Usuarios.ToList();
+            return _userManager.Users.ToList();
         }
 
-        public void Update(Usuario entity)
+        public async Task<IdentityResult> UpdateAsync(Usuario entity, string email)
         {
-            var user = _context.Usuarios.Find(entity.UsuarioID);
+            var user =  GetUserByEmailAsync(email).Result;
             if (user == null)
                 throw new Exception("User to be updated no exist");
 
@@ -55,7 +62,14 @@ namespace BizDbAccess.Authentication
             user.FirstLastName = entity.FirstLastName ?? user.FirstLastName;
             user.SecondName = entity.SecondName ?? user.SecondName;
             user.Email = entity.Email ?? user.Email;
-            user.Password = entity.Password ?? user.Password;
+
+            //this needs to be tested
+            return await _userManager.UpdateAsync(user);
+        }
+
+        public void Update(Usuario entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
