@@ -1,5 +1,6 @@
 ﻿using BizData.Entities;
 using BizDbAccess.GenericInterfaces;
+using BizDbAccess.Utils;
 using BizLogic.Authentication;
 using DataLayer.EfCode;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,7 +80,7 @@ namespace TripManager2._0.Controllers
                     var claim = new Claim("Permission", "common");
                     await _userManager.AddClaimAsync(user, claim);
 
-                    await _signInManager.SignInAsync(cmd.ToUsuario(), false);
+                    await _signInManager.SignInAsync(user, false);
 
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
@@ -109,6 +111,11 @@ namespace TripManager2._0.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel lvm)
         {
+            var getter = new GetterAll(new Dictionary<string, string> { { "Usuario", "UserDbAccess" } },
+                new AssemblyName("BizData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"),
+                _context, _signInManager, _userManager);
+            var result1 = getter.GetAll("Usuario") as IEnumerable<Usuario>;
+            
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(lvm.Email,
