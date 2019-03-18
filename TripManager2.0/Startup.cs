@@ -129,7 +129,7 @@ namespace TripManager2._0
             {
                 //Seed the database
                 using (var scope = app.ApplicationServices.CreateScope())
-                {
+                {   
                     var seeder = scope.ServiceProvider.GetService<EfSeeder>();
                     seeder.Seed();
                 }
