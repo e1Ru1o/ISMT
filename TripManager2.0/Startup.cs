@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TripManager2._0.Policies;
 using Microsoft.AspNetCore.Authorization;
+using BizDbAccess.Utils;
 
 namespace TripManager2._0
 {
@@ -58,9 +59,9 @@ namespace TripManager2._0
 
             Dictionary<string, int> levels = new Dictionary<string, int>
                 {
-                   { "common", 1 },
-                   { "edit",  2  },
-                   { "admin", 3  }
+                   { "Normal", 1 },
+                   { "Editor",  2  },
+                   { "Admin", 3  }
                 };
 
             services.AddAuthorization(cfg =>
@@ -96,6 +97,8 @@ namespace TripManager2._0
 
             services.AddSingleton<IAuthorizationHandler, LevelHandler>();
 
+            services.AddScoped<IGetterUtils, GetterUtils>();
+
             services.AddMvc(opt =>
             {
                 if (Env.IsProduction())
@@ -106,7 +109,7 @@ namespace TripManager2._0
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -129,9 +132,9 @@ namespace TripManager2._0
             {
                 //Seed the database
                 using (var scope = app.ApplicationServices.CreateScope())
-                {
+                {   
                     var seeder = scope.ServiceProvider.GetService<EfSeeder>();
-                    seeder.Seed();
+                    await seeder.Seed();
                 }
             }
 
