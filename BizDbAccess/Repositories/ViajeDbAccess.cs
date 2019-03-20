@@ -31,7 +31,7 @@ namespace BizDbAccess.Repositories
             return _context.Viajes;
         }
 
-        public void Update(Viaje entity)
+        public Viaje Update(Viaje entity, Viaje toUpd)
         {
             throw new NotImplementedException();
         }

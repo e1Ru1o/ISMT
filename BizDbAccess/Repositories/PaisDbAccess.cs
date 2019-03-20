@@ -31,7 +31,7 @@ namespace BizDbAccess.Repositories
             return _context.Paises;
         }
 
-        public void Update(Pais entity)
+        public Pais Update(Pais entity, Pais toUpd)
         {
             throw new NotImplementedException();
         }

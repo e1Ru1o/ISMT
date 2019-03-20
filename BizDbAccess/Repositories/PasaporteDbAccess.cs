@@ -31,9 +31,21 @@ namespace BizDbAccess.Repositories
             return _context.Pasaportes;
         }
 
-        public void Update(Pasaporte entity)
+        public Pasaporte Update(Pasaporte entity, Pasaporte toUpd)
         {
-            throw new NotImplementedException();
+            if (toUpd == null)
+                throw new Exception("Pasaporte to be updated no exist");
+
+            toUpd.UsuarioCI = entity.UsuarioCI;
+            toUpd.FechaCreacion = entity.FechaCreacion;
+            toUpd.FechaVencimiento = entity.FechaVencimiento;
+            toUpd.Actualizaciones = entity.Actualizaciones;
+            toUpd.Tipo = entity.Tipo;
+            toUpd.Usuario = entity.Usuario;
+            toUpd.Visas = entity.Visas;
+
+            _context.Pasaportes.Update(toUpd);
+            return toUpd;
         }
     }
 
