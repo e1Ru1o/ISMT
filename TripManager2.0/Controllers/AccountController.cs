@@ -51,18 +51,21 @@ namespace TripManager2._0.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Edit(RegisterUsuarioCommand cmd)
+        public async Task<IActionResult> Edit(RegisterUsuarioCommand cmd)
         {
             if (ModelState.IsValid)
             {
                 var log = new LoginService(_context, _signInManager, _userManager);
-                log.EditUserAsync(cmd, User.Identity.Name);
+                var userToUpd = await _userManager.GetUserAsync(User);
                 var user = cmd.ToUsuario();
 
+                user = await log.EditUserAsync(user, userToUpd);
+                await _signInManager.RefreshSignInAsync(user);
+                
                 var uvm = new UserViewModel();
                 uvm.SetProperties(cmd);
                 uvm.Email = User.Identity.Name;
-                uvm.SetPermissions(_userManager.GetClaimsAsync(user).Result);
+                uvm.SetPermissions(User.Claims);
 
                 if (Request.Query.Keys.Contains("ReturnUrl"))
                 {
