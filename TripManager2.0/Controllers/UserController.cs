@@ -1,5 +1,7 @@
-﻿using BizDbAccess.GenericInterfaces;
+﻿using BizData.Entities;
+using BizDbAccess.GenericInterfaces;
 using BizDbAccess.Utils;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TripManager2._0.ViewModels;
 
@@ -8,13 +10,19 @@ namespace TripManager2._0.Controllers
     public class UserController : Controller
     {
         private readonly GetterUtils _getterUtils;
+        private readonly SignInManager<Usuario> _signInManager;
         private readonly IUnitOfWork _context;
+        private UserManager<Usuario> _userManager;
 
-        public UserController(IUnitOfWork context ,
+        public UserController(IUnitOfWork context,
+             SignInManager<Usuario> signInManager,
+            UserManager<Usuario> userManager,
             IGetterUtils getterUtils)
         {
             _context = context;
             _getterUtils = (GetterUtils)getterUtils;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public IActionResult Welcome(TableUserViewModel user)
@@ -24,10 +32,14 @@ namespace TripManager2._0.Controllers
 
         public IActionResult Print(TableUserViewModel text)
         {
-            //GetterAll getter = new GetterAll(_getterUtils, _context);
-            //var result = getter.GetAll("Entidad");
+            GetterAll getter;
+            if(text.Table.ToString() == "Usuario")
+                getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
+            else
+                getter = new GetterAll(_getterUtils, _context);
+            var result = getter.GetAll(text.Table.ToString());
 
-            return Content(text.Table.ToString());
+            return View("Display" + text.Table.ToString(), result);
         }
     }
 }

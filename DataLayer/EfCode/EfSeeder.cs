@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DataLayer.EfCode
 {
@@ -25,7 +26,7 @@ namespace DataLayer.EfCode
             _userManager = userManager;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             _ctx.Database.EnsureCreated();
 
@@ -54,7 +55,8 @@ namespace DataLayer.EfCode
 
                 raul.Pasaportes.Add(pasaporte_raul);
 
-                _userManager.CreateAsync(raul, "T3n!");
+                await _userManager.CreateAsync(raul, "T3n!");
+                await _userManager.AddClaimAsync(raul, new Claim("Permission", "Admin"));
                 _ctx.Add(pasaporte_raul);
 
                 /*var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/usuarios.json");
@@ -68,7 +70,6 @@ namespace DataLayer.EfCode
                 }*/
 
                 _ctx.SaveChanges();
-                _userManager.AddClaimAsync(raul, new Claim("Permission", "admin"));
             }
    
         }
