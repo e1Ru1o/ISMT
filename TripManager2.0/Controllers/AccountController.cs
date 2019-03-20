@@ -145,7 +145,7 @@ namespace TripManager2._0.Controllers
             return View(lvm);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
