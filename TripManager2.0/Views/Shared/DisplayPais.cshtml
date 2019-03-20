@@ -1,13 +1,15 @@
 ﻿@using BizData.Entities
-@model ICollection<Pais>
+@model IEnumerable<Pais>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body>
     <table border="0">
 
         <caption><h3>Pais</h3></caption>
+        <tr>
         <th>
             ID
         </th>
+        </tr>
         @foreach (var item in Model)
         {
             <tr>
@@ -15,5 +17,6 @@
             </tr>
 
         }
+        </table>
 </body>
 </html>
