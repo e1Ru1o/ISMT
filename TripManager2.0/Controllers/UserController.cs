@@ -27,6 +27,7 @@ namespace TripManager2._0.Controllers
 
         public IActionResult Welcome(TableUserViewModel user)
         {
+            user.per = PermisoTipo.admin;
             return View(user);
         }
 
