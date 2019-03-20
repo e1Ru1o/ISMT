@@ -111,11 +111,6 @@ namespace TripManager2._0.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel lvm)
         {
-            var getter = new GetterAll(new Dictionary<string, string> { { "Usuario", "UserDbAccess" } },
-                new AssemblyName("BizData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"),
-                _context, _signInManager, _userManager);
-            var result1 = getter.GetAll("Usuario") as IEnumerable<Usuario>;
-            
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(lvm.Email,

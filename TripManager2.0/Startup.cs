@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TripManager2._0.Policies;
 using Microsoft.AspNetCore.Authorization;
+using BizDbAccess.Utils;
 
 namespace TripManager2._0
 {
@@ -95,6 +96,8 @@ namespace TripManager2._0
             services.AddTransient<EfSeeder>();
 
             services.AddSingleton<IAuthorizationHandler, LevelHandler>();
+
+            services.AddScoped<IGetterUtils, GetterUtils>();
 
             services.AddMvc(opt =>
             {
