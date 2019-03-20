@@ -11,10 +11,10 @@ namespace TripManager2._0.Controllers
         private readonly IUnitOfWork _context;
 
         public UserController(IUnitOfWork context ,
-            GetterUtils getterUtils)
+            IGetterUtils getterUtils)
         {
             _context = context;
-            _getterUtils = getterUtils;
+            _getterUtils = (GetterUtils)getterUtils;
         }
 
         public IActionResult Welcome(TableUserViewModel user)
