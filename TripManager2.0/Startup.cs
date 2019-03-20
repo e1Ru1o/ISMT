@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TripManager2._0.Policies;
 using Microsoft.AspNetCore.Authorization;
+using BizDbAccess.Utils;
 
 namespace TripManager2._0
 {
@@ -96,6 +97,8 @@ namespace TripManager2._0
 
             services.AddSingleton<IAuthorizationHandler, LevelHandler>();
 
+            services.AddScoped<IGetterUtils, GetterUtils>();
+
             services.AddMvc(opt =>
             {
                 if (Env.IsProduction())
@@ -129,7 +132,7 @@ namespace TripManager2._0
             {
                 //Seed the database
                 using (var scope = app.ApplicationServices.CreateScope())
-                {
+                {   
                     var seeder = scope.ServiceProvider.GetService<EfSeeder>();
                     seeder.Seed();
                 }
