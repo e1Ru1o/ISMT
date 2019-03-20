@@ -1,10 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BizDbAccess.GenericInterfaces;
+using BizDbAccess.Utils;
+using Microsoft.AspNetCore.Mvc;
 using TripManager2._0.ViewModels;
 
 namespace TripManager2._0.Controllers
 {
     public class UserController : Controller
     {
+        private readonly GetterUtils _getterUtils;
+        private readonly IUnitOfWork _context;
+
+        public UserController(IUnitOfWork context ,
+            GetterUtils getterUtils)
+        {
+            _context = context;
+            _getterUtils = getterUtils;
+        }
+
         public IActionResult Welcome(TableUserViewModel user)
         {
             return View(user);
@@ -12,6 +24,9 @@ namespace TripManager2._0.Controllers
 
         public IActionResult Print(TableUserViewModel text)
         {
+            //GetterAll getter = new GetterAll(_getterUtils, _context);
+            //var result = getter.GetAll("Entidad");
+
             return Content(text.Table.ToString());
         }
     }
