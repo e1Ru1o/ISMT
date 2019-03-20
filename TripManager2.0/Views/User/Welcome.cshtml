@@ -9,18 +9,7 @@
     <div>Your main email for all transactions is @Model.Email</div>
     <h2>Your Actions</h2>
     <section>
-        @if ((int)Model.per == 0)
-        {
-            @Html.Partial("CommonActions")
-        }
-        else if ((int)Model.per == 1)
-        {
-            @Html.Partial("EditorActions")
-        }
-        else
-        {
-            @Html.Partial("AdminActions")
-        }
+        @Html.Partial(Model.permission + "Actions")
     </section>
 </body>
 

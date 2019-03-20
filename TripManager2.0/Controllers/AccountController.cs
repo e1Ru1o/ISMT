@@ -41,13 +41,12 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Edit(string email)
+        public async Task<IActionResult> Edit(string email)
         {
-            /*Edit Post
-             * You can do two things:
-             * 1-> take a email parameter and in the post method take the current user
-             *      by :  var result = await _loginService.GetUserByEmail(email);
-             *      and pass to the _loginService.EditUser(...) a RegisterUsuarioCommand
+            var user = await _userManager.GetUserAsync(User);
+            var cmd = new RegisterUsuarioCommand();
+            cmd.SetViewModel(user);
+             /*      and pass to the _loginService.EditUser(...) a RegisterUsuarioCommand
              *      builded from this result.Result user
              *      
              * 2-> Make Edit parameterless and in the post method take the current user
@@ -55,7 +54,7 @@ namespace TripManager2._0.Controllers
              *     and pass to the _loginService.EditUser(...) a RegisterUsuarioCommand
              *     builded from this principal user, i think that this is a better way ;)
             */
-            return View();
+            return View(cmd);
         }
 
         [HttpGet]
@@ -77,10 +76,14 @@ namespace TripManager2._0.Controllers
 
                 if (result.Succeeded)
                 {
-                    var claim = new Claim("Permission", "common");
+                    var claim = new Claim("Permission", "Normal");
                     await _userManager.AddClaimAsync(user, claim);
 
                     await _signInManager.SignInAsync(user, false);
+
+                    var uvm = new UserViewModel();
+                    uvm.SetProperties(cmd);
+                    uvm.SetPermissions(_userManager.GetClaimsAsync(user).Result);
 
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
@@ -88,7 +91,7 @@ namespace TripManager2._0.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Welcome", "User");
+                        return RedirectToAction("Welcome", "User", uvm);
                     }
                 }
                 AddErrors(result);
@@ -111,11 +114,6 @@ namespace TripManager2._0.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel lvm)
         {
-            var getter = new GetterAll(new Dictionary<string, string> { { "Usuario", "UserDbAccess" } },
-                new AssemblyName("BizData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"),
-                _context, _signInManager, _userManager);
-            var result1 = getter.GetAll("Usuario") as IEnumerable<Usuario>;
-            
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(lvm.Email,
@@ -125,13 +123,18 @@ namespace TripManager2._0.Controllers
 
                 if (result.Succeeded)
                 {
+                    var user = _userManager.Users.Where(u => u.Email == lvm.Email).Single();
+                    var uvm = new UserViewModel();
+                    uvm.SetViewModel(user);
+                    uvm.SetPermissions(_userManager.GetClaimsAsync(user).Result);
+
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         return Redirect(Request.Query["ReturnUrl"].First());
                     }
                     else
                     {
-                        return RedirectToAction("Welcome", "User");
+                        return RedirectToAction("Welcome", "User", uvm);
                     }
                 }
             }
