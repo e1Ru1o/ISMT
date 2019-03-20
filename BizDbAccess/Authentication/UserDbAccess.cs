@@ -67,7 +67,7 @@ namespace BizDbAccess.Authentication
             return user;
         }
 
-        public void Update(Usuario entity)
+        public Usuario Update(Usuario entity, Usuario usuario)
         {
             throw new NotImplementedException();
         }

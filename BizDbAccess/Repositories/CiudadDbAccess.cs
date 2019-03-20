@@ -31,7 +31,7 @@ namespace BizDbAccess.Repositories
             return _context.Ciudades;
         }
 
-        public void Update(Ciudad entity)
+        public Ciudad Update(Ciudad entity, Ciudad toUpd)
         {
             throw new NotImplementedException();
         }

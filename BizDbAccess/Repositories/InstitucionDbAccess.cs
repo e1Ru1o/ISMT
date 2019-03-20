@@ -31,7 +31,7 @@ namespace BizDbAccess.Repositories
             return _context.Instituciones;
         }
 
-        public void Update(Institucion entity)
+        public Institucion Update(Institucion entity, Institucion toUpd)
         {
             throw new NotImplementedException();
         }
