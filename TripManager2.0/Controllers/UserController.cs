@@ -1,12 +1,15 @@
 ﻿using BizData.Entities;
 using BizDbAccess.GenericInterfaces;
 using BizDbAccess.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TripManager2._0.ViewModels;
 
 namespace TripManager2._0.Controllers
 {
+    [Authorize]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public class UserController : Controller
     {
         private readonly GetterUtils _getterUtils;
