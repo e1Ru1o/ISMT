@@ -3,6 +3,7 @@ using BizDbAccess.GenericInterfaces;
 using DataLayer.EfCode;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BizDbAccess.Repositories
@@ -18,22 +19,30 @@ namespace BizDbAccess.Repositories
 
         public void Add(Institucion entity)
         {
-            throw new NotImplementedException();
+            _context.Instituciones.Add(entity);
         }
 
         public void Delete(Institucion entity)
         {
-            throw new NotImplementedException();
+            _context.Instituciones.Remove(entity);
         }
 
-        public IEnumerable<Institucion> GetAll()
-        {
-            return _context.Instituciones;
-        }
+        public IEnumerable<Institucion> GetAll() => _context.Instituciones;
 
         public Institucion Update(Institucion entity, Institucion toUpd)
         {
-            throw new NotImplementedException();
+            if (toUpd == null)
+                throw new Exception("Institucion to be updated no exist");
+
+            toUpd.Nombre = entity.Nombre;
+
+            _context.Instituciones.Update(toUpd);
+            return toUpd;
+        }
+
+        public Institucion GetInstitucion(string nombre)
+        {
+            return _context.Instituciones.Where(i => i.Nombre == nombre).SingleOrDefault();
         }
     }
 

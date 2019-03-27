@@ -4,6 +4,7 @@ using DataLayer.EfCode;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BizDbAccess.Repositories
 {
@@ -18,23 +19,47 @@ namespace BizDbAccess.Repositories
 
         public void Add(Viaje entity)
         {
-            throw new NotImplementedException();
+            _context.Viajes.Add(entity);
         }
 
         public void Delete(Viaje entity)
         {
-            throw new NotImplementedException();
+            _context.Viajes.Remove(entity);
         }
 
-        public IEnumerable<Viaje> GetAll()
-        {
-            return _context.Viajes;
-        }
+        public IEnumerable<Viaje> GetAll() => _context.Viajes;
 
         public Viaje Update(Viaje entity, Viaje toUpd)
         {
-            throw new NotImplementedException();
+            if (toUpd == null)
+                throw new Exception("Viaje to be updated no exist");
+
+            toUpd.Ciudades = entity.Ciudades;
+            toUpd.Costo = entity.Costo;
+            toUpd.FechaFin = entity.FechaFin;
+            toUpd.FechaInicio = entity.FechaInicio;
+            toUpd.Instituciones = entity.Instituciones;
+            toUpd.MotivoViaje = entity.MotivoViaje;
+            toUpd.Pais = entity.Pais;
+            toUpd.Usuario = entity.Usuario;
+
+            _context.Viajes.Update(toUpd);
+            return toUpd;
         }
+
+        public Viaje GetViaje(Usuario usuario, DateTime fechaInicio, DateTime fechaFin)
+        {
+            return _context.Viajes.Where(v => v.Usuario == usuario &&
+                                              v.FechaFin == fechaFin &&
+                                              v.FechaInicio == fechaInicio)
+                                              .SingleOrDefault();
+        }
+
+        public Viaje GetViaje(long id)
+        {            
+            return _context.Viajes.Find(id); 
+        }
+
     }
 
 }

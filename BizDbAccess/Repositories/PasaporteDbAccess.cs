@@ -18,18 +18,15 @@ namespace BizDbAccess.Repositories
 
         public void Add(Pasaporte entity)
         {
-            throw new NotImplementedException();
+            _context.Pasaportes.Add(entity);
         }
 
         public void Delete(Pasaporte entity)
         {
-            throw new NotImplementedException();
+            _context.Pasaportes.Remove(entity);
         }
 
-        public IEnumerable<Pasaporte> GetAll()
-        {
-            return _context.Pasaportes;
-        }
+        public IEnumerable<Pasaporte> GetAll() => _context.Pasaportes;
 
         public Pasaporte Update(Pasaporte entity, Pasaporte toUpd)
         {
