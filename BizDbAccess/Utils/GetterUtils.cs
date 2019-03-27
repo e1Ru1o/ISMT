@@ -15,11 +15,11 @@ namespace BizDbAccess.Utils
         {
             ReposNames = new Dictionary<string, string>
             {
-                { "Material", "MaterialDbAccess" },
+                { "Ciudad", "CiudadDbAccess" },
+                { "Viaje", "ViajeDbAccess" },
                 { "Usuario", "UserDbAccess" },
-                { "UnidadOrganizativa", "UnidadOrganizativaDbAccess" },
-                { "Provincia", "ProvinciaDbAccess"},
-                { "Plan", "PlanDbAccess" },
+                { "Institucion", "InstitucionDbAccess" },
+                { "Pais", "PaisDbAccess"},
                 { "Pasaporte", "PasaporteDbAccess" }
             };
 
