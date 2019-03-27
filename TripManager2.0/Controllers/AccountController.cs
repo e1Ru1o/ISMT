@@ -21,6 +21,8 @@ using TripManager2._0.ViewModels;
 
 namespace TripManager2._0.Controllers
 {
+    [Authorize]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public class AccountController : Controller
     {
         private readonly IUnitOfWork _context;
