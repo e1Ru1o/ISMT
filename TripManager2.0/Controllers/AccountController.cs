@@ -52,7 +52,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Edit(RegisterUsuarioCommand cmd)
         {
             if (ModelState.IsValid)
