@@ -23,6 +23,7 @@ namespace DataLayer.EfCode
         public DbSet<Responsabilidad> Responsabilidades { get; set; }
         public DbSet<EstadoViaje> EstadosViaje { get; set; }
         public DbSet<Workflow> Workflow { get; set; }
+        public DbSet<Visa> Visas { get; set; }
 
         public int Commit()
         {

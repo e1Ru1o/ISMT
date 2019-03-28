@@ -20,7 +20,11 @@ namespace BizDbAccess.Utils
                 { "Usuario", "UserDbAccess" },
                 { "Institucion", "InstitucionDbAccess" },
                 { "Pais", "PaisDbAccess"},
-                { "Pasaporte", "PasaporteDbAccess" }
+                { "Pasaporte", "PasaporteDbAccess" },
+                { "Visa", "VisaDbAccess" },
+                { "Responsabilidades", "ResponsabilidadesDbAccess" },
+                { "EstadosViaje", "EstadosViajeDbAccess" },
+                { "Workflow", "WorkflowDbAccess" }
             };
 
             targetAssembly = new AssemblyName("BizData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");

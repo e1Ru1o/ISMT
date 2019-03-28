@@ -20,23 +20,30 @@ namespace BizDbAccess.Repositories
         public void Add(Responsabilidad entity)
         {
             _context.Responsabilidades.Add(entity);
-            _context.Commit();
         }
 
         public void Delete(Responsabilidad entity)
         {
             _context.Responsabilidades.Remove(entity);
-            _context.Commit();
         }
 
-        public IEnumerable<Responsabilidad> GetAll()
+        public IEnumerable<Responsabilidad> GetAll() => _context.Responsabilidades.OrderBy(i => i.Nombre);
+
+        public Responsabilidad Update(Responsabilidad entity, Responsabilidad toUpd)
         {
-            return _context.Responsabilidades.OrderBy(i => i.Nombre);
+            if (toUpd == null)
+                throw new InvalidOperationException("Responsabilidad updated not exist");
+
+            toUpd.Nombre = entity.Nombre;
+            toUpd.Usuarios = entity.Usuarios;
+
+            _context.Responsabilidades.Update(toUpd);
+            return toUpd;
         }
 
-        public void Update(Responsabilidad entity)
+        public Responsabilidad GetResponsabilidad(string nombre)
         {
-            throw new NotImplementedException();
+            return _context.Responsabilidades.Where(r => r.Nombre == nombre).SingleOrDefault();
         }
     }
 }

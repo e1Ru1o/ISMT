@@ -4,6 +4,7 @@ using DataLayer.EfCode;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BizDbAccess.Repositories
 {
@@ -19,23 +20,33 @@ namespace BizDbAccess.Repositories
         public void Add(Workflow entity)
         {
             _context.Workflow.Add(entity);
-            _context.Commit();
         }
 
         public void Delete(Workflow entity)
         {
             _context.Workflow.Remove(entity);
-            _context.Commit();
         }
 
-        public IEnumerable<Workflow> GetAll()
+        public IEnumerable<Workflow> GetAll() => _context.Workflow;
+
+        public Workflow Update(Workflow entity, Workflow toUpd)
         {
-            return _context.Workflow;
+            if (toUpd == null)
+                throw new InvalidOperationException("Workflow to be updated not exist");
+
+            toUpd.EstadoViajeDestino = entity.EstadoViajeDestino;
+            toUpd.EstadoViajeOrigen = entity.EstadoViajeOrigen;
+            toUpd.Responsabilidad = entity.Responsabilidad;
+
+            _context.Workflow.Update(toUpd);
+            return toUpd;
         }
 
-        public void Update(Workflow entity)
+        public Workflow GetWorkflow(EstadoViaje origen, EstadoViaje destino)
         {
-            throw new NotImplementedException();
+            return _context.Workflow.Where(w => w.EstadoViajeOrigen == origen &&
+                                                w.EstadoViajeDestino == destino)
+                                                .SingleOrDefault();
         }
     }
 }
