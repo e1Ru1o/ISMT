@@ -32,7 +32,7 @@ namespace BizDbAccess.Repositories
         public Ciudad Update(Ciudad entity, Ciudad toUpd)
         {
             if (toUpd == null)
-                throw new Exception("Ciudad to be updated no exist");
+                throw new InvalidOperationException("Ciudad to be updated no exist");
 
             toUpd.Nombre = entity.Nombre;
             toUpd.Pais = entity.Pais;
