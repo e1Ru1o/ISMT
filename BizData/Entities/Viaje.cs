@@ -19,6 +19,7 @@ namespace BizData.Entities
         public DateTime FechaFin { get; set; }
         public int Costo { get; set; }
 
+        public virtual EstadoViaje EstadoViaje { get; set; }
         public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Pais> Pais { get; set; }
     }
