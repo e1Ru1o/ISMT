@@ -10,6 +10,7 @@ namespace BizData.Entities
         public string FirstLastName { get; set; }
         public string SecondLastName { get; set; }
 
+        public virtual ICollection<Usuario_Responsabilidad> Responsabilidades { get; set; }
         public virtual ICollection<Pasaporte> Pasaportes { get; set; }
         public virtual ICollection<Viaje> Viajes { get; set; }
     }
