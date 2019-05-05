@@ -9,6 +9,6 @@ namespace BizData.Entities
         public int Pais_VisaID { get; set; }
 
         public virtual Pais Pais { get; set; }
-        public virtual Viaje Viaje { get; set; }
+        public virtual Visa Visa { get; set; }
     }
 }
