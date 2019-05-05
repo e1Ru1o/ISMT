@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace BizDbAccess.Repositories
 {
-    class VisaDbAccess : IEntityDbAccess<Visa>
+    public class VisaDbAccess : IEntityDbAccess<Visa>
     {
         private readonly EfCoreContext _context;
 
