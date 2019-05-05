@@ -12,6 +12,7 @@ namespace BizData.Entities
     public class Pasaporte
     {
         public int PasaporteID { get; set; }
+        public string CodigoPasaporte { get; set; }
         public long UsuarioCI { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaVencimiento { get; set; }

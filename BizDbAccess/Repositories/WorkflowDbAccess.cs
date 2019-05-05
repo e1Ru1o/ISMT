@@ -4,6 +4,7 @@ using DataLayer.EfCode;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BizDbAccess.Repositories
 {
@@ -19,23 +20,39 @@ namespace BizDbAccess.Repositories
         public void Add(Workflow entity)
         {
             _context.Workflow.Add(entity);
-            _context.Commit();
         }
 
         public void Delete(Workflow entity)
         {
             _context.Workflow.Remove(entity);
-            _context.Commit();
         }
 
-        public IEnumerable<Workflow> GetAll()
+        public IEnumerable<Workflow> GetAll() => _context.Workflow;
+
+        public Workflow Update(Workflow entity, Workflow toUpd)
         {
-            return _context.Workflow;
+            if (toUpd == null)
+                throw new InvalidOperationException("Workflow to be updated not exist");
+
+            toUpd.EstadoViajeDestino = entity.EstadoViajeDestino ?? toUpd.EstadoViajeDestino;
+            toUpd.EstadoViajeOrigen = entity.EstadoViajeOrigen ?? toUpd.EstadoViajeOrigen;
+            toUpd.Responsabilidad = entity.Responsabilidad ?? toUpd.Responsabilidad;
+
+            _context.Workflow.Update(toUpd);
+            return toUpd;
         }
 
-        public void Update(Workflow entity)
+        /// <summary>
+        /// Get a Workflow state given a pair of EstadoViaje.
+        /// </summary>
+        /// <param name="origen">The origin EstadoViaje.</param>
+        /// <param name="destino">The destination EstadoViaje.</param>
+        /// <returns>The Workflow if its the only object with that identifiers, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
+        public Workflow GetWorkflow(EstadoViaje origen, EstadoViaje destino)
         {
-            throw new NotImplementedException();
+            return _context.Workflow.Where(w => w.EstadoViajeOrigen == origen &&
+                                                w.EstadoViajeDestino == destino)
+                                                .SingleOrDefault();
         }
     }
 }

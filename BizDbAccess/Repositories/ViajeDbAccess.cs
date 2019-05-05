@@ -34,19 +34,26 @@ namespace BizDbAccess.Repositories
             if (toUpd == null)
                 throw new Exception("Viaje to be updated no exist");
 
-            toUpd.Ciudades = entity.Ciudades;
-            toUpd.Costo = entity.Costo;
-            toUpd.FechaFin = entity.FechaFin;
-            toUpd.FechaInicio = entity.FechaInicio;
-            toUpd.Instituciones = entity.Instituciones;
-            toUpd.MotivoViaje = entity.MotivoViaje;
-            toUpd.Pais = entity.Pais;
-            toUpd.Usuario = entity.Usuario;
+            toUpd.Costo = entity.Costo ?? toUpd.Costo;
+            toUpd.FechaFin = entity.FechaFin ?? toUpd.FechaFin;
+            toUpd.FechaInicio = entity.FechaInicio ?? toUpd.FechaFin;
+            toUpd.MotivoViaje = entity.MotivoViaje ?? toUpd.MotivoViaje;
+            toUpd.Pais = entity.Pais ?? toUpd.Pais;
+            toUpd.Usuario = entity.Usuario ?? toUpd.Usuario;
+            toUpd.Ciudades = toUpd.Ciudades == null ? entity.Ciudades : (toUpd.Ciudades.Concat(entity.Ciudades)).ToList();
+            toUpd.Instituciones = toUpd.Instituciones == null ? entity.Instituciones : (toUpd.Instituciones.Concat(entity.Instituciones)).ToList();
 
             _context.Viajes.Update(toUpd);
             return toUpd;
         }
 
+        /// <summary>
+        /// Get a Viaje given a user and a date representing a schedule.
+        /// </summary>
+        /// <param name="usuario">The user who has the trip in his behalf.</param>
+        /// <param name="fechaInicio">The date of departure.</param>
+        /// <param name="fechaFin">The date of arrival to the start point.</param>
+        /// <returns>The Viaje if its the only object with that identifiers, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
         public Viaje GetViaje(Usuario usuario, DateTime fechaInicio, DateTime fechaFin)
         {
             return _context.Viajes.Where(v => v.Usuario == usuario &&

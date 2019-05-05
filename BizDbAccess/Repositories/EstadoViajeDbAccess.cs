@@ -20,23 +20,34 @@ namespace BizDbAccess.Repositories
         public void Add(EstadoViaje entity)
         {
             _context.EstadosViaje.Add(entity);
-            _context.Commit();
         }
 
         public void Delete(EstadoViaje entity)
         {
             _context.EstadosViaje.Remove(entity);
-            _context.Commit();
         }
 
-        public IEnumerable<EstadoViaje> GetAll()
+        public IEnumerable<EstadoViaje> GetAll() => _context.EstadosViaje.OrderBy(i => i.Nombre);
+
+        public EstadoViaje Update(EstadoViaje entity, EstadoViaje toUpd)
         {
-            return _context.EstadosViaje.OrderBy(i => i.Nombre);
+            if (toUpd == null)
+                throw new InvalidOperationException("Estado de Viaje to be updated not exist");
+
+            toUpd.Nombre = entity.Nombre ?? toUpd.Nombre;
+
+            _context.EstadosViaje.Update(toUpd);
+            return toUpd;
         }
 
-        public void Update(EstadoViaje entity)
+        /// <summary>
+        /// Get a EstadoViaje given its name.
+        /// </summary>
+        /// <param name="nombre">The name of the desired EstadoViaje</param>
+        /// <returns>The EstadoViaje if its the only object with that identifiers, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
+        public EstadoViaje GetEstadoViaje(string nombre)
         {
-            throw new NotImplementedException();
+            return _context.EstadosViaje.Where(ev => ev.Nombre == nombre).SingleOrDefault();
         }
     }
 }

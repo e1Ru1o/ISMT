@@ -3,6 +3,7 @@ using BizDbAccess.GenericInterfaces;
 using DataLayer.EfCode;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BizDbAccess.Repositories
@@ -43,6 +44,16 @@ namespace BizDbAccess.Repositories
 
             _context.Pasaportes.Update(toUpd);
             return toUpd;
+        }
+
+        /// <summary>
+        /// Get a Passport given its code.
+        /// </summary>
+        /// <param name="codigo">The code of the desired Passport</param>
+        /// <returns>The Passport if its the only object with that identifier, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
+        public Pasaporte GetPasaporte(string codigo)
+        {
+            return _context.Pasaportes.Where(p => p.CodigoPasaporte == codigo).SingleOrDefault();
         }
     }
 
