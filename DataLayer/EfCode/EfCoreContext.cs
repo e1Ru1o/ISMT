@@ -31,6 +31,45 @@ namespace DataLayer.EfCode
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Pais_Visa>()
+                .HasOne(pv => pv.Pais)
+                .WithMany(p => p.Visas)
+                .IsRequired();
+                //.IsRequired(false)
+                //.OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Pais_Visa>()
+                .HasOne(pv => pv.Visa)
+                .WithMany(v => v.Paises)
+                .IsRequired();
+                //.IsRequired(false)
+                //.OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Pasaporte>()
+                .HasOne(p => p.Usuario)
+                .WithMany(u => u.Pasaportes)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Usuario_Responsabilidad>()
+                .HasOne(ur => ur.Usuario)
+                .WithMany(u => u.Responsabilidades)
+                .IsRequired();
+                //.IsRequired(false)
+                //.OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Usuario_Responsabilidad>()
+                .HasOne(ur => ur.Responsabilidad)
+                .WithMany(r => r.Usuarios)
+                .IsRequired();
+                //.IsRequired(false)
+                //.OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Viaje>()
+                .HasOne(v => v.Usuario)
+                .WithMany(u => u.Viajes)
+                .IsRequired();           
         }
 
         public int Commit()
