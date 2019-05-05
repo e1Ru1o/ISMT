@@ -34,14 +34,19 @@ namespace BizDbAccess.Repositories
             if (toUpd == null)
                 throw new InvalidOperationException("Visa to be updated not exist");
 
-            toUpd.Name = entity.Name;
-            toUpd.Paises = entity.Paises;
-            toUpd.Pasaportes = entity.Pasaportes;
+            toUpd.Name = entity.Name ?? toUpd.Name;
+            toUpd.Paises = toUpd.Paises == null ? entity.Paises : (toUpd.Paises.Concat(entity.Paises)).ToList();
+            toUpd.Pasaportes = toUpd.Pasaportes == null ? entity.Pasaportes : (toUpd.Pasaportes.Concat(entity.Pasaportes)).ToList();
 
             _context.Visas.Update(toUpd);
             return toUpd;
         }
 
+        /// <summary>
+        /// Get a Visa given its name.
+        /// </summary>
+        /// <param name="nombre">The name of the desired Visa</param>
+        /// <returns>The Visa if its the only object with that identifier, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
         public Visa GetVisa(string name)
         {
             return _context.Visas.Where(v => v.Name == name).SingleOrDefault();

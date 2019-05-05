@@ -34,12 +34,17 @@ namespace BizDbAccess.Repositories
             if (toUpd == null)
                 throw new InvalidOperationException("Estado de Viaje to be updated not exist");
 
-            toUpd.Nombre = entity.Nombre;
+            toUpd.Nombre = entity.Nombre ?? toUpd.Nombre;
 
             _context.EstadosViaje.Update(toUpd);
             return toUpd;
         }
 
+        /// <summary>
+        /// Get a EstadoViaje given its name.
+        /// </summary>
+        /// <param name="nombre">The name of the desired EstadoViaje</param>
+        /// <returns>The EstadoViaje if its the only object with that identifiers, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
         public EstadoViaje GetEstadoViaje(string nombre)
         {
             return _context.EstadosViaje.Where(ev => ev.Nombre == nombre).SingleOrDefault();
