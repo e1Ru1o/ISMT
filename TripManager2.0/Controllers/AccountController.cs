@@ -153,19 +153,8 @@ namespace TripManager2._0.Controllers
 
                 if (result.Succeeded)
                 {
-                    var user = _userManager.Users.Where(u => u.Email == lvm.Email).Single();
-                    var uvm = new UserViewModel();
-                    uvm.SetViewModel(user);
-                    uvm.SetPermissions(_userManager.GetClaimsAsync(user).Result);
-
-                    if (Request.Query.Keys.Contains("ReturnUrl"))
-                    {
-                        return Redirect(Request.Query["ReturnUrl"].First());
-                    }
-                    else
-                    {
-                        return RedirectToAction("Welcome", "User", uvm);
-                    }
+                    var e = User;
+                    return RedirectToAction("LoginHelper", "Home");
                 }
             }
 
