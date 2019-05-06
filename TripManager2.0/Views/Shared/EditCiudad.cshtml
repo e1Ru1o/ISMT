@@ -1,0 +1,39 @@
+﻿@using BizData.Entities
+@using BizLogic.Administration
+@model IEnumerable<Ciudad>
+
+@{ 
+    List<Ciudad> j = new List<Ciudad> { new Ciudad { Nombre = "La Habana", CiudadID = 3, Pais = new Pais { Nombre = "Cuba" } } };
+}
+<h1>Ciudades</h1>
+<table border="0">
+
+    <tr>
+        
+        <th>
+            Nombre
+        </th>
+        <th>
+            Pais
+        </th>
+        <th>
+        </th>
+    </tr>
+    @foreach (var item in j)
+    {
+        <tr>
+            @Html.Partial("Ciudad", item)
+            <td>
+                <button type="submit" name="id" value=@item.CiudadID> Eliminar</button>
+            </td>
+        </tr>
+
+    }
+    <tr>
+        <td>
+            @Html.ActionLink("Agregar", "AddCiudad", "User", new CiudadCommand())
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>

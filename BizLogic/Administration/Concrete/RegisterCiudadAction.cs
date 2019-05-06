@@ -9,16 +9,33 @@ namespace BizLogic.Administration.Concrete
 {
     public class RegisterCiudadAction : BizActionErrors, IBizAction<CiudadCommand, Ciudad>
     {
-        private readonly CiudadDbAccess _ciudadDbAccess;
+        private readonly CiudadDbAccess _dbAccess;
 
-        public RegisterCiudadAction(CiudadDbAccess ciudadDbAccess)
+        public RegisterCiudadAction(CiudadDbAccess dbAccess)
         {
-            _ciudadDbAccess = ciudadDbAccess;
+            _dbAccess = dbAccess;
         }
 
         public Ciudad Action(CiudadCommand dto)
         {
-            throw new NotImplementedException();
+            var ciudad = dto.ToCiudad();
+
+            try
+            {
+                var result = _dbAccess.GetCiudad(ciudad.Nombre, ciudad.Pais);
+
+                if (result != null)
+                    throw new InvalidOperationException();
+            }
+            catch(InvalidOperationException)
+            {
+                AddError($"Ya existe la ciudad {ciudad.Nombre} en {ciudad.Pais.Nombre}.");
+            }
+
+            if (!HasErrors)
+                _dbAccess.Add(ciudad);
+
+            return HasErrors ? null : ciudad;
         }
     }
 }

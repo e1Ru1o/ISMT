@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BizData", "BizData\BizData.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{ED2E3485-5359-476C-A47F-B2481E24B70F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizLogic", "BizLogic\BizLogic.csproj", "{CD0AF50A-FDA1-4C29-85FF-84D17CCE833B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BizLogic", "BizLogic\BizLogic.csproj", "{CD0AF50A-FDA1-4C29-85FF-84D17CCE833B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizDbAccess", "BizDbAccess\BizDbAccess.csproj", "{66AF6157-D766-49DB-957E-465F99E27442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BizDbAccess", "BizDbAccess\BizDbAccess.csproj", "{66AF6157-D766-49DB-957E-465F99E27442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{BA392EE8-D920-4FCA-AC42-C5A9405C9E36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{BA392EE8-D920-4FCA-AC42-C5A9405C9E36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
