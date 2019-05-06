@@ -15,13 +15,9 @@ namespace BizLogic.Administration
             Pais = pais ?? throw new ArgumentNullException(nameof(pais));
         }
 
-        public Ciudad ToCiudad()
+        public CiudadCommand()
         {
-            return new Ciudad
-            {
-                Nombre = Nombre,
-                Pais = Pais
-            };
+
         }
     }
 }

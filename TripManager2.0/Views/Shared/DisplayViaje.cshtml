@@ -1,21 +1,21 @@
 ﻿@using BizData.Entities
-@model ICollection<Viaje>
+@model IEnumerable<Viaje>
 
 <table border="0">
-
-    <caption><h3>Pasaportes</h3></caption>
-    <th>
-        ID
-    </th>
-    <th>
-        Inicio  
-    </th>
-    <th>
-        Fin
-    </th>
-    <th>
-        Usuario
-    </th>
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Inicio
+        </th>
+        <th>
+            Fin
+        </th>
+        <th>
+            Usuario
+        </th>
+    </tr>
     @foreach (var item in Model)
     {
         <tr>
