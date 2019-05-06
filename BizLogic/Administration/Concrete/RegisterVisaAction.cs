@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BizLogic.Administration.Concrete
 {
-    public class RegisterVisaAction : BizActionErrors, IBizAction<NameOnlyViewModel, Visa>
+    public class RegisterVisaAction : BizActionErrors, IBizAction<VisaCommand, Visa>
     {
         private readonly VisaDbAccess _visaDbAccess;
 
@@ -17,7 +17,7 @@ namespace BizLogic.Administration.Concrete
             _visaDbAccess = visaDbAccess;
         }
 
-        public Visa Action(NameOnlyViewModel dto)
+        public Visa Action(VisaCommand dto)
         {
             throw new NotImplementedException();
         }

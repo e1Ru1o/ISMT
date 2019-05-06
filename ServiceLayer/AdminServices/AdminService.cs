@@ -25,7 +25,7 @@ namespace ServiceLayer.AdminServices
         private readonly RunnerWriteDb<NameOnlyViewModel, Institucion> _runnerInstitucion;
         private readonly RunnerWriteDb<NameOnlyViewModel, Pais> _runnerPais;
         private readonly RunnerWriteDb<NameOnlyViewModel, Responsabilidad> _runnerResponsabilidad;
-        private readonly RunnerWriteDb<NameOnlyViewModel, Visa> _runnerVisa;
+        private readonly RunnerWriteDb<VisaCommand, Visa> _runnerVisa;
         private readonly RunnerWriteDb<WorkflowCommand, Workflow> _runnerWorkflow;
 
         private readonly PaisDbAccess _paisDbAccess;
@@ -46,7 +46,7 @@ namespace ServiceLayer.AdminServices
                 new RegisterPaisAction(new PaisDbAccess(_context)), _context);
             _runnerResponsabilidad = new RunnerWriteDb<NameOnlyViewModel, Responsabilidad>(
                 new RegisterResponsabilidadAction(new ResponsabilidadDbAccess(_context)), _context);
-            _runnerVisa = new RunnerWriteDb<NameOnlyViewModel, Visa>(
+            _runnerVisa = new RunnerWriteDb<VisaCommand, Visa>(
                 new RegisterVisaAction(new VisaDbAccess(_context)), _context);
             _runnerWorkflow = new RunnerWriteDb<WorkflowCommand, Workflow>(
                 new RegisterWorkflowAction(new WorkflowDbAccess(_context)), _context);
@@ -56,7 +56,7 @@ namespace ServiceLayer.AdminServices
             _responsabilidadDbAccess = new ResponsabilidadDbAccess(_context);
         }
 
-        public long RegisterCiudad(CiudadViewModel cmd, out IImmutableList<ValidationResult> errors)
+        public long RegisterCiudad(CiudadCommand cmd, out IImmutableList<ValidationResult> errors)
         {
             throw new NotImplementedException();
         }
@@ -126,7 +126,7 @@ namespace ServiceLayer.AdminServices
             throw new NotImplementedException();
         }
 
-        public long RegisterVisa(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
+        public long RegisterVisa(VisaCommand vm, out IImmutableList<ValidationResult> errors)
         {
             throw new NotImplementedException();
         }
@@ -141,7 +141,7 @@ namespace ServiceLayer.AdminServices
             throw new NotImplementedException();
         }
 
-        public long RegisterWorkflow(WorkflowViewModel cmd, out IImmutableList<ValidationResult> errors)
+        public long RegisterWorkflow(WorkflowCommand cmd, out IImmutableList<ValidationResult> errors)
         {
             throw new NotImplementedException();
         }
