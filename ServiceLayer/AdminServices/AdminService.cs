@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace ServiceLayer.AdminServices
@@ -31,6 +32,10 @@ namespace ServiceLayer.AdminServices
         private readonly PaisDbAccess _paisDbAccess;
         private readonly EstadoViajeDbAccess _estadoViajeDbAccess;
         private readonly ResponsabilidadDbAccess _responsabilidadDbAccess;
+        private readonly CiudadDbAccess _ciudadDbAccess;
+        private readonly InstitucionDbAccess _institucionDbAccess;
+        private readonly Pais_VisaDbAccess _pais_VisaDbAccess;
+        private readonly VisaDbAccess _visaDbAccess;
 
         public AdminService(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils)
         {
@@ -54,91 +59,179 @@ namespace ServiceLayer.AdminServices
             _paisDbAccess = new PaisDbAccess(_context);
             _estadoViajeDbAccess = new EstadoViajeDbAccess(_context);
             _responsabilidadDbAccess = new ResponsabilidadDbAccess(_context);
+            _ciudadDbAccess = new CiudadDbAccess(_context);
+            _institucionDbAccess = new InstitucionDbAccess(_context);
+            _pais_VisaDbAccess = new Pais_VisaDbAccess(_context);
+            _visaDbAccess = new VisaDbAccess(_context);
         }
 
         public long RegisterCiudad(CiudadCommand cmd, out IImmutableList<ValidationResult> errors)
         {
-            throw new NotImplementedException();
+            cmd.Pais = _paisDbAccess.GetPais(cmd.paisName);
+
+            var ciudad = _runnerCiudad.RunAction(cmd);
+
+            if (_runnerCiudad.HasErrors)
+            {
+                errors = _runnerCiudad.Errors;
+                return -1;
+            }
+
+            errors = null;
+            return ciudad.CiudadID;
         }
 
         public Ciudad UpdateCiudad(Ciudad entity, Ciudad toUpd)
         {
-            throw new NotImplementedException();
+            var ciudad = _ciudadDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return ciudad;
         }
 
         public void RemoveCiudad(Ciudad entity)
         {
-            throw new NotImplementedException();
+            _ciudadDbAccess.Delete(entity);
+            _context.Commit();
         }
 
         public long RegisterInstitucion(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
         {
-            throw new NotImplementedException();
+            var institucion = _runnerInstitucion.RunAction(vm);
+
+            if (_runnerInstitucion.HasErrors)
+            {
+                errors = _runnerInstitucion.Errors;
+                return -1;
+            }
+
+            errors = null;
+            return institucion.InstitucionID;
         }
 
         public Institucion UpdateInstitucion(Institucion entity, Institucion toUpd)
         {
-            throw new NotImplementedException();
+            var institucion = _institucionDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return institucion;
         }
 
         public void RemoveInstitucion(Institucion entity)
         {
-            throw new NotImplementedException();
+            _institucionDbAccess.Delete(entity);
+            _context.Commit();
         }
 
         public long RegisterPais(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
         {
-            throw new NotImplementedException();
+            var pais = _runnerPais.RunAction(vm);
+
+            if (_runnerPais.HasErrors)
+            {
+                errors = _runnerPais.Errors;
+                return -1;
+            }
+
+            errors = null;
+            return pais.PaisID;
         }
 
         public Pais UpdatePais(Pais entity, Pais toUpd)
         {
-            throw new NotImplementedException();
-        }
-
-        public Pais GetPais(string nombre)
-        {
-            throw new NotImplementedException();
+            var pais = _paisDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return pais;
         }
 
         public void RemovePais(Pais entity)
         {
-            throw new NotImplementedException();
+            _paisDbAccess.Delete(entity);
+            _context.Commit();
+        }
+
+        public IEnumerable<Pais> GetPaisesWithoutVisa(string visaName)
+        {
+            var paises_visas = _pais_VisaDbAccess.GetAll().Where(pv => pv.Visa.Name != visaName).Select(pv => pv.Pais);
+            var paises = _paisDbAccess.GetAll();
+
+            foreach (var p in paises)
+            {
+                if (!paises_visas.Where(pv => pv.Nombre == p.Nombre).Any())
+                    yield return p;
+            }
         }
 
         public long RegisterResponsabilidad(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
         {
-            throw new NotImplementedException();
+            var resp = _runnerResponsabilidad.RunAction(vm);
+
+            if (_runnerResponsabilidad.HasErrors)
+            {
+                errors = _runnerResponsabilidad.Errors;
+                return -1;
+            }
+
+            errors = null;
+            return resp.ResponsabilidadID;
         }
 
         public Responsabilidad UpdateResponsabilidad(Responsabilidad entity, Responsabilidad toUpd)
         {
-            throw new NotImplementedException();
-        }
-
-        public Responsabilidad GetResponsabilidad(string nombre)
-        {
-            throw new NotImplementedException();
+            var resp = _responsabilidadDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return resp;
         }
 
         public void RemoveResponsabilidad(Responsabilidad entity)
         {
-            throw new NotImplementedException();
+            _responsabilidadDbAccess.Delete(entity);
+            _context.Commit();
         }
 
-        public long RegisterVisa(VisaCommand vm, out IImmutableList<ValidationResult> errors)
+        public IEnumerable<Pais_Visa> BuildListOfPais_Visa(IEnumerable<Pais> paises, IEnumerable<Visa> visas)
         {
-            throw new NotImplementedException();
+            foreach (var v in visas)
+                foreach (var p in paises)
+                    yield return new Pais_Visa()
+                    {
+                        Pais = p,
+                        Visa = v
+                    };
+        }
+
+        public long RegisterVisa(VisaCommand cmd, out IImmutableList<ValidationResult> errors)
+        {
+            cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
+            {
+                return p.Nombre == s ? p : null;
+            })
+            .Where(p => p != null)
+            .ToList();
+
+            cmd.PaisesVisas = BuildListOfPais_Visa(cmd.Paises, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+
+            var visa =  _runnerVisa.RunAction(cmd);
+
+            if (_runnerVisa.HasErrors)
+            {
+                errors = _runnerVisa.Errors;
+                return -1;
+            }
+    
+            errors = null;
+            return visa.VisaID;
         }
 
         public Visa UpdateVisa(Visa entity, Visa toUpd)
         {
-            throw new NotImplementedException();
+            var visa = _visaDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return visa;
         }
 
         public void RemoveVisa(Visa entity)
         {
-            throw new NotImplementedException();
+            _visaDbAccess.Delete(entity);
+            _context.Commit();
         }
 
         public long RegisterWorkflow(WorkflowCommand cmd, out IImmutableList<ValidationResult> errors)

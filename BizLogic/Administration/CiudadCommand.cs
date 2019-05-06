@@ -14,5 +14,14 @@ namespace BizLogic.Administration
         {
             Pais = pais ?? throw new ArgumentNullException(nameof(pais));
         }
+
+        public Ciudad ToCiudad()
+        {
+            return new Ciudad
+            {
+                Nombre = Nombre,
+                Pais = Pais
+            };
+        }
     }
 }

@@ -10,16 +10,36 @@ namespace BizLogic.Administration.Concrete
 {
     public class RegisterPaisAction : BizActionErrors, IBizAction<NameOnlyViewModel, Pais>
     {
-        private readonly PaisDbAccess _paisDbAccess;
+        private readonly PaisDbAccess _dbAccess;
 
-        public RegisterPaisAction(PaisDbAccess paisDbAccess)
+        public RegisterPaisAction(PaisDbAccess dbAccess)
         {
-            _paisDbAccess = paisDbAccess;
+            _dbAccess = dbAccess;
         }
 
         public Pais Action(NameOnlyViewModel dto)
         {
-            throw new NotImplementedException();
+            var pais = new Pais()
+            {
+                Nombre = dto.Nombre
+            };
+
+            try
+            {
+                var result = _dbAccess.GetPais(pais.Nombre);
+
+                if (result != null)
+                    throw new InvalidOperationException();
+            }
+            catch (InvalidOperationException)
+            {
+                AddError($"Ya existe el pais {pais.Nombre}.");
+            }
+
+            if (!HasErrors)
+                _dbAccess.Add(pais);
+
+            return HasErrors ? null : pais;
         }
     }
 }
