@@ -8,6 +8,7 @@ namespace BizData.Entities
     {
         public int CiudadID { get; set; }
         public string Nombre { get; set; }
+
         public virtual Pais Pais { get; set; }
     }
 }
