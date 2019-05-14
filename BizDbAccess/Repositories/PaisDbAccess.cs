@@ -35,6 +35,7 @@ namespace BizDbAccess.Repositories
                 throw new Exception("Pais to be updated no exist");
             
             toUpd.Nombre = entity.Nombre ?? toUpd.Nombre;
+            toUpd.Region = entity.Region ?? toUpd.Region;
             toUpd.Visas = toUpd.Visas == null ? entity.Visas : (toUpd.Visas.Concat(entity.Visas)).ToList();
 
             _context.Paises.Update(toUpd);

@@ -34,15 +34,13 @@ namespace BizDbAccess.Repositories
             if (toUpd == null)
                 throw new Exception("Viaje to be updated no exist");
 
-            toUpd.Costo = entity.Costo ?? toUpd.Costo;
             toUpd.FechaFin = entity.FechaFin ?? toUpd.FechaFin;
             toUpd.FechaInicio = entity.FechaInicio ?? toUpd.FechaFin;
             toUpd.MotivoViaje = entity.MotivoViaje ?? toUpd.MotivoViaje;
             toUpd.Pais = entity.Pais ?? toUpd.Pais;
             toUpd.Usuario = entity.Usuario ?? toUpd.Usuario;
-            toUpd.Ciudades = toUpd.Ciudades == null ? entity.Ciudades : (toUpd.Ciudades.Concat(entity.Ciudades)).ToList();
-            toUpd.Instituciones = toUpd.Instituciones == null ? entity.Instituciones : (toUpd.Instituciones.Concat(entity.Instituciones)).ToList();
-
+            toUpd.Ciudad = entity.Ciudad ?? toUpd.Ciudad;
+    
             _context.Viajes.Update(toUpd);
             return toUpd;
         }
