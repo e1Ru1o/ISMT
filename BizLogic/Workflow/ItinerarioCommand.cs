@@ -5,8 +5,16 @@ using System.Text;
 
 namespace BizLogic.Workflow
 {
-    public class ItinerarioCommand
+    public class ItinerarioCommand : ItinerarioViewModel
     {
         public Usuario Usuario { get; set; }
+
+        public Itinerario ToItinerario()
+        {
+            return new Itinerario()
+            {
+                Usuario = Usuario
+            };
+        }
     }
 }
