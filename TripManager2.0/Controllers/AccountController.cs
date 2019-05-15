@@ -110,6 +110,7 @@ namespace TripManager2._0.Controllers
                     var claim = new Claim("Permission", "Normal");
                     await _userManager.AddClaimAsync(user, claim);
                     await _userManager.AddClaimAsync(user, new Claim("Pending", "true"));
+                    await _userManager.AddClaimAsync(user, new Claim("Cargo", "comun"));
 
                     await _signInManager.SignInAsync(user, false);
 
