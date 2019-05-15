@@ -34,6 +34,11 @@ namespace TripManager2._0.Controllers
             return View(user);
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         public IActionResult Print(TableUserViewModel text)
         {
             GetterAll getter;
