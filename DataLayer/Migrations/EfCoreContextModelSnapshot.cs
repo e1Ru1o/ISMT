@@ -29,28 +29,11 @@ namespace DataLayer.Migrations
 
                     b.Property<int?>("PaisID");
 
-                    b.Property<int?>("ViajeID");
-
                     b.HasKey("CiudadID");
 
                     b.HasIndex("PaisID");
 
-                    b.HasIndex("ViajeID");
-
                     b.ToTable("Ciudades");
-                });
-
-            modelBuilder.Entity("BizData.Entities.EstadoViaje", b =>
-                {
-                    b.Property<int>("EstadoViajeID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Nombre");
-
-                    b.HasKey("EstadoViajeID");
-
-                    b.ToTable("EstadosViaje");
                 });
 
             modelBuilder.Entity("BizData.Entities.Institucion", b =>
@@ -61,13 +44,29 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Nombre");
 
-                    b.Property<int?>("ViajeID");
-
                     b.HasKey("InstitucionID");
 
-                    b.HasIndex("ViajeID");
-
                     b.ToTable("Instituciones");
+                });
+
+            modelBuilder.Entity("BizData.Entities.Itinerario", b =>
+                {
+                    b.Property<int>("ItinerarioID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("FechaFin");
+
+                    b.Property<DateTime?>("FechaInicio");
+
+                    b.Property<string>("UsuarioId")
+                        .IsRequired();
+
+                    b.HasKey("ItinerarioID");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Itinerarios");
                 });
 
             modelBuilder.Entity("BizData.Entities.Pais", b =>
@@ -78,11 +77,11 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Nombre");
 
-                    b.Property<int?>("ViajeID");
+                    b.Property<int?>("RegionID");
 
                     b.HasKey("PaisID");
 
-                    b.HasIndex("ViajeID");
+                    b.HasIndex("RegionID");
 
                     b.ToTable("Paises");
                 });
@@ -106,63 +105,36 @@ namespace DataLayer.Migrations
                     b.ToTable("Paises_Visas");
                 });
 
-            modelBuilder.Entity("BizData.Entities.Pasaporte", b =>
+            modelBuilder.Entity("BizData.Entities.Region", b =>
                 {
-                    b.Property<int>("PasaporteID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Actualizaciones");
-
-                    b.Property<string>("CodigoPasaporte");
-
-                    b.Property<DateTime>("FechaCreacion");
-
-                    b.Property<DateTime>("FechaVencimiento");
-
-                    b.Property<int>("Tipo");
-
-                    b.Property<long>("UsuarioCI");
-
-                    b.Property<string>("UsuarioId");
-
-                    b.HasKey("PasaporteID");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Pasaportes");
-                });
-
-            modelBuilder.Entity("BizData.Entities.Pasaporte_Visa", b =>
-                {
-                    b.Property<int>("Pasaporte_VisaID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("PasaporteID");
-
-                    b.Property<int?>("VisaID");
-
-                    b.HasKey("Pasaporte_VisaID");
-
-                    b.HasIndex("PasaporteID");
-
-                    b.HasIndex("VisaID");
-
-                    b.ToTable("Pasaportes_Visas");
-                });
-
-            modelBuilder.Entity("BizData.Entities.Responsabilidad", b =>
-                {
-                    b.Property<int>("ResponsabilidadID")
+                    b.Property<int>("RegionID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Nombre");
 
-                    b.HasKey("ResponsabilidadID");
+                    b.HasKey("RegionID");
 
-                    b.ToTable("Responsabilidades");
+                    b.ToTable("Regiones");
+                });
+
+            modelBuilder.Entity("BizData.Entities.Region_Visa", b =>
+                {
+                    b.Property<int>("Region_VisaID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("RegionID");
+
+                    b.Property<int?>("VisaID");
+
+                    b.HasKey("Region_VisaID");
+
+                    b.HasIndex("RegionID");
+
+                    b.HasIndex("VisaID");
+
+                    b.ToTable("Regiones_Visa");
                 });
 
             modelBuilder.Entity("BizData.Entities.Usuario", b =>
@@ -183,6 +155,8 @@ namespace DataLayer.Migrations
                     b.Property<string>("FirstLastName");
 
                     b.Property<string>("FirstName");
+
+                    b.Property<bool>("HasPassport");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -224,48 +198,37 @@ namespace DataLayer.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("BizData.Entities.Usuario_Responsabilidad", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ResponsabilidadID");
-
-                    b.Property<string>("UsuarioId")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ResponsabilidadID");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Usuarios_Responsabilidades");
-                });
-
             modelBuilder.Entity("BizData.Entities.Viaje", b =>
                 {
                     b.Property<int>("ViajeID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("Costo");
-
-                    b.Property<int?>("EstadoViajeID");
+                    b.Property<int?>("CiudadID");
 
                     b.Property<DateTime?>("FechaFin");
 
                     b.Property<DateTime?>("FechaInicio");
 
+                    b.Property<int?>("InstitucionID");
+
+                    b.Property<int?>("ItinerarioID");
+
                     b.Property<int?>("MotivoViaje");
 
-                    b.Property<string>("UsuarioId")
-                        .IsRequired();
+                    b.Property<int?>("PaisID");
+
+                    b.Property<string>("UsuarioId");
 
                     b.HasKey("ViajeID");
 
-                    b.HasIndex("EstadoViajeID");
+                    b.HasIndex("CiudadID");
+
+                    b.HasIndex("InstitucionID");
+
+                    b.HasIndex("ItinerarioID");
+
+                    b.HasIndex("PaisID");
 
                     b.HasIndex("UsuarioId");
 
@@ -280,32 +243,17 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int?>("RegionID");
+
+                    b.Property<string>("UsuarioId");
+
                     b.HasKey("VisaID");
 
+                    b.HasIndex("RegionID");
+
+                    b.HasIndex("UsuarioId");
+
                     b.ToTable("Visas");
-                });
-
-            modelBuilder.Entity("BizData.Entities.Workflow", b =>
-                {
-                    b.Property<int>("WorkflowID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("EstadoViajeDestinoEstadoViajeID");
-
-                    b.Property<int?>("EstadoViajeOrigenEstadoViajeID");
-
-                    b.Property<int?>("ResponsabilidadID");
-
-                    b.HasKey("WorkflowID");
-
-                    b.HasIndex("EstadoViajeDestinoEstadoViajeID");
-
-                    b.HasIndex("EstadoViajeOrigenEstadoViajeID");
-
-                    b.HasIndex("ResponsabilidadID");
-
-                    b.ToTable("Workflow");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -423,24 +371,21 @@ namespace DataLayer.Migrations
                     b.HasOne("BizData.Entities.Pais", "Pais")
                         .WithMany()
                         .HasForeignKey("PaisID");
-
-                    b.HasOne("BizData.Entities.Viaje")
-                        .WithMany("Ciudades")
-                        .HasForeignKey("ViajeID");
                 });
 
-            modelBuilder.Entity("BizData.Entities.Institucion", b =>
+            modelBuilder.Entity("BizData.Entities.Itinerario", b =>
                 {
-                    b.HasOne("BizData.Entities.Viaje")
-                        .WithMany("Instituciones")
-                        .HasForeignKey("ViajeID");
+                    b.HasOne("BizData.Entities.Usuario", "Usuario")
+                        .WithMany("Itinerarios")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("BizData.Entities.Pais", b =>
                 {
-                    b.HasOne("BizData.Entities.Viaje")
-                        .WithMany("Pais")
-                        .HasForeignKey("ViajeID");
+                    b.HasOne("BizData.Entities.Region", "Region")
+                        .WithMany("Paises")
+                        .HasForeignKey("RegionID");
                 });
 
             modelBuilder.Entity("BizData.Entities.Pais_Visa", b =>
@@ -456,63 +401,49 @@ namespace DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("BizData.Entities.Pasaporte", b =>
+            modelBuilder.Entity("BizData.Entities.Region_Visa", b =>
                 {
-                    b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany("Pasaportes")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.SetNull);
-                });
-
-            modelBuilder.Entity("BizData.Entities.Pasaporte_Visa", b =>
-                {
-                    b.HasOne("BizData.Entities.Pasaporte", "Pasaporte")
-                        .WithMany("Visas")
-                        .HasForeignKey("PasaporteID");
+                    b.HasOne("BizData.Entities.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionID");
 
                     b.HasOne("BizData.Entities.Visa", "Visa")
-                        .WithMany("Pasaportes")
+                        .WithMany("Regiones")
                         .HasForeignKey("VisaID");
-                });
-
-            modelBuilder.Entity("BizData.Entities.Usuario_Responsabilidad", b =>
-                {
-                    b.HasOne("BizData.Entities.Responsabilidad", "Responsabilidad")
-                        .WithMany("Usuarios")
-                        .HasForeignKey("ResponsabilidadID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany("Responsabilidades")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("BizData.Entities.Viaje", b =>
                 {
-                    b.HasOne("BizData.Entities.EstadoViaje", "EstadoViaje")
+                    b.HasOne("BizData.Entities.Ciudad", "Ciudad")
                         .WithMany()
-                        .HasForeignKey("EstadoViajeID");
+                        .HasForeignKey("CiudadID");
+
+                    b.HasOne("BizData.Entities.Institucion", "Institucion")
+                        .WithMany()
+                        .HasForeignKey("InstitucionID");
+
+                    b.HasOne("BizData.Entities.Itinerario")
+                        .WithMany("Viajes")
+                        .HasForeignKey("ItinerarioID");
+
+                    b.HasOne("BizData.Entities.Pais", "Pais")
+                        .WithMany()
+                        .HasForeignKey("PaisID");
 
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany("Viajes")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
                 });
 
-            modelBuilder.Entity("BizData.Entities.Workflow", b =>
+            modelBuilder.Entity("BizData.Entities.Visa", b =>
                 {
-                    b.HasOne("BizData.Entities.EstadoViaje", "EstadoViajeDestino")
-                        .WithMany()
-                        .HasForeignKey("EstadoViajeDestinoEstadoViajeID");
+                    b.HasOne("BizData.Entities.Region")
+                        .WithMany("Visas")
+                        .HasForeignKey("RegionID");
 
-                    b.HasOne("BizData.Entities.EstadoViaje", "EstadoViajeOrigen")
-                        .WithMany()
-                        .HasForeignKey("EstadoViajeOrigenEstadoViajeID");
-
-                    b.HasOne("BizData.Entities.Responsabilidad", "Responsabilidad")
-                        .WithMany()
-                        .HasForeignKey("ResponsabilidadID");
+                    b.HasOne("BizData.Entities.Usuario")
+                        .WithMany("Visas")
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
