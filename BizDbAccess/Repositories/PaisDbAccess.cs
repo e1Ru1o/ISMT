@@ -52,6 +52,13 @@ namespace BizDbAccess.Repositories
             return _context.Paises.Where(p => p.Nombre == nombre).SingleOrDefault();
         }
 
+        public Pais GetPais(string nombre, string nombreRegion)
+        {
+            return _context.Paises.Where(p => p.Nombre == nombre &&
+                                              p.Region.Nombre == nombreRegion)
+                                              .SingleOrDefault();
+        }
+
     }
 
 }
