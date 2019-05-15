@@ -17,16 +17,13 @@ namespace DataLayer.EfCode
 
         public DbSet<Viaje> Viajes { get; set; }
         public DbSet<Institucion> Instituciones { get; set; }
+        public DbSet<Itinerario> Itinerarios { get; set; }
         public DbSet<Ciudad> Ciudades { get; set; }
+        public DbSet<Region> Regiones { get; set; }
+        public DbSet<Region_Visa> Regiones_Visa { get; set; }
         public DbSet<Pais> Paises { get; set; }
         public DbSet<Pais_Visa> Paises_Visas { get; set; }
-        public DbSet<Pasaporte> Pasaportes { get; set; }
-        public DbSet<Pasaporte_Visa> Pasaportes_Visas { get; set; }
-        public DbSet<Responsabilidad> Responsabilidades { get; set; }
-        public DbSet<EstadoViaje> EstadosViaje { get; set; }
-        public DbSet<Usuario_Responsabilidad> Usuarios_Responsabilidades { get; set; }
         public DbSet<Visa> Visas { get; set; }
-        public DbSet<Workflow> Workflow { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,30 +43,12 @@ namespace DataLayer.EfCode
                 //.IsRequired(false)
                 //.OnDelete(DeleteBehavior.SetNull);
 
-            builder.Entity<Pasaporte>()
-                .HasOne(p => p.Usuario)
-                .WithMany(u => u.Pasaportes)
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            builder.Entity<Usuario_Responsabilidad>()
-                .HasOne(ur => ur.Usuario)
-                .WithMany(u => u.Responsabilidades)
-                .IsRequired();
-                //.IsRequired(false)
-                //.OnDelete(DeleteBehavior.SetNull);
-
-            builder.Entity<Usuario_Responsabilidad>()
-                .HasOne(ur => ur.Responsabilidad)
-                .WithMany(r => r.Usuarios)
-                .IsRequired();
-                //.IsRequired(false)
-                //.OnDelete(DeleteBehavior.SetNull);
-
-            builder.Entity<Viaje>()
+            builder.Entity<Itinerario>()
                 .HasOne(v => v.Usuario)
-                .WithMany(u => u.Viajes)
-                .IsRequired();           
+                .WithMany(u => u.Itinerarios)
+                .IsRequired();    
+            
+            //TODO: Config the new entities if is needed.
         }
 
         public int Commit()

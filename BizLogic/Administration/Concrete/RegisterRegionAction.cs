@@ -8,38 +8,38 @@ using System.Text;
 
 namespace BizLogic.Administration.Concrete
 {
-    public class RegisterResponsabilidadAction : BizActionErrors, IBizAction<NameOnlyViewModel, Responsabilidad>
+    public class RegisterRegionAction : BizActionErrors, IBizAction<NameOnlyViewModel, Region>
     {
-        private readonly ResponsabilidadDbAccess _dbAccess;
+        private readonly RegionDbAccess _dbAccess;
 
-        public RegisterResponsabilidadAction(ResponsabilidadDbAccess dbAccess)
+        public RegisterRegionAction(RegionDbAccess dbAccess)
         {
             _dbAccess = dbAccess;
         }
 
-        public Responsabilidad Action(NameOnlyViewModel dto)
+        public Region Action(NameOnlyViewModel dto)
         {
-            var resp = new Responsabilidad()
+            var region = new Region()
             {
                 Nombre = dto.Nombre
             };
 
             try
             {
-                var result = _dbAccess.GetResponsabilidad(resp.Nombre);
+                var result = _dbAccess.GetRegion(dto.Nombre);
 
                 if (result != null)
                     throw new InvalidOperationException();
             }
             catch (InvalidOperationException)
             {
-                AddError($"Ya existe la responsabilidad {resp.Nombre}.");
+                AddError($"Ya existe la ciudad {region.Nombre}.");
             }
 
             if (!HasErrors)
-                _dbAccess.Add(resp);
+                _dbAccess.Add(region);
 
-            return HasErrors ? null : resp;
+            return HasErrors ? null : region;
         }
     }
 }

@@ -24,18 +24,16 @@ namespace ServiceLayer.AdminServices
 
         private readonly RunnerWriteDb<CiudadCommand, Ciudad> _runnerCiudad;
         private readonly RunnerWriteDb<NameOnlyViewModel, Institucion> _runnerInstitucion;
-        private readonly RunnerWriteDb<NameOnlyViewModel, Pais> _runnerPais;
-        private readonly RunnerWriteDb<NameOnlyViewModel, Responsabilidad> _runnerResponsabilidad;
+        private readonly RunnerWriteDb<PaisCommand, Pais> _runnerPais;
         private readonly RunnerWriteDb<VisaCommand, Visa> _runnerVisa;
-        private readonly RunnerWriteDb<WorkflowCommand, Workflow> _runnerWorkflow;
+        private readonly RunnerWriteDb<NameOnlyViewModel, Region> _runnerRegion;
 
         private readonly PaisDbAccess _paisDbAccess;
-        private readonly EstadoViajeDbAccess _estadoViajeDbAccess;
-        private readonly ResponsabilidadDbAccess _responsabilidadDbAccess;
         private readonly CiudadDbAccess _ciudadDbAccess;
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly Pais_VisaDbAccess _pais_VisaDbAccess;
         private readonly VisaDbAccess _visaDbAccess;
+        private readonly RegionDbAccess _regionDbAccess;
 
         public AdminService(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils)
         {
@@ -47,22 +45,19 @@ namespace ServiceLayer.AdminServices
                 new RegisterCiudadAction(new CiudadDbAccess(_context)), _context);
             _runnerInstitucion = new RunnerWriteDb<NameOnlyViewModel, Institucion>(
                 new RegisterInstitucionAction(new InstitucionDbAccess(_context)), _context);
-            _runnerPais = new RunnerWriteDb<NameOnlyViewModel, Pais>(
+            _runnerPais = new RunnerWriteDb<PaisCommand, Pais>(
                 new RegisterPaisAction(new PaisDbAccess(_context)), _context);
-            _runnerResponsabilidad = new RunnerWriteDb<NameOnlyViewModel, Responsabilidad>(
-                new RegisterResponsabilidadAction(new ResponsabilidadDbAccess(_context)), _context);
             _runnerVisa = new RunnerWriteDb<VisaCommand, Visa>(
                 new RegisterVisaAction(new VisaDbAccess(_context)), _context);
-            _runnerWorkflow = new RunnerWriteDb<WorkflowCommand, Workflow>(
-                new RegisterWorkflowAction(new WorkflowDbAccess(_context)), _context);
+            _runnerRegion = new RunnerWriteDb<NameOnlyViewModel, Region>(
+                new RegisterRegionAction(new RegionDbAccess(_context)), _context);
 
             _paisDbAccess = new PaisDbAccess(_context);
-            _estadoViajeDbAccess = new EstadoViajeDbAccess(_context);
-            _responsabilidadDbAccess = new ResponsabilidadDbAccess(_context);
             _ciudadDbAccess = new CiudadDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _pais_VisaDbAccess = new Pais_VisaDbAccess(_context);
             _visaDbAccess = new VisaDbAccess(_context);
+            _regionDbAccess = new RegionDbAccess(_context);
         }
 
         public long RegisterCiudad(CiudadCommand cmd, out IImmutableList<ValidationResult> errors)
@@ -121,9 +116,11 @@ namespace ServiceLayer.AdminServices
             _context.Commit();
         }
 
-        public long RegisterPais(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
+        public long RegisterPais(PaisCommand cmd, out IImmutableList<ValidationResult> errors)
         {
-            var pais = _runnerPais.RunAction(vm);
+            cmd.Region = _regionDbAccess.GetRegion(cmd.RegionName);
+
+            var pais = _runnerPais.RunAction(cmd);
 
             if (_runnerPais.HasErrors)
             {
@@ -160,33 +157,6 @@ namespace ServiceLayer.AdminServices
             }
         }
 
-        public long RegisterResponsabilidad(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
-        {
-            var resp = _runnerResponsabilidad.RunAction(vm);
-
-            if (_runnerResponsabilidad.HasErrors)
-            {
-                errors = _runnerResponsabilidad.Errors;
-                return -1;
-            }
-
-            errors = null;
-            return resp.ResponsabilidadID;
-        }
-
-        public Responsabilidad UpdateResponsabilidad(Responsabilidad entity, Responsabilidad toUpd)
-        {
-            var resp = _responsabilidadDbAccess.Update(entity, toUpd);
-            _context.Commit();
-            return resp;
-        }
-
-        public void RemoveResponsabilidad(Responsabilidad entity)
-        {
-            _responsabilidadDbAccess.Delete(entity);
-            _context.Commit();
-        }
-
         public IEnumerable<Pais_Visa> BuildListOfPais_Visa(IEnumerable<Pais> paises, IEnumerable<Visa> visas)
         {
             foreach (var v in visas)
@@ -198,8 +168,28 @@ namespace ServiceLayer.AdminServices
                     };
         }
 
+        public IEnumerable<Region_Visa> BuildListOfRegion_Visa(IEnumerable<Region> regiones, IEnumerable<Visa> visas)
+        {
+            foreach (var v in visas)
+                foreach (var r in regiones)
+                    yield return new Region_Visa()
+                    {
+                        Region = r,
+                        Visa = v
+                    };
+        }
+
         public long RegisterVisa(VisaCommand cmd, out IImmutableList<ValidationResult> errors)
         {
+            cmd.Regiones = _regionDbAccess.GetAll().Zip(cmd.regionesName, (Region r, string s) =>
+            {
+                return r.Nombre == s ? r : null;
+            })
+            .Where(r => r != null)
+            .ToList();
+
+            cmd.RegionesVisas = BuildListOfRegion_Visa(cmd.Regiones, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+
             cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
             {
                 return p.Nombre == s ? p : null;
@@ -234,19 +224,31 @@ namespace ServiceLayer.AdminServices
             _context.Commit();
         }
 
-        public long RegisterWorkflow(WorkflowCommand cmd, out IImmutableList<ValidationResult> errors)
+        public long RegisterRegion(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
         {
-            throw new NotImplementedException();
+            var region = _runnerRegion.RunAction(vm);
+
+            if (_runnerPais.HasErrors)
+            {
+                errors = _runnerPais.Errors;
+                return -1;
+            }
+
+            errors = null;
+            return region.RegionID;
         }
 
-        public Workflow UpdateWorkflow(Workflow entity, Workflow toUpd)
+        public Region UpdateRegion(Region entity, Region toUpd)
         {
-            throw new NotImplementedException();
-        } 
+            var region = _regionDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return region;
+        }
 
-        public void RemoveWorkflow(Workflow entity)
+        public void RemoveRegion(Region entity)
         {
-            throw new NotImplementedException();
+            _regionDbAccess.Delete(entity);
+            _context.Commit();
         }
     }
 }

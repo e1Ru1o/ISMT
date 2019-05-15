@@ -27,7 +27,7 @@ namespace BizDbAccess.Repositories
             _context.Visas.Remove(entity);
         }
 
-        public IEnumerable<Visa> GetAll() => _context.Visas;
+        public IEnumerable<Visa> GetAll() => _context.Visas.OrderBy(v => v.Name);
 
         public Visa Update(Visa entity, Visa toUpd)
         {
@@ -36,7 +36,6 @@ namespace BizDbAccess.Repositories
 
             toUpd.Name = entity.Name ?? toUpd.Name;
             toUpd.Paises = toUpd.Paises == null ? entity.Paises : (toUpd.Paises.Concat(entity.Paises)).ToList();
-            toUpd.Pasaportes = toUpd.Pasaportes == null ? entity.Pasaportes : (toUpd.Pasaportes.Concat(entity.Pasaportes)).ToList();
 
             _context.Visas.Update(toUpd);
             return toUpd;

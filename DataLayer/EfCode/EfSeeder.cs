@@ -39,25 +39,11 @@ namespace DataLayer.EfCode
                     FirstLastName = "Iglesias",
                     SecondLastName = "Vera",
                     Email = "raul@gmail.com",
-                    Pasaportes = new List<Pasaporte>(),
                     UserName = "raul@gmail.com"
                 };
 
-                var pasaporte_raul = new Pasaporte()
-                {
-                    UsuarioCI = 97022206986,
-                    FechaCreacion = new DateTime(2019, 1, 1),
-                    FechaVencimiento = new DateTime(2019, 12, 31),
-                    Actualizaciones = 0,
-                    Tipo = PasaporteTipo.Americano,
-                    Usuario = raul
-                };
-
-                raul.Pasaportes.Add(pasaporte_raul);
-
                 await _userManager.CreateAsync(raul, "T3n!");
                 await _userManager.AddClaimAsync(raul, new Claim("Permission", "Admin"));
-                _ctx.Add(pasaporte_raul);
 
                 /*var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/usuarios.json");
                 var json = File.ReadAllText(filepath);

@@ -35,6 +35,7 @@ namespace BizDbAccess.Repositories
                 throw new Exception("Pais to be updated no exist");
             
             toUpd.Nombre = entity.Nombre ?? toUpd.Nombre;
+            toUpd.Region = entity.Region ?? toUpd.Region;
             toUpd.Visas = toUpd.Visas == null ? entity.Visas : (toUpd.Visas.Concat(entity.Visas)).ToList();
 
             _context.Paises.Update(toUpd);
@@ -49,6 +50,13 @@ namespace BizDbAccess.Repositories
         public Pais GetPais(string nombre)
         {
             return _context.Paises.Where(p => p.Nombre == nombre).SingleOrDefault();
+        }
+
+        public Pais GetPais(string nombre, string nombreRegion)
+        {
+            return _context.Paises.Where(p => p.Nombre == nombre &&
+                                              p.Region.Nombre == nombreRegion)
+                                              .SingleOrDefault();
         }
 
     }

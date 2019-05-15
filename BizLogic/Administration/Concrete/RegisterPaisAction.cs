@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BizLogic.Administration.Concrete
 {
-    public class RegisterPaisAction : BizActionErrors, IBizAction<NameOnlyViewModel, Pais>
+    public class RegisterPaisAction : BizActionErrors, IBizAction<PaisCommand, Pais>
     {
         private readonly PaisDbAccess _dbAccess;
 
@@ -17,23 +17,20 @@ namespace BizLogic.Administration.Concrete
             _dbAccess = dbAccess;
         }
 
-        public Pais Action(NameOnlyViewModel dto)
+        public Pais Action(PaisCommand dto)
         {
-            var pais = new Pais()
-            {
-                Nombre = dto.Nombre
-            };
-
+            var pais = dto.ToPais();
+            
             try
             {
-                var result = _dbAccess.GetPais(pais.Nombre);
+                var result = _dbAccess.GetPais(pais.Nombre, pais.Region.Nombre);
 
                 if (result != null)
                     throw new InvalidOperationException();
             }
             catch (InvalidOperationException)
             {
-                AddError($"Ya existe el pais {pais.Nombre}.");
+                AddError($"Ya existe el pais {pais.Nombre} en la region {pais.Region.Nombre}.");
             }
 
             if (!HasErrors)
