@@ -13,6 +13,7 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ServiceLayer.AdminServices
 {
@@ -249,6 +250,27 @@ namespace ServiceLayer.AdminServices
         {
             _regionDbAccess.Delete(entity);
             _context.Commit();
+        }
+
+        public async Task<(List<string> UserPendings, bool Paises, bool Regiones)> FillNotificationsAsync()
+        {
+            //check for pending users
+            List<string> UserPendings = new List<string>();
+            foreach (var user in _userManager.Users)
+            {
+                if ((await _userManager.GetClaimsAsync(user)).Any(c => c.Type == "Pending" && c.Value == "true"))
+                    UserPendings.Add(user.Email);
+            }
+
+            GetterAll getter = new GetterAll(_getterUtils, _context);
+
+            //check for empty provincias
+            bool Paises = getter.GetAll("Pais").Any();
+
+            //check for empty UOs
+            bool Regiones = getter.GetAll("Region").Any();
+
+            return (UserPendings, Paises, Regiones);
         }
     }
 }
