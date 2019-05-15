@@ -1,0 +1,39 @@
+﻿@using BizData.Entities
+@model IEnumerable<Itinerario>
+
+<head>
+    <title>Travels</title>
+</head>
+<body>
+    <table border="0">
+        <thead>
+            <tr colspan="3">
+                <h1>Mis Viajes<h1>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                Fecha
+            </tr>
+            <tr>
+                Estado
+            </tr>
+            <tr></tr>
+        </thead>
+        @foreach(var it in Model)
+        {
+            <tr>
+                <td>
+                    @it.FechaInicio
+                </td>
+                <td>
+                    @it.status
+                </td>
+                <td>
+                    <button class="button"><span>Eliminar</span></button>
+                </td>
+            </tr>
+        }
+    </table>
+    <button class="button"><span>Annadir</span></button>
+</body>

@@ -44,7 +44,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Edit(string email)
+        public async Task<IActionResult> Edit()
         {
             var user = await _userManager.GetUserAsync(User);
             var cmd = new RegisterUsuarioCommand();
