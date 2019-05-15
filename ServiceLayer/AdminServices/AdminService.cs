@@ -26,7 +26,7 @@ namespace ServiceLayer.AdminServices
         private readonly RunnerWriteDb<NameOnlyViewModel, Institucion> _runnerInstitucion;
         private readonly RunnerWriteDb<PaisCommand, Pais> _runnerPais;
         private readonly RunnerWriteDb<VisaCommand, Visa> _runnerVisa;
-        private readonly RunnerWriteDb<NameOnlyViewModel, Region> _runnerWriteDb;
+        private readonly RunnerWriteDb<NameOnlyViewModel, Region> _runnerRegion;
 
         private readonly PaisDbAccess _paisDbAccess;
         private readonly CiudadDbAccess _ciudadDbAccess;
@@ -49,6 +49,8 @@ namespace ServiceLayer.AdminServices
                 new RegisterPaisAction(new PaisDbAccess(_context)), _context);
             _runnerVisa = new RunnerWriteDb<VisaCommand, Visa>(
                 new RegisterVisaAction(new VisaDbAccess(_context)), _context);
+            _runnerRegion = new RunnerWriteDb<NameOnlyViewModel, Region>(
+                new RegisterRegionAction(new RegionDbAccess(_context)), _context);
 
             _paisDbAccess = new PaisDbAccess(_context);
             _ciudadDbAccess = new CiudadDbAccess(_context);
@@ -224,7 +226,7 @@ namespace ServiceLayer.AdminServices
 
         public long RegisterRegion(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
         {
-            var region = _runnerPais.RunAction(vm);
+            var region = _runnerRegion.RunAction(vm);
 
             if (_runnerPais.HasErrors)
             {
@@ -233,7 +235,7 @@ namespace ServiceLayer.AdminServices
             }
 
             errors = null;
-            return region.PaisID;
+            return region.RegionID;
         }
 
         public Region UpdateRegion(Region entity, Region toUpd)
