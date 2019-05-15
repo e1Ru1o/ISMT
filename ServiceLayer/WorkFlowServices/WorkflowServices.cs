@@ -22,10 +22,10 @@ namespace ServiceLayer.WorkFlowServices
             _context = context;
             _getterUtils = getterUtils;
 
-            _runnerItinerario = new RunnerWriteDb<ItinerarioCommand, Itinerario>(
-                new RegisterI)
+            //_runnerItinerario = new RunnerWriteDb<ItinerarioCommand, Itinerario>(
+            //    new RegisterI)
         }
 
-        public 
+       // public 
     }
 }
