@@ -11,11 +11,13 @@ namespace BizLogic.WorkflowManager
 {
     public class WorkflowManager
     {
-        private HistorialDbAccess _historial{ get; set; }
+        private  HistorialDbAccess _historial{ get; set; }
+        private IUnitOfWork _context { get; set; }
 
         public WorkflowManager(IUnitOfWork context)
         {
-            _historial = new HistorialDbAccess(context);
+            _context = context; 
+            _historial = new HistorialDbAccess(_context);
         }
 
         public void Manage(Itinerario itinerario, Action action, Usuario usuario)
@@ -65,6 +67,7 @@ namespace BizLogic.WorkflowManager
                     Fecha = DateTime.Now
                 };
                 _historial.Add(historial_entity);
+                _context.Commit();
 
                 itinerario.Estado = Estado.PendienteAprobacionDecano;
                 return true;
@@ -85,6 +88,7 @@ namespace BizLogic.WorkflowManager
                     Fecha = DateTime.Now
                 };
                 _historial.Add(historial_entity);
+                _context.Commit();
 
                 itinerario.Estado = Estado.PendienteAprobacionRector;
                 return true;
@@ -105,6 +109,7 @@ namespace BizLogic.WorkflowManager
                     Fecha = DateTime.Now
                 };
                 _historial.Add(historial_entity);
+                _context.Commit();
 
                 itinerario.Estado = Estado.PendientePasaporte;
                 return true;
@@ -127,6 +132,7 @@ namespace BizLogic.WorkflowManager
                         Fecha = DateTime.Now
                     };
                     _historial.Add(historial_entity);
+                    _context.Commit();
 
                     itinerario.Estado = Estado.PendienteVisas;
                     return true;
@@ -145,6 +151,7 @@ namespace BizLogic.WorkflowManager
                     Fecha = DateTime.Now
                 };
                 _historial.Add(historial_entity);
+                _context.Commit();
 
                 itinerario.Estado = Estado.PendienteVisas;
                 return true;
@@ -167,6 +174,7 @@ namespace BizLogic.WorkflowManager
                         Fecha = DateTime.Now
                     };
                     _historial.Add(historial_entity);
+                    _context.Commit();
 
                     itinerario.Estado = Estado.PendienteRealizacion;
                     return true;
@@ -187,6 +195,7 @@ namespace BizLogic.WorkflowManager
                         Fecha = DateTime.Now
                     };
                     _historial.Add(historial_entity);
+                    _context.Commit();
 
                     itinerario.Estado = Estado.PendienteRealizacion;
                     return true;
@@ -212,6 +221,7 @@ namespace BizLogic.WorkflowManager
                     Fecha = DateTime.Now
                 };
                 _historial.Add(historial_entity);
+                _context.Commit();
 
                 return true;
             }
@@ -246,6 +256,7 @@ namespace BizLogic.WorkflowManager
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
+            _context.Commit();
 
             if (claimTipoUsuario == "Trabajador")
             {
@@ -281,6 +292,7 @@ namespace BizLogic.WorkflowManager
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
+            _context.Commit();
         }
     }
 }
