@@ -19,5 +19,14 @@ namespace BizLogic.Administration
         {
 
         }
+
+        public Ciudad ToCiudad()
+        {
+            return new Ciudad
+            {
+                Nombre = Nombre,
+                Pais = Pais
+            };
+        }
     }
 }

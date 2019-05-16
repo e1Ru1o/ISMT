@@ -1,5 +1,5 @@
-﻿@using BizLogic.Shared
-@model NameOnlyViewModel
+﻿@using BizLogic.Administration
+@model PaisCommand
 @{
     ViewData["Title"] = "Añadir Pais";
 }
@@ -10,10 +10,20 @@
         <div class="col-md-2 col-md-offset-3">
             <div class="form-group">
                 <label>Nombre</label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <input type="submit" />
+            <div class="form-group">
+                <label>Region</label>
+                <select asp-for="RegionName" class="form-control">
+                    @foreach (var item in Model.Regiones)
+                    {
+                        <option value=@item>@item</option>
+                    }
+                </select>
+                <span asp-validation-for="RegionName" class="text-danger"></span>
+            </div>
+            <button class="button">Agregar</button>
         </div>
     </CENTER>
 </form>

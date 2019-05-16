@@ -2,14 +2,10 @@
 @using BizLogic.Administration
 @model IEnumerable<Ciudad>
 
-@{ 
-    List<Ciudad> j = new List<Ciudad> { new Ciudad { Nombre = "La Habana", CiudadID = 3, Pais = new Pais { Nombre = "Cuba" } } };
-}
 <h1>Ciudades</h1>
 <table border="0">
-
     <tr>
-        
+
         <th>
             Nombre
         </th>
@@ -19,12 +15,12 @@
         <th>
         </th>
     </tr>
-    @foreach (var item in j)
+    @foreach (var item in Model)
     {
         <tr>
             @Html.Partial("Ciudad", item)
             <td>
-                <button type="submit" name="id" value=@item.CiudadID> Eliminar</button>
+                <button type="submit" class="button" name="id" value=@item.CiudadID> Eliminar</button>
             </td>
         </tr>
 

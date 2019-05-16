@@ -16,10 +16,15 @@
 
             <div class="form-group">
                 <label>Pais</label>
-                <input asp-for="paisName" class="form-control" />
+                <select asp-for="paisName" class="form-control">
+                    @foreach (var item in Model.Paises)
+                    {
+                        <option value=@item>@item</option>
+                    }
+                </select>
                 <span asp-validation-for="paisName" class="text-danger"></span>
             </div>
-            <input type="submit" />
+            <button class="button">Agregar</button>
         </div>
     </CENTER>
 </form>

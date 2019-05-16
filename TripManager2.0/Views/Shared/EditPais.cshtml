@@ -1,30 +1,41 @@
 ﻿@using BizData.Entities
 @using BizLogic.Shared
 @model IEnumerable<Pais>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<body>
-    <table>
-        <tr>
-            <th>
-                ID
-            </th>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                @Html.Partial("Pais", item)
-                <td>
-                    <button type="submit" name="id" value=@item.PaisID> Eliminar</button>
-                </td>
-            </tr>
 
-        }
-        <tr>
-            <td>
-                @Html.ActionLink("Agregar", "AddPais", "User", new NameOnlyViewModel())
-            </td>
-            
-        </tr>
-    </table>
+<body>
+    <h1>Paises</h1>
+    <form method="post">
+        <table>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Region
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @Html.Partial("Pais", item)
+                    <td>
+                        <button type="submit" name="id" class="button" value=@item.PaisID> Eliminar</button>
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td>
+                    @Html.ActionLink("Agregar", "AddPais", "User", new NameOnlyViewModel())
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
 </body>
-</html>
+<script>
+    document.getElementsByTagName("a").addClass("button")
+
+</script>
