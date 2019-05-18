@@ -43,12 +43,17 @@ namespace BizDbAccess.Repositories
             return toUpd;
         }
 
-        public Itinerario GetItenerario(Usuario usuario, DateTime? FechaInicio, DateTime? FechaFin)
+        public Itinerario GetItinerario(Usuario usuario, DateTime? FechaInicio, DateTime? FechaFin)
         {
             return _context.Itinerarios.Where(i => i.Usuario == usuario &&
                                                    i.FechaInicio == FechaInicio &&
                                                    i.FechaFin == FechaFin)
-                                                   .SingleOrDefault();
+                                                   .Single();
+        }
+
+        public Itinerario GetItinerario(int ID)
+        {
+            return _context.Itinerarios.Find(ID);
         }
     }
 }

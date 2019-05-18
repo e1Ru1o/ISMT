@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataLayer.Migrations
 {
-    public partial class FinalSprint100 : Migration
+    public partial class FinalSprint200 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -253,6 +253,26 @@ namespace DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Historial",
+                columns: table => new
+                {
+                    HistorialID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EstadoViaje = table.Column<string>(nullable: true),
+                    ViajeItinerarioID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Historial", x => x.HistorialID);
+                    table.ForeignKey(
+                        name: "FK_Historial_Itinerarios_ViajeItinerarioID",
+                        column: x => x.ViajeItinerarioID,
+                        principalTable: "Itinerarios",
+                        principalColumn: "ItinerarioID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ciudades",
                 columns: table => new
                 {
@@ -330,7 +350,7 @@ namespace DataLayer.Migrations
                 {
                     ViajeID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    MotivoViaje = table.Column<int>(nullable: true),
+                    MotivoViaje = table.Column<string>(nullable: true),
                     FechaInicio = table.Column<DateTime>(nullable: true),
                     FechaFin = table.Column<DateTime>(nullable: true),
                     UsuarioId = table.Column<string>(nullable: true),
@@ -419,6 +439,11 @@ namespace DataLayer.Migrations
                 column: "PaisID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Historial_ViajeItinerarioID",
+                table: "Historial",
+                column: "ViajeItinerarioID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Itinerarios_UsuarioId",
                 table: "Itinerarios",
                 column: "UsuarioId");
@@ -500,6 +525,9 @@ namespace DataLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Historial");
 
             migrationBuilder.DropTable(
                 name: "Paises_Visas");
