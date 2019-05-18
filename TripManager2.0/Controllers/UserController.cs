@@ -34,9 +34,17 @@ namespace TripManager2._0.Controllers
             return View(user);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new ViajeViewModel());
+        }
+
+        [HttpPost]
+        public IActionResult Create(ViajeViewModel travel)
+        {
+
+            return null;
         }
 
         public IActionResult Print(TableUserViewModel text)
