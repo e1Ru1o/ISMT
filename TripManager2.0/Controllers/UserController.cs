@@ -28,10 +28,9 @@ namespace TripManager2._0.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Welcome(TableUserViewModel user)
+        public IActionResult Welcome()
         {
-            user.per = PermisoTipo.admin;
-            return View(user);
+            return View();
         }
 
         [HttpGet]
@@ -43,8 +42,8 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public IActionResult Create(ViajeViewModel travel)
         {
-
-            return null;
+            //Teno proccess the data
+            return View("Welcome");
         }
 
         public IActionResult Print(TableUserViewModel text)

@@ -10,7 +10,7 @@
         <form method="post">
             <div>
                 <h1>Datos del Viaje</h1>
-                <div class="form-group">
+                @*<div class="form-group">
                     <label asp-for="start"></label>
                     <input asp-for="start" class="form-control col-md-4 col-md-offset-3" />
                     <span asp-validation-for="start" class="text-danger"></span>
@@ -19,7 +19,7 @@
                     <label asp-for="end"></label>
                     <input asp-for="end" class="form-control col-md-4 col-md-offset-3" />
                     <span asp-validation-for="end" class="text-danger"></span>
-                </div>
+                </div>*@
                 <div>
                     <label for="pais">Proximo pais:</label>
                     <input list="countries" id="pais" type="text" size=10 class="form-control col-md-4 col-md-offset-3" autocomplete="off" placeholder="Selecciona un pais">
@@ -41,59 +41,3 @@
         </form>
     </CENTER>
 </body>
-
-<script type="text/javascript">
-    function add(pais) {
-        if(validate()){
-            var destiny = document.getElementById("all");
-            var txt = document.createElement("input");
-            txt.value = pais;
-            txt.readOnly = "readonly";
-            txt.style = "border: 0;";
-            var i = destiny.getElementsByTagName("input").length;
-            txt.name = "paises[" + i + "]";
-            var but = document.createElement("button");
-            var sp = document.createElement("span");
-            sp.innerHTML = "Remove";
-            but.className = "button";
-            but.appendChild(sp);
-            but.type = "button";
-            but.addEventListener("click", function () {
-                this.parentNode.parentNode.removeChild(this.parentNode);
-            });
-            var obj = document.createElement("li");
-            obj.appendChild(txt);
-            obj.appendChild(but);
-            console.log(obj);
-            destiny.appendChild(obj);
-        }
-    }
-
-    function validate() {
-        var input = document.getElementById("pais");
-        console.log("entrando");
-        var optionFound = false;
-        var datalist = input.list;
-        // Determine whether an option exists with the current value of the input.
-        for (var j = 0; j < datalist.options.length; j++) {
-            if (input.value == datalist.options[j].value) {
-                optionFound = true;
-                break;
-            }
-        }
-        // use the setCustomValidity function of the Validation API
-        // to provide an user feedback if the value does not exist in the datalist
-        input.value = '';
-        if (optionFound) {
-            input.placeholder = 'Selecciona un pais';
-            return true;
-        } else {
-            input.placeholder = 'Selecciona un pais valido';
-            return false;
-        }
-    }
-    
-
-
-
-</script>
