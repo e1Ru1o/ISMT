@@ -1,3 +1,26 @@
 ﻿@model IEnumerable<TripViewModel>
 
-
+<body>
+    <CENTER>
+        <h1>Viajes actuales</h1>
+        <table>
+            <tr>
+                <th>
+                    Fecha de viaje
+                </th>
+                <th>
+                    Estado
+                </th>
+            </tr>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    @item.Identifier
+                </tr>
+                <tr>
+                    @item.Status
+                </tr>
+            }
+        </table>
+    </CENTER>
+</body>
