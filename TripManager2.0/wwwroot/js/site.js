@@ -49,7 +49,6 @@ function add(pais) {
 
         var obj = make_a_new_container(pais, idx)
 
-        console.log(obj);
         destiny.appendChild(obj);
     }
 }
@@ -78,7 +77,7 @@ function make_a_new_container(pais, idx) {
                 city.name = "City[" + idx + "]";
                 city.dataset = "data-val='true'; data-val-required='The city field is required.';";
             }
-            fc.appendChild(city);
+            fc.appendChild(City);
             var s = document.createElement("label"); {
                 s.htmlFor = "Start[" + idx + "]";
                 s.innerHTML = "Fecha de partida:";
@@ -95,7 +94,7 @@ function make_a_new_container(pais, idx) {
             fc.appendChild(sdate);
             /*var sp = document.createElement("span"); {
                 sp.className = "text-danger field-validation-valid";
-                sp.dataset = "data-valmsg-for='start'; data-valmsg-replace='true';";
+                sp.dataset = "data-valmsg-for='Start'; data-valmsg-replace='true';";
             }
             fc.appendChild(sp);*/
             var e = document.createElement("label"); {
@@ -123,7 +122,7 @@ function make_a_new_container(pais, idx) {
                 mot.id = "Motivo[" + idx + "]";
                 mot.name = "Motivo[" + idx + "]";
             }
-            fc.appendChild(mot);
+            fc.appendChild(Motivo);
             var but = document.createElement("button"); {
                 but.className = "button";
                 but.type = "button";
@@ -141,12 +140,11 @@ function make_a_new_container(pais, idx) {
     }
     return li;
 }
-//<input class="form-control col-md-3 col-md-offset-10" type="datetime-local" id="start[0]" name="start[0]">
-//<input class="form-control col-md-4 col-md-offset-3" type="datetime-local" data-val="true" data-val-required="The start field is required." id="start" name="start" value="2019-05-18T18:19:31.180">
-//<span class="text-danger field-validation-valid" data-valmsg-for="start" data-valmsg-replace="true"></span>
+
+
 function validate() {
     var input = document.getElementById("pais");
-    console.log("entrando");
+    
     var optionFound = false;
     var datalist = input.list;
     for (var j = 0; j < datalist.options.length; j++) {
