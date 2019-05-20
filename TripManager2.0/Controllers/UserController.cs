@@ -40,6 +40,7 @@ namespace TripManager2._0.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public IActionResult Welcome()
         {
             return View();

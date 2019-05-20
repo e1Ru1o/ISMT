@@ -55,6 +55,7 @@ function add(pais) {
 
 function make_a_new_container(pais, idx) {
     var li = document.createElement("li"); {
+        console.log('to nice');
         var p = document.createElement("input"); {
             p.value = pais;
             p.readOnly = "readonly";
@@ -77,7 +78,7 @@ function make_a_new_container(pais, idx) {
                 city.name = "City[" + idx + "]";
                 city.dataset = "data-val='true'; data-val-required='The city field is required.';";
             }
-            fc.appendChild(City);
+            fc.appendChild(city);
             var s = document.createElement("label"); {
                 s.htmlFor = "Start[" + idx + "]";
                 s.innerHTML = "Fecha de partida:";
@@ -122,7 +123,7 @@ function make_a_new_container(pais, idx) {
                 mot.id = "Motivo[" + idx + "]";
                 mot.name = "Motivo[" + idx + "]";
             }
-            fc.appendChild(Motivo);
+            fc.appendChild(mot);
             var but = document.createElement("button"); {
                 but.className = "button";
                 but.type = "button";
