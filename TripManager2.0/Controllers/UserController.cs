@@ -14,6 +14,8 @@ using System.Linq;
 using ServiceLayer.AccountServices;
 using BizLogic.Authentication;
 using System.Threading.Tasks;
+using BizLogic.Workflow;
+using ServiceLayer.WorkFlowServices;
 
 namespace TripManager2._0.Controllers
 {
@@ -49,9 +51,23 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(ViajeViewModel travel)
+        public async Task<IActionResult> Create(ViajeViewModel vm)
         {
-            //Teno proccess the data
+            var services = new WorkflowServices(_context, _userManager, _getterUtils);
+
+            var iterCmd = new ItinerarioCommand()
+            {
+                UsuarioID = _userManager.GetUserId(User)
+            };
+
+            var iterID =  await services.RegisterItinerarioAsync(iterCmd);
+
+            for (int i = 0; i < vm.Country.Count(); i++)
+            {
+                var viajeCmd = new ViajeCommand(iterID, iterCmd.UsuarioID, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
+                await services.RegisterViajeAsync(viajeCmd);
+            }
+
             return View("Welcome");
         }
 
