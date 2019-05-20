@@ -2,33 +2,39 @@
 @using BizLogic.Shared
 @model IEnumerable<Region>
 
-<form method="post">
-    <h1>Region</h1>
-    <table border="0">
-        <tr>
-
-            <th>
-                Nombre
-            </th>
-
-            <th>
-            </th>
-        </tr>
-        @foreach (var item in Model)
-        {
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Pais";
+}
+<div class="main">
+    <form method="post">
+        <h1>Region</h1>
+        <table border="0">
             <tr>
-                @Html.Partial("Region", item)
-                <td>
-                    <button type="submit" name="id" class="button" value=@item.RegionID> Eliminar</button>
-                </td>
-            </tr>
 
-        }
-        <tr>
-            <td>
-                @Html.ActionLink("Agregar", "AddRegion", "User", new NameOnlyViewModel())
-            </td>
-            <td></td>
-        </tr>
-    </table>
-</form>
+                <th>
+                    Nombre
+                </th>
+
+                <th>
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @Html.Partial("Region", item)
+                    <td>
+                        <button type="submit" name="id" class="button" value=@item.RegionID> Eliminar</button>
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td>
+                    @Html.ActionLink("Agregar", "AddRegion", "User", new NameOnlyViewModel())
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+</div>

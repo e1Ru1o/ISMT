@@ -17,6 +17,7 @@ using BizLogic.Authentication;
 using System.Threading.Tasks;
 using BizLogic.Workflow;
 using ServiceLayer.WorkFlowServices;
+using System.Security.Claims;
 
 namespace TripManager2._0.Controllers
 {
@@ -112,6 +113,7 @@ namespace TripManager2._0.Controllers
             service.RemoveCiudad(ciudad);
             return View(getter.GetAll("Ciudad"));
         }
+        [HttpPost]
         public IActionResult AddCiudad(CiudadCommand cmd)
         {
 
@@ -123,6 +125,11 @@ namespace TripManager2._0.Controllers
             }
             cmd.Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre);
             return View(cmd);
+        }
+        [HttpGet]
+        public IActionResult AddCiudad()
+        {
+            return View(new CiudadCommand { Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre)});
         }
 
         [HttpGet]
@@ -140,6 +147,8 @@ namespace TripManager2._0.Controllers
             service.RemovePais(pais);
             return View(getter.GetAll("Pais"));
         }
+
+        [HttpPost]
         public IActionResult AddPais(PaisCommand cmd)
         {
 
@@ -152,6 +161,13 @@ namespace TripManager2._0.Controllers
 
             var getter = new GetterAll(_getterUtils, _context);
             cmd.Regiones=(getter.GetAll("Region") as IEnumerable<Region>).Select(x=>x.Nombre);
+            return View(cmd);
+        }
+        [HttpGet]
+        public IActionResult AddPais()
+        {
+            var cmd = new PaisCommand();
+            cmd.Regiones = (new GetterAll(_getterUtils, _context).GetAll("Region") as IEnumerable<Region>).Select(x => x.Nombre);
             return View(cmd);
         }
         [HttpGet]
@@ -169,6 +185,8 @@ namespace TripManager2._0.Controllers
             service.RemoveInstitucion(ins);
             return View(getter.GetAll("Institucion"));
         }
+
+        [HttpPost]
         public IActionResult AddInstitucion(NameOnlyViewModel cmd)
         {
 
@@ -180,6 +198,11 @@ namespace TripManager2._0.Controllers
             }
 
             return View(cmd);
+        }
+        [HttpGet]
+        public IActionResult AddInstitucion()
+        {
+            return View(new NameOnlyViewModel());
         }
         [HttpGet]
         public IActionResult EditRegion()
@@ -196,6 +219,7 @@ namespace TripManager2._0.Controllers
             service.RemoveRegion(ins);
             return View(getter.GetAll("Region"));
         }
+        [HttpPost]
         public IActionResult AddRegion(NameOnlyViewModel cmd)
         {
 
@@ -208,16 +232,22 @@ namespace TripManager2._0.Controllers
 
             return View(cmd);
         }
+        [HttpGet]
+        public IActionResult AddRegion()
+        {
+            return View(new NameOnlyViewModel());
+        }
 
         public IActionResult EditUsuario()
         {
+            ViewBag["test"] = _userManager;
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             return View(getter.GetAll("Usuario"));
         }
 
         public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)
         {
-
+           
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             GetterAll getter1 = new GetterAll(_getterUtils, _context);
             if (ModelState.IsValid)
@@ -230,6 +260,44 @@ namespace TripManager2._0.Controllers
                 return RedirectToAction("EditUsuario", "User");
             }
             return View(cmd);
+        }
+        [HttpGet]
+        public async Task<IActionResult> PendingUsers()
+        {
+            GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
+            List<Usuario> pending = new List<Usuario>();
+            foreach (var item in getter.GetAll("Usuario"))
+            {
+                if ((await _userManager.GetClaimsAsync(item as Usuario)).Any(c => c.Type == "Pending" && c.Value == "true"))
+                    pending.Add(item as Usuario);
+            }
+
+            PendingUsersViewModel vm = new PendingUsersViewModel()
+            {
+                Usuarios = pending,
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PendingUsers(PendingUsersViewModel vm)
+        {
+        
+            var user = await _userManager.FindByIdAsync(vm.userID);
+            await _userManager.RemoveClaimAsync(user, new Claim("Pending", "true"));
+            await _userManager.AddClaimAsync(user, new Claim("Pending", "false"));
+            await _userManager.AddClaimAsync(user, new Claim("Permission", "inversionista"));
+            _context.Commit();
+
+            GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
+            List<Usuario> pending = new List<Usuario>();
+            foreach (var item in getter.GetAll("Usuario"))
+            {
+                if ((await _userManager.GetClaimsAsync(item as Usuario)).Any(c => c.Type == "Pending" && c.Value == "true"))
+                    pending.Add(item as Usuario);
+            }
+            return RedirectToAction("PendingUsers", "User");
         }
 
     }
