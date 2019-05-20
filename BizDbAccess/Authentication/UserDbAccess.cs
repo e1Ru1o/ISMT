@@ -61,6 +61,7 @@ namespace BizDbAccess.Authentication
             user.SecondName = entity.SecondName ?? user.SecondName;
             user.FirstLastName = entity.FirstLastName ?? user.FirstLastName;
             user.SecondLastName = entity.SecondLastName ?? user.SecondLastName;
+            user.HasPassport |= entity.HasPassport;
 
             await _userManager.UpdateAsync(user);
             return user;

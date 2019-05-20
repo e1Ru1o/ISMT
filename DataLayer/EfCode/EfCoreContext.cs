@@ -17,12 +17,40 @@ namespace DataLayer.EfCode
 
         public DbSet<Viaje> Viajes { get; set; }
         public DbSet<Institucion> Instituciones { get; set; }
+        public DbSet<Itinerario> Itinerarios { get; set; }
         public DbSet<Ciudad> Ciudades { get; set; }
+        public DbSet<Region> Regiones { get; set; }
+        public DbSet<Region_Visa> Regiones_Visa { get; set; }
         public DbSet<Pais> Paises { get; set; }
-        public DbSet<Pasaporte> Pasaportes { get; set; }
-        public DbSet<Responsabilidad> Responsabilidades { get; set; }
-        public DbSet<EstadoViaje> EstadosViaje { get; set; }
-        public DbSet<Workflow> Workflow { get; set; }
+        public DbSet<Pais_Visa> Paises_Visas { get; set; }
+        public DbSet<Visa> Visas { get; set; }
+        public DbSet<Historial> Historial { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Pais_Visa>()
+                .HasOne(pv => pv.Pais)
+                .WithMany(p => p.Visas)
+                .IsRequired();
+                //.IsRequired(false)
+                //.OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Pais_Visa>()
+                .HasOne(pv => pv.Visa)
+                .WithMany(v => v.Paises)
+                .IsRequired();
+                //.IsRequired(false)
+                //.OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Itinerario>()
+                .HasOne(v => v.Usuario)
+                .WithMany(u => u.Itinerarios)
+                .IsRequired();    
+            
+            //TODO: Config the new entities if is needed.
+        }
 
         public int Commit()
         {

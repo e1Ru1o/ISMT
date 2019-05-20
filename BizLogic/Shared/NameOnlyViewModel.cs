@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace BizData.Entities
+namespace BizLogic.Shared
 {
-    public class EstadoViaje
+    public class NameOnlyViewModel
     {
-        public int EstadoViajeID { get; set; }
+        [Required]
         public string Nombre { get; set; }
     }
 }

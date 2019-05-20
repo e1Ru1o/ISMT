@@ -34,12 +34,17 @@ namespace BizDbAccess.Repositories
             if (toUpd == null)
                 throw new Exception("Institucion to be updated no exist");
 
-            toUpd.Nombre = entity.Nombre;
+            toUpd.Nombre = entity.Nombre ?? toUpd.Nombre;
 
             _context.Instituciones.Update(toUpd);
             return toUpd;
         }
 
+        /// <summary>
+        /// Get a Institution given its name.
+        /// </summary>
+        /// <param name="nombre">The name of the desired Institution</param>
+        /// <returns>The Institution if its the only object with that identifiers, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
         public Institucion GetInstitucion(string nombre)
         {
             return _context.Instituciones.Where(i => i.Nombre == nombre).SingleOrDefault();

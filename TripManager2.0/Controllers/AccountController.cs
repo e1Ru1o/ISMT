@@ -21,6 +21,7 @@ using TripManager2._0.ViewModels;
 
 namespace TripManager2._0.Controllers
 {
+    //Example for how to use policy:    [Authorize("VisaManager")]
     [Authorize]
     [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public class AccountController : Controller
@@ -108,12 +109,10 @@ namespace TripManager2._0.Controllers
                 {
                     var claim = new Claim("Permission", "Normal");
                     await _userManager.AddClaimAsync(user, claim);
+                    await _userManager.AddClaimAsync(user, new Claim("Pending", "true"));
+                    await _userManager.AddClaimAsync(user, new Claim("Cargo", "comun"));
 
                     await _signInManager.SignInAsync(user, false);
-
-                    var uvm = new UserViewModel();
-                    uvm.SetProperties(cmd);
-                    uvm.SetPermissions(_userManager.GetClaimsAsync(user).Result);
 
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
@@ -121,7 +120,7 @@ namespace TripManager2._0.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Welcome", "User", uvm);
+                        return RedirectToAction("Pending", "Home");
                     }
                 }
                 AddErrors(result);
@@ -153,19 +152,7 @@ namespace TripManager2._0.Controllers
 
                 if (result.Succeeded)
                 {
-                    var user = _userManager.Users.Where(u => u.Email == lvm.Email).Single();
-                    var uvm = new UserViewModel();
-                    uvm.SetViewModel(user);
-                    uvm.SetPermissions(_userManager.GetClaimsAsync(user).Result);
-
-                    if (Request.Query.Keys.Contains("ReturnUrl"))
-                    {
-                        return Redirect(Request.Query["ReturnUrl"].First());
-                    }
-                    else
-                    {
-                        return RedirectToAction("Welcome", "User", uvm);
-                    }
+                    return RedirectToAction("LoginHelper", "Home");
                 }
             }
 
