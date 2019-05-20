@@ -15,12 +15,15 @@ namespace BizDbAccess.Utils
         {
             ReposNames = new Dictionary<string, string>
             {
-                { "Material", "MaterialDbAccess" },
-                { "Usuario", "UserDbAccess" },
-                { "UnidadOrganizativa", "UnidadOrganizativaDbAccess" },
-                { "Provincia", "ProvinciaDbAccess"},
-                { "Plan", "PlanDbAccess" },
-                { "Pasaporte", "PasaporteDbAccess" }
+                { "Ciudad", "CiudadDbAccess" },
+                { "Institucion", "InstitucionDbAccess" },
+                { "Itinerario", "ItinerarioDbAccess" },
+                { "Pais_Visa", "Pais_VisaDbAccess" },
+                { "Pais", "PaisDbAccess"},
+                { "Region", "RegionDbAccess" },
+                { "Viaje", "ViajeDbAccess" },
+                { "Visa", "VisaDbAccess" },
+                { "Usuario", "UserDbAccess" }
             };
 
             targetAssembly = new AssemblyName("BizData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");

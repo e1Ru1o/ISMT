@@ -21,6 +21,8 @@ using TripManager2._0.ViewModels;
 
 namespace TripManager2._0.Controllers
 {
+    [Authorize]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public class AccountController : Controller
     {
         private readonly IUnitOfWork _context;
@@ -46,16 +48,44 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.GetUserAsync(User);
             var cmd = new RegisterUsuarioCommand();
             cmd.SetViewModel(user);
-             /*      and pass to the _loginService.EditUser(...) a RegisterUsuarioCommand
-             *      builded from this result.Result user
-             *      
-             * 2-> Make Edit parameterless and in the post method take the current user
-             *     by : var principal = await _userManager.GetUserAsync(User);
-             *     and pass to the _loginService.EditUser(...) a RegisterUsuarioCommand
-             *     builded from this principal user, i think that this is a better way ;)
-            */
             return View(cmd);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(RegisterUsuarioCommand cmd)
+        {
+            if (ModelState.IsValid)
+            {
+                var log = new LoginService(_context, _signInManager, _userManager);
+                var userToUpd = await _userManager.GetUserAsync(User);
+                var user = cmd.ToUsuario();
+
+                user = await log.EditUserAsync(user, userToUpd);
+                await _signInManager.RefreshSignInAsync(user);
+                
+                var uvm = new UserViewModel();
+                uvm.SetProperties(cmd);
+                uvm.Email = User.Identity.Name;
+                uvm.SetPermissions(User.Claims);
+
+                if (Request.Query.Keys.Contains("ReturnUrl"))
+                {
+                    return Redirect(Request.Query["ReturnUrl"].First());
+                }
+                else
+                {
+                    return RedirectToAction("Welcome", "User", uvm);
+                }
+                
+            }
+
+            ModelState.AddModelError(string.Empty, "An error occured trying to register the user");
+
+            //If we got to here, something went wrong
+            return View(cmd);
+        }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -123,19 +153,8 @@ namespace TripManager2._0.Controllers
 
                 if (result.Succeeded)
                 {
-                    var user = _userManager.Users.Where(u => u.Email == lvm.Email).Single();
-                    var uvm = new UserViewModel();
-                    uvm.SetViewModel(user);
-                    uvm.SetPermissions(_userManager.GetClaimsAsync(user).Result);
-
-                    if (Request.Query.Keys.Contains("ReturnUrl"))
-                    {
-                        return Redirect(Request.Query["ReturnUrl"].First());
-                    }
-                    else
-                    {
-                        return RedirectToAction("Welcome", "User", uvm);
-                    }
+                    var e = User;
+                    return RedirectToAction("LoginHelper", "Home");
                 }
             }
 
@@ -145,7 +164,7 @@ namespace TripManager2._0.Controllers
             return View(lvm);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

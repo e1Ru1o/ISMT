@@ -4,6 +4,7 @@ using DataLayer.EfCode;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BizDbAccess.Repositories
 {
@@ -18,23 +19,52 @@ namespace BizDbAccess.Repositories
 
         public void Add(Viaje entity)
         {
-            throw new NotImplementedException();
+            _context.Viajes.Add(entity);
         }
 
         public void Delete(Viaje entity)
         {
-            throw new NotImplementedException();
+            _context.Viajes.Remove(entity);
         }
 
-        public IEnumerable<Viaje> GetAll()
+        public IEnumerable<Viaje> GetAll() => _context.Viajes;
+
+        public Viaje Update(Viaje entity, Viaje toUpd)
         {
-            return _context.Viajes;
+            if (toUpd == null)
+                throw new Exception("Viaje to be updated no exist");
+
+            toUpd.FechaFin = entity.FechaFin ?? toUpd.FechaFin;
+            toUpd.FechaInicio = entity.FechaInicio ?? toUpd.FechaFin;
+            toUpd.MotivoViaje = entity.MotivoViaje ?? toUpd.MotivoViaje;
+            toUpd.Pais = entity.Pais ?? toUpd.Pais;
+            toUpd.Usuario = entity.Usuario ?? toUpd.Usuario;
+            toUpd.Ciudad = entity.Ciudad ?? toUpd.Ciudad;
+    
+            _context.Viajes.Update(toUpd);
+            return toUpd;
         }
 
-        public void Update(Viaje entity)
+        /// <summary>
+        /// Get a Viaje given a user and a date representing a schedule.
+        /// </summary>
+        /// <param name="usuario">The user who has the trip in his behalf.</param>
+        /// <param name="fechaInicio">The date of departure.</param>
+        /// <param name="fechaFin">The date of arrival to the start point.</param>
+        /// <returns>The Viaje if its the only object with that identifiers, otherwise throws a InvalidOperationException. Null if no exist such object</returns>
+        public Viaje GetViaje(Usuario usuario, DateTime fechaInicio, DateTime fechaFin)
         {
-            throw new NotImplementedException();
+            return _context.Viajes.Where(v => v.Usuario == usuario &&
+                                              v.FechaFin == fechaFin &&
+                                              v.FechaInicio == fechaInicio)
+                                              .SingleOrDefault();
         }
+
+        public Viaje GetViaje(long id)
+        {            
+            return _context.Viajes.Find(id); 
+        }
+
     }
 
 }

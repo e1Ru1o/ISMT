@@ -9,8 +9,9 @@ namespace BizData.Entities
         public string SecondName { get; set; }
         public string FirstLastName { get; set; }
         public string SecondLastName { get; set; }
+        public bool HasPassport { get; set; }
 
-        public virtual ICollection<Pasaporte> Pasaportes { get; set; }
-        public virtual ICollection<Viaje> Viajes { get; set; }
+        public virtual ICollection<Itinerario> Itinerarios { get; set; }
+        public virtual ICollection<Visa> Visas { get; set; }
     }
 }
