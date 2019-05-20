@@ -13,6 +13,7 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ServiceLayer.AdminServices
 {
@@ -24,9 +25,9 @@ namespace ServiceLayer.AdminServices
 
         private readonly RunnerWriteDb<CiudadCommand, Ciudad> _runnerCiudad;
         private readonly RunnerWriteDb<NameOnlyViewModel, Institucion> _runnerInstitucion;
-        private readonly RunnerWriteDb<NameOnlyViewModel, Pais> _runnerPais;
+        private readonly RunnerWriteDb<PaisCommand, Pais> _runnerPais;
         private readonly RunnerWriteDb<VisaCommand, Visa> _runnerVisa;
-        private readonly RunnerWriteDb<NameOnlyViewModel, Region> _runnerWriteDb;
+        private readonly RunnerWriteDb<NameOnlyViewModel, Region> _runnerRegion;
 
         private readonly PaisDbAccess _paisDbAccess;
         private readonly CiudadDbAccess _ciudadDbAccess;
@@ -45,16 +46,19 @@ namespace ServiceLayer.AdminServices
                 new RegisterCiudadAction(new CiudadDbAccess(_context)), _context);
             _runnerInstitucion = new RunnerWriteDb<NameOnlyViewModel, Institucion>(
                 new RegisterInstitucionAction(new InstitucionDbAccess(_context)), _context);
-            _runnerPais = new RunnerWriteDb<NameOnlyViewModel, Pais>(
+            _runnerPais = new RunnerWriteDb<PaisCommand, Pais>(
                 new RegisterPaisAction(new PaisDbAccess(_context)), _context);
             _runnerVisa = new RunnerWriteDb<VisaCommand, Visa>(
                 new RegisterVisaAction(new VisaDbAccess(_context)), _context);
+            _runnerRegion = new RunnerWriteDb<NameOnlyViewModel, Region>(
+                new RegisterRegionAction(new RegionDbAccess(_context)), _context);
 
             _paisDbAccess = new PaisDbAccess(_context);
             _ciudadDbAccess = new CiudadDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _pais_VisaDbAccess = new Pais_VisaDbAccess(_context);
             _visaDbAccess = new VisaDbAccess(_context);
+            _regionDbAccess = new RegionDbAccess(_context);
         }
 
         public long RegisterCiudad(CiudadCommand cmd, out IImmutableList<ValidationResult> errors)
@@ -113,9 +117,11 @@ namespace ServiceLayer.AdminServices
             _context.Commit();
         }
 
-        public long RegisterPais(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
+        public long RegisterPais(PaisCommand cmd, out IImmutableList<ValidationResult> errors)
         {
-            var pais = _runnerPais.RunAction(vm);
+            cmd.Region = _regionDbAccess.GetRegion(cmd.RegionName);
+
+            var pais = _runnerPais.RunAction(cmd);
 
             if (_runnerPais.HasErrors)
             {
@@ -163,8 +169,28 @@ namespace ServiceLayer.AdminServices
                     };
         }
 
+        public IEnumerable<Region_Visa> BuildListOfRegion_Visa(IEnumerable<Region> regiones, IEnumerable<Visa> visas)
+        {
+            foreach (var v in visas)
+                foreach (var r in regiones)
+                    yield return new Region_Visa()
+                    {
+                        Region = r,
+                        Visa = v
+                    };
+        }
+
         public long RegisterVisa(VisaCommand cmd, out IImmutableList<ValidationResult> errors)
         {
+            cmd.Regiones = _regionDbAccess.GetAll().Zip(cmd.regionesName, (Region r, string s) =>
+            {
+                return r.Nombre == s ? r : null;
+            })
+            .Where(r => r != null)
+            .ToList();
+
+            cmd.RegionesVisas = BuildListOfRegion_Visa(cmd.Regiones, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+
             cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
             {
                 return p.Nombre == s ? p : null;
@@ -201,7 +227,7 @@ namespace ServiceLayer.AdminServices
 
         public long RegisterRegion(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)
         {
-            var region = _runnerPais.RunAction(vm);
+            var region = _runnerRegion.RunAction(vm);
 
             if (_runnerPais.HasErrors)
             {
@@ -210,7 +236,7 @@ namespace ServiceLayer.AdminServices
             }
 
             errors = null;
-            return region.PaisID;
+            return region.RegionID;
         }
 
         public Region UpdateRegion(Region entity, Region toUpd)
@@ -224,6 +250,27 @@ namespace ServiceLayer.AdminServices
         {
             _regionDbAccess.Delete(entity);
             _context.Commit();
+        }
+
+        public async Task<(List<string> UserPendings, bool Paises, bool Regiones)> FillNotificationsAsync()
+        {
+            //check for pending users
+            List<string> UserPendings = new List<string>();
+            foreach (var user in _userManager.Users)
+            {
+                if ((await _userManager.GetClaimsAsync(user)).Any(c => c.Type == "Pending" && c.Value == "true"))
+                    UserPendings.Add(user.Email);
+            }
+
+            GetterAll getter = new GetterAll(_getterUtils, _context);
+
+            //check for empty provincias
+            bool Paises = getter.GetAll("Pais").Any();
+
+            //check for empty UOs
+            bool Regiones = getter.GetAll("Region").Any();
+
+            return (UserPendings, Paises, Regiones);
         }
     }
 }

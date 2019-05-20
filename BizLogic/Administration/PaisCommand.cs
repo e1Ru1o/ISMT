@@ -9,11 +9,6 @@ namespace BizLogic.Administration
     {
         public Region Region { get; set; }
 
-        public PaisCommand(Region region)
-        {
-            Region = region;
-        }
-
         public Pais ToPais()
         {
             return new Pais

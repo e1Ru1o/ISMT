@@ -9,11 +9,15 @@ namespace BizLogic.Administration
     public class VisaCommand : VisaViewModel
     {
         public IEnumerable<Pais> Paises { get; set; }
-        public IEnumerable<Pais_Visa> PaisesVisas { get; set; }
+        public IEnumerable<Region> Regiones { get; set; }
 
-        public VisaCommand(IEnumerable<Pais> paises)
+        public IEnumerable<Pais_Visa> PaisesVisas { get; set; }
+        public IEnumerable<Region_Visa> RegionesVisas { get; set; }
+
+        public VisaCommand(IEnumerable<Pais> paises, IEnumerable<Region> regiones)
         {
             Paises = paises;
+            Regiones = regiones;
         }
 
         public Visa ToVisa()
@@ -21,7 +25,8 @@ namespace BizLogic.Administration
             return new Visa()
             {
                 Name = Nombre,
-                Paises = new List<Pais_Visa>(PaisesVisas)
+                Paises = new List<Pais_Visa>(PaisesVisas),
+                Regiones = new List<Region_Visa>(RegionesVisas)
             };
         }
 
@@ -41,6 +46,17 @@ namespace BizLogic.Administration
                 if (!paises_visas.Where(pv => pv.Nombre == p.Nombre).Any())
                     yield return p;
             }
+        }
+
+        /// <summary>
+        /// Gets all the countries that belongs to the Region with name regionName.
+        /// </summary>
+        /// <param name="regionName">Name of region selected.</param>
+        /// <param name="regiones">All the Region objects in the database.</param>
+        /// <returns></returns>
+        public IEnumerable<Pais> GetPaisesFromRegion(string regionName, IEnumerable<Region> regiones)
+        {
+            return regiones.Where(r => r.Nombre == regionName).Select(r => r.Paises).Single();
         }
     }
 }

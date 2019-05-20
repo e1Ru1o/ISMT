@@ -1,7 +1,8 @@
-﻿using BizData.Entities;
+using BizData.Entities;
 using BizDbAccess.GenericInterfaces;
 using DataLayer.EfCode;
 using System;
+
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
@@ -24,17 +25,28 @@ namespace BizDbAccess.Repositories
 
         public void Delete(Historial entity)
         {
-
+            _context.Historial.Remove(entity);
         }
 
-        public IEnumerable<Historial> GetAll()
-        {
-            return _context.Historial.OrderBy(item => item.Fecha);
-        }
+        public IEnumerable<Historial> GetAll() =>  _context.Historial.OrderBy(item => item.Fecha);
 
         public Historial Update(Historial entity, Historial toUpd)
         {
-            return null;
+            if (toUpd == null)
+                throw new Exception("Historial to be updated no exist");
+
+            toUpd.EstadoViaje = entity.EstadoViaje ?? toUpd.EstadoViaje;
+            toUpd.Viaje = entity.Viaje ?? toUpd.Viaje;
+
+            _context.Historial.Update(toUpd);
+            return toUpd;
+        }
+
+        public Historial GetHistorial(string estadoViaje, Itinerario viaje)
+        {
+            return _context.Historial.Where(h => h.EstadoViaje == estadoViaje &&
+                                                 h.Viaje.Usuario.Id == viaje.Usuario.Id)
+                                                 .SingleOrDefault();
         }
     }
 }

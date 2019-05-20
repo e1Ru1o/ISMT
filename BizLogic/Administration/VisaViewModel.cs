@@ -15,5 +15,8 @@ namespace BizLogic.Administration
         //Nombre is edited. Call GetPaisesWithoutVisa from the razor page when you already get the name in case that you don't have it previosly.
         [Required]
         public IEnumerable<string> paisesNames { get; set; }
+
+        [Required]
+        public IEnumerable<string> regionesName { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace BizData.Entities
     public class Viaje
     {
         public int ViajeID { get; set; }
-        public MotivoViaje? MotivoViaje { get; set; }
+        public string MotivoViaje { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         
@@ -20,5 +20,6 @@ namespace BizData.Entities
         public virtual Pais Pais { get; set; }
         public virtual Ciudad Ciudad { get; set; }
         public virtual Institucion Institucion { get; set; }
+        public virtual Itinerario Itinerario { get; set; }
     }
 }
