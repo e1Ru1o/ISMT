@@ -7,6 +7,7 @@ namespace BizData.Entities
     public class Historial
     {
         public int HistorialID { get; set; }
+        public string Comentario { get; set; }
         public Estado Estado { get; set; }
         public DateTime Fecha { get; set; }
 
