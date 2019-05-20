@@ -5,12 +5,31 @@ using System.Text;
 
 namespace BizData.Entities
 {
+    public enum Estado
+    {
+        Creado,
+        PendienteAprobacionJefeArea,
+        AprobadoJefeArea,
+        PendienteAprobacionDecano,
+        AprobadoDecano,
+        PendienteAprobacionRector,
+        AprobadoRector,
+        PendientePasaporte,
+        AprobadoPasaporte,
+        PendienteVisas,
+        AprobadasVisas,
+        PendienteRealizacion,
+        Realizado,
+        Cancelado
+    }
+
     public class Itinerario
     { 
         public string status { get; set; }
         public int ItinerarioID { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
+        public Estado Estado { get; set; }
 
         public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Viaje> Viajes { get; set; }

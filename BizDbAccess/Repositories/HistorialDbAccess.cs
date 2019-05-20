@@ -1,9 +1,10 @@
-﻿using BizData.Entities;
+using BizData.Entities;
 using BizDbAccess.GenericInterfaces;
 using DataLayer.EfCode;
 using System;
-using System.Collections.Generic;
+
 using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 
 namespace BizDbAccess.Repositories
@@ -27,7 +28,7 @@ namespace BizDbAccess.Repositories
             _context.Historial.Remove(entity);
         }
 
-        public IEnumerable<Historial> GetAll() => _context.Historial;
+        public IEnumerable<Historial> GetAll() =>  _context.Historial.OrderBy(item => item.Fecha);
 
         public Historial Update(Historial entity, Historial toUpd)
         {
