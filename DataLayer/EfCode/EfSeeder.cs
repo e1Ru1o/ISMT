@@ -44,6 +44,7 @@ namespace DataLayer.EfCode
 
                 await _userManager.CreateAsync(raul, "T3n!");
                 await _userManager.AddClaimAsync(raul, new Claim("Permission", "Admin"));
+                await _userManager.AddClaimAsync(raul, new Claim("Pending", "false"));
 
                 /*var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/usuarios.json");
                 var json = File.ReadAllText(filepath);

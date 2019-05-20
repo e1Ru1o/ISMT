@@ -119,7 +119,8 @@ namespace ServiceLayer.AdminServices
 
         public long RegisterPais(PaisCommand cmd, out IImmutableList<ValidationResult> errors)
         {
-            cmd.Region = _regionDbAccess.GetRegion(cmd.RegionName);
+            if (cmd.RegionName != null)
+                cmd.Region = _regionDbAccess.GetRegion(cmd.RegionName);
 
             var pais = _runnerPais.RunAction(cmd);
 
