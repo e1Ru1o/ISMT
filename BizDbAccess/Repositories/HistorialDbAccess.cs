@@ -32,20 +32,13 @@ namespace BizDbAccess.Repositories
 
         public Historial Update(Historial entity, Historial toUpd)
         {
-            if (toUpd == null)
-                throw new Exception("Historial to be updated no exist");
-
-            toUpd.EstadoViaje = entity.EstadoViaje ?? toUpd.EstadoViaje;
-            toUpd.Viaje = entity.Viaje ?? toUpd.Viaje;
-
-            _context.Historial.Update(toUpd);
-            return toUpd;
+            throw new NotImplementedException();
         }
 
-        public Historial GetHistorial(string estadoViaje, Itinerario viaje)
+        public Historial GetHistorial(Estado estadoViaje, Itinerario viaje)
         {
-            return _context.Historial.Where(h => h.EstadoViaje == estadoViaje &&
-                                                 h.Viaje.Usuario.Id == viaje.Usuario.Id)
+            return _context.Historial.Where(h => h.Estado == estadoViaje &&
+                                                 h.Itinerario.Usuario.Id == viaje.Usuario.Id)
                                                  .SingleOrDefault();
         }
     }
