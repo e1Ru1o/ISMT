@@ -3,6 +3,7 @@
 @model IEnumerable<Usuario>
 
 @{
+    Layout = "UserLayout";
     ViewData["Title"] = "Usuarios";
 }
 
@@ -22,7 +23,7 @@
             <th>
                 Correo
             </th>
-          
+
             <th>
 
             </th>
@@ -40,7 +41,7 @@
                     @item.UserName
                 </td>
 
-            
+
 
                 <td>
                     @Html.ActionLink("editar", "UpdateUsuario", "User", new RegisterUsuarioCommand
