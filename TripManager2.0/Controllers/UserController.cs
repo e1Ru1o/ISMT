@@ -4,6 +4,7 @@ using BizDbAccess.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using TripManager2._0.ViewModels;
 
 namespace TripManager2._0.Controllers
@@ -36,7 +37,12 @@ namespace TripManager2._0.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View(new ViajeViewModel());
+        	var getter = new GetterAll(_getterUtils, _context);
+        	var data = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
+        	var trip = new ViajeViewModel();
+        	trip.Posibilities = data.ToList();
+            
+            return View(trip);
         }
 
         [HttpPost]

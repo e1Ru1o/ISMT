@@ -60,13 +60,13 @@ function make_a_new_container(pais, idx) {
             p.value = pais;
             p.readOnly = "readonly";
             p.style = "border: 0; font-size: 30px; text-align: center;";
-            p.name = "country[" + idx + "]";
+            p.name = "Country[" + idx + "]";
         }
         li.appendChild(p);
         var fc = document.createElement("div"); {
             fc.class = "form-group";
             var l = document.createElement("label"); {
-                l.htmlFor = "city[" + idx + "]";
+                l.htmlFor = "City[" + idx + "]";
                 l.innerHTML = "Ciudad de destino:";
             }
             fc.appendChild(l);
@@ -74,13 +74,13 @@ function make_a_new_container(pais, idx) {
                 city.className = "form-control col-md-3 col-md-offset-10";
                 city.type = "text";
                 city.required = true;
-                city.id = "city[" + idx + "]";
-                city.name = "city[" + idx + "]";
+                city.id = "City[" + idx + "]";
+                city.name = "City[" + idx + "]";
                 city.dataset = "data-val='true'; data-val-required='The city field is required.';";
             }
             fc.appendChild(city);
             var s = document.createElement("label"); {
-                s.htmlFor = "start[" + idx + "]";
+                s.htmlFor = "Start[" + idx + "]";
                 s.innerHTML = "Fecha de partida:";
             }
             fc.appendChild(s);
@@ -88,8 +88,8 @@ function make_a_new_container(pais, idx) {
                 sdate.className = "form-control col-md-3 col-md-offset-10";
                 sdate.type = "datetime-local";
                 sdate.required = true;
-                sdate.id = "start[" + idx + "]";
-                sdate.name = "start[" + idx + "]";
+                sdate.id = "Start[" + idx + "]";
+                sdate.name = "Start[" + idx + "]";
                 sdate.dataset = "data-val='true'; data-val-required='The start field is required.';";
             }
             fc.appendChild(sdate);
@@ -99,7 +99,7 @@ function make_a_new_container(pais, idx) {
             }
             fc.appendChild(sp);*/
             var e = document.createElement("label"); {
-                e.htmlFor = "end[" + idx + "]";
+                e.htmlFor = "End[" + idx + "]";
                 e.innerHTML = "Fecha de llegada:";
             }
             fc.appendChild(e);
@@ -107,21 +107,21 @@ function make_a_new_container(pais, idx) {
                 edate.className = "form-control col-md-3 col-md-offset-3";
                 edate.type = "datetime-local";
                 edate.required = true;
-                edate.id = "end[" + idx + "]";
-                edate.name = "end[" + idx + "]";
+                edate.id = "End[" + idx + "]";
+                edate.name = "End[" + idx + "]";
                 edate.dataset = "data-val='true'; data-val-required='The start field is required.';";
             }
             fc.appendChild(edate);
             var m = document.createElement("label"); {
-                m.htmlFor = "mot[" + idx + "]";
+                m.htmlFor = "Motivo[" + idx + "]";
                 m.innerHTML = "Motivo(Opcinal):";
             }
             fc.appendChild(m);
             var mot = document.createElement("input"); {
                 mot.className = "form-control col-md-4 col-md-offset-3";
                 mot.type = "text";
-                mot.id = "mot[" + idx + "]";
-                mot.name = "mot[" + idx + "]";
+                mot.id = "Motivo[" + idx + "]";
+                mot.name = "Motivo[" + idx + "]";
             }
             fc.appendChild(mot);
             var but = document.createElement("button"); {

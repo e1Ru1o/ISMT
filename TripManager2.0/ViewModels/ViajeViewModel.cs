@@ -7,19 +7,21 @@ namespace TripManager2._0.ViewModels
 {
     public class ViajeViewModel
     {
-        public List<DateTime> start { get; set; }
-        public List<DateTime> end { get; set; }
-        public List<string> country { get; set;}
-        public List<string> city { get; set; }
-        public List<string> mot { get; set; }
+        public List<DateTime> Start { get; set; }
+        public List<DateTime> End { get; set; }
+        public List<string> Country { get; set;}
+        public List<string> City { get; set; }
+        public List<string> Motivo { get; set; }
+        public List<string> Posibilities { get; set; }
 
         public ViajeViewModel()
         {
-            start = new List<DateTime>();
-            end = new List<DateTime>();
-            city = new List<string>();
-            country = new List<string>();
-            mot = new List<string>();
-    }
+            Start = new List<DateTime>();
+            End = new List<DateTime>();
+            City = new List<string>();
+            Country = new List<string>();
+            Motivo = new List<string>();
+            Posibilities = new List<string>();
+    	}
     }
 }
