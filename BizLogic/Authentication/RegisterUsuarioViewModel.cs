@@ -33,5 +33,7 @@ namespace BizLogic.Authentication
         public string ConfirmPassword { get; set; }
 
         public  string EditEmail { get; set; }
+
+        public string Level { get; set; }
     }
 }

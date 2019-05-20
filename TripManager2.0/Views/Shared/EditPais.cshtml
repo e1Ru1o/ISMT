@@ -2,7 +2,11 @@
 @using BizLogic.Shared
 @model IEnumerable<Pais>
 
-<body>
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Pais";
+}
+<div class="main">
     <h1>Paises</h1>
     <form method="post">
         <table>
@@ -34,7 +38,7 @@
             </tr>
         </table>
     </form>
-</body>
+</div>
 <script>
     document.getElementsByTagName("a").addClass("button")
 
