@@ -77,6 +77,17 @@ namespace TripManager2._0
                     policyBuilder => policyBuilder.AddRequirements(
                         new LevelAuthRequirement(levels, "Permission", 3)
                         ));
+
+                cfg.AddPolicy(
+                    "VisaManager",
+                    policyBuilder => policyBuilder.RequireClaim("Permission", "VisaManager"));
+
+
+                cfg.AddPolicy(
+                    "PasaporteManager",
+                    policyBuilder => policyBuilder.RequireClaim("Permission", "PasaporteManager"));
+
+
             });
 
             services.Configure<CookiePolicyOptions>(options =>

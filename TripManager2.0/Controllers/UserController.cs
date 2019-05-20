@@ -9,11 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.AdminServices;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using TripManager2._0.ViewModels;
 using System.Linq;
 using ServiceLayer.AccountServices;
 using BizLogic.Authentication;
 using System.Threading.Tasks;
+using BizLogic.Workflow;
+using ServiceLayer.WorkFlowServices;
 
 namespace TripManager2._0.Controllers
 {
@@ -37,10 +40,41 @@ namespace TripManager2._0.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Welcome(TableUserViewModel user)
+        public IActionResult Welcome()
         {
-            user.per = PermisoTipo.admin;
-            return View(user);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+        	var getter = new GetterAll(_getterUtils, _context);
+        	var data = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
+        	var trip = new ViajeViewModel();
+        	trip.Posibilities = data.ToList();
+            
+            return View(trip);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(ViajeViewModel vm)
+        {
+            var services = new WorkflowServices(_context, _userManager, _getterUtils);
+
+            var iterCmd = new ItinerarioCommand()
+            {
+                UsuarioID = _userManager.GetUserId(User)
+            };
+
+            var iterID =  await services.RegisterItinerarioAsync(iterCmd);
+
+            for (int i = 0; i < vm.Country.Count(); i++)
+            {
+                var viajeCmd = new ViajeCommand(iterID, iterCmd.UsuarioID, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
+                await services.RegisterViajeAsync(viajeCmd);
+            }
+
+            return View("Welcome");
         }
 
         public IActionResult Print(TableUserViewModel text)

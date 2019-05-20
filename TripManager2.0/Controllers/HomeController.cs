@@ -40,14 +40,27 @@ namespace TripManager2._0.Controllers
             uvm.SetViewModel(user);
             uvm.SetPermissions(await _userManager.GetClaimsAsync(user));
 
-            if (Request.Query.Keys.Contains("ReturnUrl"))
+            if (User.HasClaim("Pending", "false"))
             {
-                return Redirect(Request.Query["ReturnUrl"].First());
+                if (Request.Query.Keys.Contains("ReturnUrl"))
+                {
+                    return Redirect(Request.Query["ReturnUrl"].First());
+                }
+                else
+                {
+                    return RedirectToAction("Welcome", "User", uvm);
+                }
             }
             else
             {
-                return RedirectToAction("Welcome", "User", uvm);
+                return RedirectToAction("Pending", "Home");
             }
+        }
+
+        [HttpGet]
+        public IActionResult Pending()
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

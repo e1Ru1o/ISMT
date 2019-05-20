@@ -18,6 +18,7 @@ namespace BizDbAccess.Utils
                 { "Ciudad", "CiudadDbAccess" },
                 { "Institucion", "InstitucionDbAccess" },
                 { "Itinerario", "ItinerarioDbAccess" },
+                { "Historial", "HistorialDbAccess" },
                 { "Pais_Visa", "Pais_VisaDbAccess" },
                 { "Pais", "PaisDbAccess"},
                 { "Region", "RegionDbAccess" },
