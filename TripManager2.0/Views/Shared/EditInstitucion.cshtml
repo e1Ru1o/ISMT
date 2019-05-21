@@ -1,31 +1,37 @@
 ﻿@using BizData.Entities
 @using BizLogic.Shared
 @model IEnumerable<Institucion>
-<h1>Instituciones</h1>
-<form method="post">
-    <table border="0">
-        <tr>
-            <th>
-                Nombre
-            </th>
-            <th>
-            </th>
-        </tr>
-        @foreach (var item in Model)
-        {
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Institucion";
+}
+<div class="main">
+    <h1>Instituciones</h1>
+    <form method="post">
+        <table border="0">
             <tr>
-                @Html.Partial("Institucion", item)
-                <td>
-                    <button type="submit" name="id" class="button" value=@item.InstitucionID> Eliminar</button>
-                </td>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                </th>
             </tr>
+            @foreach (var item in Model)
+        {
+                <tr>
+                    @Html.Partial("Institucion", item)
+                    <td>
+                        <button type="submit" name="id" class="button" value=@item.InstitucionID> Eliminar</button>
+                    </td>
+                </tr>
 
         }
-        <tr>
-            <td>
-                @Html.ActionLink("Agregar", "AddInstitucion", "User", new NameOnlyViewModel())
-            </td>
-            <td></td>
-        </tr>
-    </table>
-</form>
+            <tr>
+                <td>
+                    @Html.ActionLink("Agregar", "AddInstitucion", "User", new NameOnlyViewModel())
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+</div>

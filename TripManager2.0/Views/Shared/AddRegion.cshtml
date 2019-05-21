@@ -2,17 +2,20 @@
 @model NameOnlyViewModel
 @{
     ViewData["Title"] = "Añadir Region";
+     Layout = "UserLayout";
 }
-<form method="post">
-    <CENTER>
-        <h3>Añadir Region</h3>
-        <div class="col-md-2 col-md-offset-3">
-            <div class="form-group">
-                <label>Nombre</label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+<div class="main">
+    <form method="post">
+        <CENTER>
+            <h3>Añadir Region</h3>
+            <div class="col-md-2 col-md-offset-3">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <button class="button">Agregar</button>
             </div>
-            <button class="button">Agregar</button>
-        </div>
-    </CENTER>
-</form>
+        </CENTER>
+    </form>
+</div>
