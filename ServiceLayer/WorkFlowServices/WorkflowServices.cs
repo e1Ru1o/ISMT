@@ -53,6 +53,7 @@ namespace ServiceLayer.WorkFlowServices
 
        public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
         {
+            var iters = _userDbAccess.GetAllItinerarios();
             cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioID);
 
             var itinerario = _runnerItinerario.RunAction(cmd);

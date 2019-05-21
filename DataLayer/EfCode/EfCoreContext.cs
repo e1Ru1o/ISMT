@@ -41,8 +41,8 @@ namespace DataLayer.EfCode
                 .HasOne(pv => pv.Visa)
                 .WithMany(v => v.Paises)
                 .IsRequired();
-                //.IsRequired(false)
-                //.OnDelete(DeleteBehavior.SetNull);
+            //.IsRequired(false)
+            //.OnDelete(DeleteBehavior.SetNull);
             
             //TODO: Config the new entities if is needed.
         }

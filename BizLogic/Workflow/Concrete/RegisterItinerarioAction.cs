@@ -22,8 +22,8 @@ namespace BizLogic.Workflow.Concrete
             if (dto.Usuario.Itinerarios == null)
                 dto.Usuario.Itinerarios = new List<Itinerario>();
 
-            //if (!HasErrors)
-            //    _dbAccess.Add(itinerario);
+            if (!HasErrors)
+                _dbAccess.Add(itinerario);
 
             dto.Usuario.Itinerarios.Add(itinerario);
 
