@@ -57,12 +57,13 @@ namespace TripManager2._0.Controllers
             
             return View(trip);
         }
-           
-        public async Task<IActionResult> ViewTrips()
+
+        public async Task<IActionResult> ViewTrips(int canceled=-1)
         {
+            //TODO: use `canceled` as the ID of the Itinerary to cancel if value of `canceled != -1`
             var getter = new GetterAll(_getterUtils, _context);
             var data = (await _userManager.GetUserAsync(User)).Itinerarios
-                .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.status));
+                .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.status, x.ItinerarioID));
             return View(data);
         }
 
