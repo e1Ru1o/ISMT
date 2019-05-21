@@ -48,7 +48,7 @@ namespace ServiceLayer.WorkFlowServices
             _ciudadDbAccess = new CiudadDbAccess(_context);
         }
 
-       public async Task<long> RegisterItinerarioAsync(ItinerarioCommand cmd)
+       public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
         {
             cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioID);
 
@@ -73,8 +73,8 @@ namespace ServiceLayer.WorkFlowServices
         public async Task<long> RegisterViajeAsync(ViajeCommand cmd)
         {
             cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioId);
-            cmd.Ciudad = _ciudadDbAccess.GetCiudad(cmd.CiudadName);
-            cmd.Institucion = _institucionDbAccess.GetInstitucion(cmd.InstitucionName);
+            //cmd.Ciudad = _ciudadDbAccess.GetCiudad(cmd.CiudadName);
+            //cmd.Institucion = _institucionDbAccess.GetInstitucion(cmd.InstitucionName);
             cmd.Pais = _paisDbAccess.GetPais(cmd.PaisName);
 
             try

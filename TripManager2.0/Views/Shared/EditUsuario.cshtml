@@ -1,0 +1,62 @@
+﻿@using BizData.Entities
+@using BizLogic.Authentication
+@model IEnumerable<Usuario>
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="main">
+    <h1>Usuarios</h1>
+    <p>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por nombre">
+    </p>
+    <table id="myTable">
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Apellido
+            </th>
+            <th>
+                Correo
+            </th>
+
+            <th>
+
+            </th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.FirstLastName
+                </td>
+                <td>
+                    @item.UserName
+                </td>
+
+
+
+                <td>
+                    @Html.ActionLink("editar", "UpdateUsuario", "User", new RegisterUsuarioCommand
+               {
+                   EditEmail = item.UserName,
+                   Email = item.UserName,
+                   FirstName = item.FirstName,
+                   FirstLastName = item.FirstLastName,
+                   SecondLastName = item.SecondLastName,
+                   SecondName = item.SecondName,
+                   Password = "P9n$",
+                   Level=User.Claims.Where(x=>x.Type=="Permission").Select(x=>x.Value).Single()
+               })
+                </td>
+            </tr>
+        }
+    </table>
+</div>

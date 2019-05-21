@@ -1,15 +1,13 @@
 ﻿@using BizData.Entities
-@model ICollection<Institucion>
+@model IEnumerable<Institucion>
 
 <table border="0">
-
-    <caption><h3>Instituciones</h3></caption>
-    <th>
-        ID
-    </th>
-    <th>
-        Nombre
-    </th>
+    <tr>
+       
+        <th>
+            Nombre
+        </th>
+    </tr>
     @foreach (var item in Model)
     {
         <tr>

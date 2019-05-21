@@ -15,6 +15,11 @@ namespace BizLogic.Administration
             Pais = pais ?? throw new ArgumentNullException(nameof(pais));
         }
 
+        public CiudadCommand()
+        {
+
+        }
+
         public Ciudad ToCiudad()
         {
             return new Ciudad

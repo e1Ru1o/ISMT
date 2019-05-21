@@ -1,15 +1,24 @@
 ﻿@using TripManager2._0.ViewModels
 @model UserViewModel
 
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Usuarios";
+}
+
 <head>
     <title>Signed up</title>
 </head>
 <body>
-    <h1>Congratulations @Model.FirstName @Model.SecondName!!! You are already signed up</h1>
-    <div>Your main email for all transactions is @Model.Email</div>
-    <h2>Your Actions</h2>
-    <section>
-        @Html.Partial(Model.permission + "Actions")
-    </section>
+    <CENTER>
+        <h1>No tienes notificaciones.</h1>
+        <h1>La verdad es q ni lo se ;-)</h1>
+    </CENTER>
+    @*<h2>Your Actions</h2>
+        <section>
+            @Html.Partial(Model.permission + "Actions")
+        </section>*@
 </body>
+
+
 
