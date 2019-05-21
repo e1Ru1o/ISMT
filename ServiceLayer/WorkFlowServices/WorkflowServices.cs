@@ -96,17 +96,17 @@ namespace ServiceLayer.WorkFlowServices
 
         public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
         {
-            return _usuarioDbAccess.GetItinerariosNotFinished(usuario);
+            return _userDbAccess.GetItinerariosNotFinished(usuario);
         }
 
         public IEnumerable<Itinerario> GetItinerarioDone(Usuario usuario)
         {
-            return _usuarioDbAccess.GetItinerariosDone(usuario);
+            return _userDbAccess.GetItinerariosDone(usuario);
         }
 
         public IEnumerable<Itinerario> GetItinerarioCanceled(Usuario usuario)
         {
-            return _usuarioDbAccess.GetItinerariosCanceled(usuario);
+            return _userDbAccess.GetItinerariosCanceled(usuario);
         }
 
         public IEnumerable<Itinerario> GetItinerariosEstado(Estado estado, Usuario user)
