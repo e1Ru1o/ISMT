@@ -240,7 +240,6 @@ namespace TripManager2._0.Controllers
 
         public IActionResult EditUsuario()
         {
-            ViewBag["test"] = _userManager;
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             return View(getter.GetAll("Usuario"));
         }
