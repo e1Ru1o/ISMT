@@ -231,13 +231,14 @@ namespace TripManager2._0.Controllers
 
         public IActionResult EditUsuario()
         {
+            ViewBag["test"] = _userManager;
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             return View(getter.GetAll("Usuario"));
         }
 
         public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)
         {
-
+           
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             GetterAll getter1 = new GetterAll(_getterUtils, _context);
             if (ModelState.IsValid)
@@ -273,6 +274,7 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public async Task<IActionResult> PendingUsers(PendingUsersViewModel vm)
         {
+        
             var user = await _userManager.FindByIdAsync(vm.userID);
             await _userManager.RemoveClaimAsync(user, new Claim("Pending", "true"));
             await _userManager.AddClaimAsync(user, new Claim("Pending", "false"));
