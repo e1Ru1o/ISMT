@@ -55,5 +55,13 @@ namespace BizDbAccess.Repositories
         {
             return _context.Itinerarios.Find(ID);
         }
+
+        public IEnumerable<Itinerario> GetItinerariosEstado(Estado estado, Usuario user)
+        {
+            var itinerarios = from it in _context.Itinerarios
+                              where it.Estado == estado && it.Usuario != user
+                              select it;
+            return itinerarios;
+        }
     }
 }

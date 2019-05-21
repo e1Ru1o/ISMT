@@ -108,5 +108,10 @@ namespace ServiceLayer.WorkFlowServices
         {
             return _usuarioDbAccess.GetItinerariosCanceled(usuario);
         }
+
+        public IEnumerable<Itinerario> GetItinerariosEstado(Estado estado, Usuario user)
+        {
+            return _itinerarioDbAccess.GetItinerariosEstado(estado, user);
+        }
     }
 }
