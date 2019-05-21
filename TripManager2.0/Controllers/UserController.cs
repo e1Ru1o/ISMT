@@ -80,8 +80,8 @@ namespace TripManager2._0.Controllers
 
             for (int i = 0; i < vm.Country.Count(); i++)
             {
-                var viajeCmd = new ViajeCommand(iterID, iterCmd.UsuarioID, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
-                await services.RegisterViajeAsync(viajeCmd);
+                var viajeCmd = new ViajeCommand(iterID, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
+                services.RegisterViajeAsync(viajeCmd);
             }
 
             return View("Welcome");
@@ -240,7 +240,6 @@ namespace TripManager2._0.Controllers
 
         public IActionResult EditUsuario()
         {
-            ViewBag["test"] = _userManager;
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             return View(getter.GetAll("Usuario"));
         }
