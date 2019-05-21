@@ -23,6 +23,11 @@ namespace BizLogic.Workflow.Concrete
             if (!HasErrors)
                 _dbAccess.Add(viaje);
 
+            if (dto.Itinerario.Viajes == null)
+                dto.Itinerario.Viajes = new List<Viaje>();
+
+            dto.Itinerario.Viajes.Add(viaje);
+
             return HasErrors ? null : viaje;
         }
     }

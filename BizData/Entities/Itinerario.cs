@@ -31,6 +31,8 @@ namespace BizData.Entities
         public DateTime? FechaFin { get; set; }
         public Estado Estado { get; set; }
 
+        public string UsuarioID { get; set; }
+        [ForeignKey("UsuarioID")]
         public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Viaje> Viajes { get; set; }
 

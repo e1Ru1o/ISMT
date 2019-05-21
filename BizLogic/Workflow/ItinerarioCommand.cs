@@ -13,7 +13,7 @@ namespace BizLogic.Workflow
         {
             return new Itinerario()
             {
-                Usuario = Usuario
+                UsuarioID = Usuario.Id
             };
         }
     }

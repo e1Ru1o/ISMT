@@ -19,9 +19,10 @@ namespace BizLogic.Workflow
         //public Institucion Institucion { get; set; }
         public Itinerario Itinerario { get; set; }
 
-        public ViajeCommand(int itinerarioID, string paisName, string motivo, DateTime? fechaInicio, DateTime? fechaFin)
+        public ViajeCommand(int itinerarioID, string usuarioID, string paisName, string motivo, DateTime? fechaInicio, DateTime? fechaFin)
         {
             ItinerarioID = itinerarioID;
+            UsuarioId = usuarioID;
             FechaInicio = fechaInicio;
             FechaFin = fechaFin;
             PaisName = paisName;
@@ -34,6 +35,8 @@ namespace BizLogic.Workflow
             {
                 MotivoViaje = Motivo,
                 Pais = Pais,
+                FechaInicio = FechaInicio,
+                FechaFin = FechaFin,
                 //Ciudad = Ciudad
                // Institucion = Institucion
             };

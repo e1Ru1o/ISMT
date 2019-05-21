@@ -41,13 +41,8 @@ namespace DataLayer.EfCode
                 .HasOne(pv => pv.Visa)
                 .WithMany(v => v.Paises)
                 .IsRequired();
-                //.IsRequired(false)
-                //.OnDelete(DeleteBehavior.SetNull);
-
-            builder.Entity<Itinerario>()
-                .HasOne(v => v.Usuario)
-                .WithMany(u => u.Itinerarios)
-                .IsRequired();    
+            //.IsRequired(false)
+            //.OnDelete(DeleteBehavior.SetNull);
             
             //TODO: Config the new entities if is needed.
         }
