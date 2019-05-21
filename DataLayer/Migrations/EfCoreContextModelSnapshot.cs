@@ -42,13 +42,21 @@ namespace DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EstadoViaje");
+                    b.Property<string>("Comentario");
 
-                    b.Property<int?>("ViajeItinerarioID");
+                    b.Property<int>("Estado");
+
+                    b.Property<DateTime>("Fecha");
+
+                    b.Property<int?>("ItinerarioID");
+
+                    b.Property<string>("UsuarioId");
 
                     b.HasKey("HistorialID");
 
-                    b.HasIndex("ViajeItinerarioID");
+                    b.HasIndex("ItinerarioID");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Historial");
                 });
@@ -72,12 +80,16 @@ namespace DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Estado");
+
                     b.Property<DateTime?>("FechaFin");
 
                     b.Property<DateTime?>("FechaInicio");
 
                     b.Property<string>("UsuarioId")
                         .IsRequired();
+
+                    b.Property<string>("status");
 
                     b.HasKey("ItinerarioID");
 
@@ -235,8 +247,6 @@ namespace DataLayer.Migrations
 
                     b.Property<int?>("PaisID");
 
-                    b.Property<string>("UsuarioId");
-
                     b.HasKey("ViajeID");
 
                     b.HasIndex("CiudadID");
@@ -246,8 +256,6 @@ namespace DataLayer.Migrations
                     b.HasIndex("ItinerarioID");
 
                     b.HasIndex("PaisID");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Viajes");
                 });
@@ -392,9 +400,13 @@ namespace DataLayer.Migrations
 
             modelBuilder.Entity("BizData.Entities.Historial", b =>
                 {
-                    b.HasOne("BizData.Entities.Itinerario", "Viaje")
+                    b.HasOne("BizData.Entities.Itinerario", "Itinerario")
                         .WithMany()
-                        .HasForeignKey("ViajeItinerarioID");
+                        .HasForeignKey("ItinerarioID");
+
+                    b.HasOne("BizData.Entities.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("BizData.Entities.Itinerario", b =>
@@ -453,10 +465,6 @@ namespace DataLayer.Migrations
                     b.HasOne("BizData.Entities.Pais", "Pais")
                         .WithMany()
                         .HasForeignKey("PaisID");
-
-                    b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("BizData.Entities.Visa", b =>

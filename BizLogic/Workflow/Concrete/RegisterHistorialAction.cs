@@ -20,7 +20,7 @@ namespace BizLogic.WorkFlow.Concrete
         {
             try
             {
-                var result = _dbAccess.GetHistorial(dto.EstadoViaje, dto.Viaje);
+                var result = _dbAccess.GetHistorial(dto.Estado, dto.Itinerario);
 
                 if (result != null)
                     throw new InvalidOperationException();
