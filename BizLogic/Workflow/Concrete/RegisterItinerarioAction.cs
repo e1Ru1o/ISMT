@@ -19,9 +19,13 @@ namespace BizLogic.Workflow.Concrete
         public Itinerario Action(ItinerarioCommand dto)
         {
             var itinerario = dto.ToItinerario();
+            if (dto.Usuario.Itinerarios == null)
+                dto.Usuario.Itinerarios = new List<Itinerario>();
 
             if (!HasErrors)
                 _dbAccess.Add(itinerario);
+
+            dto.Usuario.Itinerarios.Add(itinerario);
 
             return HasErrors ? null : itinerario;
         }
