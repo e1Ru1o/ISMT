@@ -95,5 +95,22 @@ namespace BizDbAccess.Authentication
                               select it;
             return itinerarios;
         }
+
+        public Itinerario GetItinerario(string userID, int iterID)
+        {
+            return _userManager.Users.Where(u => u.Id == userID).Single()
+                               .Itinerarios.Where(i => i.ItinerarioID == iterID).Single();
+        }
+
+        public List<Itinerario> GetItinerarios(string userID)
+        {
+            return _userManager.Users.Where(u => u.Id == userID).Single()
+                               .Itinerarios.ToList();
+        }
+
+        public List<Itinerario> GetAllItinerarios()
+        {
+            return _userManager.Users.SelectMany(u => u.Itinerarios.ToList()).ToList();
+        }
     }
 }
