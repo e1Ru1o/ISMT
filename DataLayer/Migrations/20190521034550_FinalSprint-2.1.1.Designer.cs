@@ -4,14 +4,16 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20190521034550_FinalSprint-2.1.1")]
+    partial class FinalSprint211
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,13 +88,13 @@ namespace DataLayer.Migrations
 
                     b.Property<DateTime?>("FechaInicio");
 
-                    b.Property<string>("UsuarioID");
+                    b.Property<string>("UsuarioId");
 
                     b.Property<string>("status");
 
                     b.HasKey("ItinerarioID");
 
-                    b.HasIndex("UsuarioID");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Itinerarios");
                 });
@@ -412,7 +414,7 @@ namespace DataLayer.Migrations
                 {
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
                         .WithMany("Itinerarios")
-                        .HasForeignKey("UsuarioID");
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("BizData.Entities.Pais", b =>

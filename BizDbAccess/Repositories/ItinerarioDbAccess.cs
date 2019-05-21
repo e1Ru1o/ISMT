@@ -36,7 +36,7 @@ namespace BizDbAccess.Repositories
 
             toUpd.FechaFin = entity.FechaFin ?? toUpd.FechaFin;
             toUpd.FechaInicio = entity.FechaInicio ?? toUpd.FechaInicio;
-            toUpd.Usuario = entity.Usuario ?? toUpd.Usuario;
+            toUpd.UsuarioID = entity.UsuarioID ?? toUpd.UsuarioID;
             toUpd.Viajes =  entity.Viajes == null ? entity.Viajes : (toUpd.Viajes.Concat(entity.Viajes)).ToList();
 
             _context.Itinerarios.Update(toUpd);
@@ -45,7 +45,7 @@ namespace BizDbAccess.Repositories
 
         public Itinerario GetItinerario(Usuario usuario, DateTime? FechaInicio, DateTime? FechaFin)
         {
-            return _context.Itinerarios.Where(i => i.Usuario == usuario &&
+            return _context.Itinerarios.Where(i => i.UsuarioID == usuario.Id &&
                                                    i.FechaInicio == FechaInicio &&
                                                    i.FechaFin == FechaFin)
                                                    .Single();
@@ -54,6 +54,14 @@ namespace BizDbAccess.Repositories
         public Itinerario GetItinerario(int ID)
         {
             return _context.Itinerarios.Find(ID);
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosEstado(Estado estado, Usuario user)
+        {
+            var itinerarios = from it in _context.Itinerarios
+                              where it.Estado == estado && it.Usuario != user
+                              select it;
+            return itinerarios;
         }
     }
 }

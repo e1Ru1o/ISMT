@@ -71,5 +71,46 @@ namespace BizDbAccess.Authentication
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<Itinerario> GetItinerariosNotFinished(Usuario usuario)
+        {
+            var itinerarios = from it in usuario.Itinerarios
+                              where it.Estado != Estado.Realizado && it.Estado != Estado.Cancelado
+                              select it;
+            return itinerarios;
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosDone(Usuario usuario)
+        {
+            var itinerarios = from it in usuario.Itinerarios
+                              where it.Estado == Estado.Realizado
+                              select it;
+            return itinerarios;
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosCanceled(Usuario usuario)
+        {
+            var itinerarios = from it in usuario.Itinerarios
+                              where it.Estado == Estado.Cancelado
+                              select it;
+            return itinerarios;
+        }
+
+        public Itinerario GetItinerario(string userID, int iterID)
+        {
+            return _userManager.Users.Where(u => u.Id == userID).Single()
+                               .Itinerarios.Where(i => i.ItinerarioID == iterID).Single();
+        }
+
+        public List<Itinerario> GetItinerarios(string userID)
+        {
+            return _userManager.Users.Where(u => u.Id == userID).Single()
+                               .Itinerarios.ToList();
+        }
+
+        public List<Itinerario> GetAllItinerarios()
+        {
+            return _userManager.Users.SelectMany(u => u.Itinerarios.ToList()).ToList();
+        }
     }
 }

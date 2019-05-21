@@ -70,18 +70,23 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ViajeViewModel vm)
         {
-            var services = new WorkflowServices(_context, _userManager, _getterUtils);
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
 
             var iterCmd = new ItinerarioCommand()
             {
                 UsuarioID = _userManager.GetUserId(User)
             };
 
-            var iterID =  await services.RegisterItinerarioAsync(iterCmd);
+            await services.RegisterItinerarioAsync(iterCmd);
+            var user = await _userManager.GetUserAsync(User);
+            var iterID = user.Itinerarios.Last().ItinerarioID;
 
             for (int i = 0; i < vm.Country.Count(); i++)
             {
-                var viajeCmd = new ViajeCommand(iterID, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
+                while (vm.Motivo.Count() < vm.Country.Count())
+                    vm.Motivo.Add("");
+
+                var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
                 services.RegisterViajeAsync(viajeCmd);
             }
 
@@ -241,7 +246,6 @@ namespace TripManager2._0.Controllers
 
         public IActionResult EditUsuario()
         {
-            ViewBag["test"] = _userManager;
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             return View(getter.GetAll("Usuario"));
         }
