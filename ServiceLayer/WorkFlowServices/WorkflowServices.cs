@@ -1,4 +1,5 @@
 ﻿using BizData.Entities;
+using BizDbAccess.Authentication;
 using BizDbAccess.GenericInterfaces;
 using BizDbAccess.Repositories;
 using BizDbAccess.Utils;
@@ -29,6 +30,7 @@ namespace ServiceLayer.WorkFlowServices
         private readonly PaisDbAccess _paisDbAccess;
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly CiudadDbAccess _ciudadDbAccess;
+        private readonly UserDbAccess _usuarioDbAccess;
 
         public WorkflowServices(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils)
         {
@@ -46,6 +48,7 @@ namespace ServiceLayer.WorkFlowServices
             _paisDbAccess = new PaisDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _ciudadDbAccess = new CiudadDbAccess(_context);
+            _usuarioDbAccess = new UserDbAccess(_context, null, userManager);
         }
 
        public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
@@ -89,6 +92,21 @@ namespace ServiceLayer.WorkFlowServices
             var viaje = _runnerViaje.RunAction(cmd);
 
             return viaje.ViajeID;
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
+        {
+            return _usuarioDbAccess.GetItinerariosNotFinished(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioDone(Usuario usuario)
+        {
+            return _usuarioDbAccess.GetItinerariosDone(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioCanceled(Usuario usuario)
+        {
+            return _usuarioDbAccess.GetItinerariosCanceled(usuario);
         }
     }
 }

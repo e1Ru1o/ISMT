@@ -35,7 +35,6 @@ namespace BizLogic.Workflow
             return new Viaje()
             {
                 MotivoViaje = Motivo,
-                Usuario = Usuario,
                 Pais = Pais,
                 Ciudad = Ciudad
                // Institucion = Institucion
