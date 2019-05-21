@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataLayer.Migrations
 {
-    public partial class FinalSprint200 : Migration
+    public partial class FinalSprint210 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -190,8 +190,10 @@ namespace DataLayer.Migrations
                 {
                     ItinerarioID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    status = table.Column<string>(nullable: true),
                     FechaInicio = table.Column<DateTime>(nullable: true),
                     FechaFin = table.Column<DateTime>(nullable: true),
+                    Estado = table.Column<int>(nullable: false),
                     UsuarioId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -258,17 +260,26 @@ namespace DataLayer.Migrations
                 {
                     HistorialID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    EstadoViaje = table.Column<string>(nullable: true),
-                    ViajeItinerarioID = table.Column<int>(nullable: true)
+                    Comentario = table.Column<string>(nullable: true),
+                    Estado = table.Column<int>(nullable: false),
+                    Fecha = table.Column<DateTime>(nullable: false),
+                    UsuarioId = table.Column<string>(nullable: true),
+                    ItinerarioID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Historial", x => x.HistorialID);
                     table.ForeignKey(
-                        name: "FK_Historial_Itinerarios_ViajeItinerarioID",
-                        column: x => x.ViajeItinerarioID,
+                        name: "FK_Historial_Itinerarios_ItinerarioID",
+                        column: x => x.ItinerarioID,
                         principalTable: "Itinerarios",
                         principalColumn: "ItinerarioID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Historial_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -353,11 +364,10 @@ namespace DataLayer.Migrations
                     MotivoViaje = table.Column<string>(nullable: true),
                     FechaInicio = table.Column<DateTime>(nullable: true),
                     FechaFin = table.Column<DateTime>(nullable: true),
-                    UsuarioId = table.Column<string>(nullable: true),
+                    ItinerarioID = table.Column<int>(nullable: true),
                     PaisID = table.Column<int>(nullable: true),
                     CiudadID = table.Column<int>(nullable: true),
-                    InstitucionID = table.Column<int>(nullable: true),
-                    ItinerarioID = table.Column<int>(nullable: true)
+                    InstitucionID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -385,12 +395,6 @@ namespace DataLayer.Migrations
                         column: x => x.PaisID,
                         principalTable: "Paises",
                         principalColumn: "PaisID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Viajes_AspNetUsers_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -439,9 +443,14 @@ namespace DataLayer.Migrations
                 column: "PaisID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Historial_ViajeItinerarioID",
+                name: "IX_Historial_ItinerarioID",
                 table: "Historial",
-                column: "ViajeItinerarioID");
+                column: "ItinerarioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historial_UsuarioId",
+                table: "Historial",
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Itinerarios_UsuarioId",
@@ -492,11 +501,6 @@ namespace DataLayer.Migrations
                 name: "IX_Viajes_PaisID",
                 table: "Viajes",
                 column: "PaisID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Viajes_UsuarioId",
-                table: "Viajes",
-                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Visas_RegionID",

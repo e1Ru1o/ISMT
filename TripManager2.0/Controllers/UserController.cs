@@ -41,6 +41,7 @@ namespace TripManager2._0.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public IActionResult Welcome()
         {
             return View();
@@ -55,6 +56,14 @@ namespace TripManager2._0.Controllers
         	trip.Posibilities = data.ToList();
             
             return View(trip);
+        }
+           
+        public async Task<IActionResult> ViewTrips()
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var data = (await _userManager.GetUserAsync(User)).Itinerarios
+                .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.status));
+            return View(data);
         }
 
         [HttpPost]
@@ -71,8 +80,8 @@ namespace TripManager2._0.Controllers
 
             for (int i = 0; i < vm.Country.Count(); i++)
             {
-                var viajeCmd = new ViajeCommand(iterID, iterCmd.UsuarioID, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
-                await services.RegisterViajeAsync(viajeCmd);
+                var viajeCmd = new ViajeCommand(iterID, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
+                services.RegisterViajeAsync(viajeCmd);
             }
 
             return View("Welcome");

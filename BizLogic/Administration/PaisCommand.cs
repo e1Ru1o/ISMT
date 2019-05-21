@@ -14,7 +14,7 @@ namespace BizLogic.Administration
             return new Pais
             {
                 Nombre = Name,
-                Region = Region
+                Region = Region == null ? null : Region
             };
         }
     }
