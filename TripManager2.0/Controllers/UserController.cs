@@ -244,15 +244,19 @@ namespace TripManager2._0.Controllers
             return View(getter.GetAll("Usuario"));
         }
 
+        
         public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)
         {
            
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             GetterAll getter1 = new GetterAll(_getterUtils, _context);
+            var user = (getter.GetAll("Usuario") as IEnumerable<Usuario>).Where(x => x.Email == cmd.EditEmail).Single();
+            var claim = (await _userManager.GetClaimsAsync(user)).Where(x => x.Type == "Permission").Select(x => x.Value).Single();
+            cmd.Level = claim;
             if (ModelState.IsValid)
             {
 
-                var user = await _userManager.FindByEmailAsync(cmd.Email);
+                //var user = await _userManager.FindByEmailAsync(cmd.Email);
                 LoginService loginService = new LoginService(_context, _signInManager, _userManager);
                 var us = cmd.ToUsuario();
                 await loginService.EditUserAsync(us, (getter.GetAll("Usuario") as IEnumerable<Usuario>).Where(x => x.Email == cmd.EditEmail).Single());
@@ -286,7 +290,6 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.FindByIdAsync(vm.userID);
             await _userManager.RemoveClaimAsync(user, new Claim("Pending", "true"));
             await _userManager.AddClaimAsync(user, new Claim("Pending", "false"));
-            await _userManager.AddClaimAsync(user, new Claim("Permission", "inversionista"));
             _context.Commit();
 
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
