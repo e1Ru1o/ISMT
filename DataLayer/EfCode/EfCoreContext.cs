@@ -43,11 +43,6 @@ namespace DataLayer.EfCode
                 .IsRequired();
                 //.IsRequired(false)
                 //.OnDelete(DeleteBehavior.SetNull);
-
-            builder.Entity<Itinerario>()
-                .HasOne(v => v.Usuario)
-                .WithMany(u => u.Itinerarios)
-                .IsRequired();    
             
             //TODO: Config the new entities if is needed.
         }

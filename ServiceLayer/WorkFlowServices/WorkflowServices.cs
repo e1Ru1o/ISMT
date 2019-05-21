@@ -1,4 +1,5 @@
 ﻿using BizData.Entities;
+using BizDbAccess.Authentication;
 using BizDbAccess.GenericInterfaces;
 using BizDbAccess.Repositories;
 using BizDbAccess.Utils;
@@ -29,8 +30,9 @@ namespace ServiceLayer.WorkFlowServices
         private readonly PaisDbAccess _paisDbAccess;
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly CiudadDbAccess _ciudadDbAccess;
+        private readonly UserDbAccess _userDbAccess; 
 
-        public WorkflowServices(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils)
+        public WorkflowServices(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils, SignInManager<Usuario> signInManager)
         {
             _context = context;
             _userManager = userManager;
@@ -46,6 +48,7 @@ namespace ServiceLayer.WorkFlowServices
             _paisDbAccess = new PaisDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _ciudadDbAccess = new CiudadDbAccess(_context);
+            _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
         }
 
        public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
@@ -78,7 +81,7 @@ namespace ServiceLayer.WorkFlowServices
 
             try
             {
-                cmd.Itinerario = _itinerarioDbAccess.GetItinerario(cmd.ItinerarioID);
+                cmd.Itinerario = _userDbAccess.GetItinerario(cmd.UsuarioId, cmd.ItinerarioID);
             }
             catch (InvalidOperationException)
             {
