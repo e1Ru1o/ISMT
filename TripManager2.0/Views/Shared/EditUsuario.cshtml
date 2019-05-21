@@ -52,7 +52,8 @@
                    FirstLastName = item.FirstLastName,
                    SecondLastName = item.SecondLastName,
                    SecondName = item.SecondName,
-                   Password = "P9n$"
+                   Password = "P9n$",
+                   Level=User.Claims.Where(x=>x.Type=="Permission").Select(x=>x.Value).Single()
                })
                 </td>
             </tr>

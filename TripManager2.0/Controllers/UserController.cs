@@ -104,6 +104,7 @@ namespace TripManager2._0.Controllers
             service.RemoveCiudad(ciudad);
             return View(getter.GetAll("Ciudad"));
         }
+        [HttpPost]
         public IActionResult AddCiudad(CiudadCommand cmd)
         {
 
@@ -115,6 +116,11 @@ namespace TripManager2._0.Controllers
             }
             cmd.Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre);
             return View(cmd);
+        }
+        [HttpGet]
+        public IActionResult AddCiudad()
+        {
+            return View(new CiudadCommand { Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre)});
         }
 
         [HttpGet]
@@ -132,6 +138,8 @@ namespace TripManager2._0.Controllers
             service.RemovePais(pais);
             return View(getter.GetAll("Pais"));
         }
+
+        [HttpPost]
         public IActionResult AddPais(PaisCommand cmd)
         {
 
@@ -144,6 +152,13 @@ namespace TripManager2._0.Controllers
 
             var getter = new GetterAll(_getterUtils, _context);
             cmd.Regiones=(getter.GetAll("Region") as IEnumerable<Region>).Select(x=>x.Nombre);
+            return View(cmd);
+        }
+        [HttpGet]
+        public IActionResult AddPais()
+        {
+            var cmd = new PaisCommand();
+            cmd.Regiones = (new GetterAll(_getterUtils, _context).GetAll("Region") as IEnumerable<Region>).Select(x => x.Nombre);
             return View(cmd);
         }
         [HttpGet]
@@ -161,6 +176,8 @@ namespace TripManager2._0.Controllers
             service.RemoveInstitucion(ins);
             return View(getter.GetAll("Institucion"));
         }
+
+        [HttpPost]
         public IActionResult AddInstitucion(NameOnlyViewModel cmd)
         {
 
@@ -172,6 +189,11 @@ namespace TripManager2._0.Controllers
             }
 
             return View(cmd);
+        }
+        [HttpGet]
+        public IActionResult AddInstitucion()
+        {
+            return View(new NameOnlyViewModel());
         }
         [HttpGet]
         public IActionResult EditRegion()
@@ -188,6 +210,7 @@ namespace TripManager2._0.Controllers
             service.RemoveRegion(ins);
             return View(getter.GetAll("Region"));
         }
+        [HttpPost]
         public IActionResult AddRegion(NameOnlyViewModel cmd)
         {
 
@@ -199,6 +222,11 @@ namespace TripManager2._0.Controllers
             }
 
             return View(cmd);
+        }
+        [HttpGet]
+        public IActionResult AddRegion()
+        {
+            return View(new NameOnlyViewModel());
         }
 
         public IActionResult EditUsuario()
