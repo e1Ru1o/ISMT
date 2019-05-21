@@ -93,5 +93,25 @@ namespace ServiceLayer.WorkFlowServices
 
             return viaje.ViajeID;
         }
+
+        public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
+        {
+            return _userDbAccess.GetItinerariosNotFinished(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioDone(Usuario usuario)
+        {
+            return _userDbAccess.GetItinerariosDone(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioCanceled(Usuario usuario)
+        {
+            return _userDbAccess.GetItinerariosCanceled(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosEstado(Estado estado, Usuario user)
+        {
+            return _itinerarioDbAccess.GetItinerariosEstado(estado, user);
+        }
     }
 }
