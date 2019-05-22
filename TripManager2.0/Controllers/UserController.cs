@@ -89,10 +89,8 @@ namespace TripManager2._0.Controllers
             //TODO: [KARL LEWIS] When you create TripDetailsView add funtionality to the DetailsButton in the View correspondent to this method
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            //TODO: [TENORIO] When you fill the time fields of the Itinerario replace `DateTime.Now` putting the Start and End dates appropiately, use only `.Date`
-            var test = DateTime.Now.Date;
             var data = services.GetItinerarioNotFinished(user)
-                .Select(x => new TripViewModel(DateTime.Now.Date, DateTime.Now.Date, x.Estado.ToString(), x.ItinerarioID));
+                .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID));
             return View(data);
         }
 
@@ -101,7 +99,7 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            services.CancelItinerario(canceled, user, "El usuario cancelo su viaje");
+            services.CancelItinerario(canceled, user.Id, "El usuario cancelo su viaje");
             return RedirectToAction("ViewTrips");
         }
         
