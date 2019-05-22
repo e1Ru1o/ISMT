@@ -11,5 +11,6 @@ namespace BizData.Entities
 
         public virtual ICollection<Pais_Visa> Paises { get; set; }
         public virtual ICollection<Region_Visa> Regiones { get; set; }
+        public virtual ICollection<Usuario_Visa> Usuarios { get; set; }
     }
 }

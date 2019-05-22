@@ -117,8 +117,6 @@ namespace ServiceLayer.WorkFlowServices
             return viaje.ViajeID;
         }
 
-
-
         public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
         {
             return _userDbAccess.GetItinerariosNotFinished(usuario);
@@ -201,5 +199,6 @@ namespace ServiceLayer.WorkFlowServices
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
+
     }
 }
