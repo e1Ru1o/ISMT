@@ -79,14 +79,32 @@ namespace TripManager2._0
                         ));
 
                 cfg.AddPolicy(
-                    "VisaManager",
-                    policyBuilder => policyBuilder.RequireClaim("Permission", "VisaManager"));
+                    "Common",
+                    policyBuilder => policyBuilder.RequireClaim("Permission", "Common"));
 
 
                 cfg.AddPolicy(
-                    "PasaporteManager",
-                    policyBuilder => policyBuilder.RequireClaim("Permission", "PasaporteManager"));
+                    "Admin",
+                    policyBuilder => policyBuilder.RequireClaim("Permission", "Admin"));
 
+                cfg.AddPolicy(
+                    "Visa",
+                    policyBuilder => policyBuilder.RequireClaim("Visa"));
+
+                cfg.AddPolicy(
+                    "Passport",
+                    policyBuilder => policyBuilder.RequireClaim("Passport"));
+
+                cfg.AddPolicy(
+                    "Institucion",
+                    policyBuilder => policyBuilder.RequireClaim("Institucion"));
+
+                cfg.AddPolicy(
+                    "Boss",
+                    policyBuilder => policyBuilder.RequireAssertion(ctx =>
+                    {
+                        return !ctx.User.HasClaim("Institucion", "Trabajador");
+                    }));
 
             });
 

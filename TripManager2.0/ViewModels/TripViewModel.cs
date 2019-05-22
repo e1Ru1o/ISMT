@@ -13,8 +13,13 @@ namespace TripManager2._0.ViewModels
 
         public TripViewModel(DateTime s, DateTime f, string status, int iId)
         {
-            Identifier = s.Date.ToString() + " --> " + f.Date.ToString();
+            Identifier = s.Date.ToString().Split()[0] + " --> " + f.Date.ToString().Split()[0];
             ID = iId;
+        }
+
+        public TripViewModel(DateTime s, DateTime f, string status)
+        {
+            Identifier = s.Date.ToString() + " --> " + f.Date.ToString();
             Status = status;
         }
     }

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,6 +76,24 @@ namespace ServiceLayer.WorkFlowServices
         public void Removeitinerario(Itinerario entity)
         {
             _itinerarioDbAccess.Delete(entity);
+            _context.Commit();
+        }
+
+        public Itinerario GetItinerario(int id)
+        {
+            return _itinerarioDbAccess.GetItinerario(id);
+        }
+
+        public void CalculateDates(Itinerario iter)
+        {
+            var initials = iter.Viajes.Select(v => v.FechaInicio).ToList();
+            initials.Sort();
+            iter.FechaInicio = initials.First();
+
+            var finals = iter.Viajes.Select(v => v.FechaFin).ToList();
+            finals.Sort();
+            iter.FechaFin = finals.First();
+
             _context.Commit();
         }
 
