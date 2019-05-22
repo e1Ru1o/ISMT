@@ -60,6 +60,7 @@ namespace ServiceLayer.WorkFlowServices
         {
             var iters = _userDbAccess.GetAllItinerarios();
             cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID); //await _userManager.FindByIdAsync(cmd.UsuarioID);
+
             var itinerario = _runnerItinerario.RunAction(cmd);
 
             _workflowManagerLocal.CrearViaje(itinerario, claimTipoInstitucion);

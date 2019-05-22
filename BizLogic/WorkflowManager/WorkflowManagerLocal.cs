@@ -1,4 +1,4 @@
-﻿using BizData.Entities;
+using BizData.Entities;
 using BizDbAccess.GenericInterfaces;
 using DataLayer.EfCode;
 using System.Linq;
