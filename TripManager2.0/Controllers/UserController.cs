@@ -57,6 +57,14 @@ namespace TripManager2._0.Controllers
             
             return View(trip);
         }
+           
+        public async Task<IActionResult> ViewTrips()
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var data = (await _userManager.GetUserAsync(User)).Itinerarios
+                .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.status));
+            return View(data);
+        }
 
         [HttpGet]
         public async Task<IActionResult> ViewTrips()
