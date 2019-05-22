@@ -19,7 +19,7 @@ namespace BizLogic.WorkflowManager
             _context = context;
             _historial = new HistorialDbAccess(_context);
         }
-        
+
         public void ManageActionJefeArea(Itinerario itinerario, Action action, Usuario usuario, string comentario)
         {
             var historial_entity = new Historial
@@ -151,7 +151,7 @@ namespace BizLogic.WorkflowManager
             {
                 historial_entity.Estado = itinerario.Estado;
                 historial_entity.Usuario = usuario;
-                historial_entity.Comentario = comentario;               
+                historial_entity.Comentario = comentario;
                 _historial.Add(historial_entity);
                 _context.Commit();
                 return;
@@ -214,19 +214,31 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public Pais CurrentVisaPais(Itinerario itinerario)
+        private Pais CurrentVisaPais(Itinerario itinerario)
         {
-            foreach (var viaje in itinerario.Viajes)
-            {
-                var visas = from visa in viaje.Pais.Visas
-                            select visa.Visa;
+            //foreach (var viaje in itinerario.Viajes)
+            //{
+            //    var visas_pais = from visa in viaje.Pais.Visas
+            //                     select visa.Visa;
+            //    var visas_region = from visa in viaje.Pais.Region.Visas
+            //                       select visa;
 
-                foreach (var visa in visas)
-                    if (itinerario.Usuario.Visas.Contains(visa))
-                        break;
+            //    IEnumerable<Visa> visas;
+            //    if (visas_region is null && visas_pais is null)
+            //        continue;
+            //    else if (visas_pais is null)
+            //        visas = visas_region;
+            //    else if (visas_region is null)
+            //        visas = visas_pais;
+            //    else
+            //        visas = visas_pais.Concat(visas_region);
 
-                return viaje.Pais;
-            }
+            //    foreach (var visa in visas)
+            //        if (itinerario.Usuario.Visas.Contains(visa))
+            //            break;
+
+            //    return viaje.Pais;
+            //}
 
             return null;
         }
@@ -265,7 +277,7 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public void ManageActionRealizacion(Itinerario itinerario)
+        public void RealizarItinerario(Itinerario itinerario)
         {
             itinerario.Estado = Estado.Realizado;
 

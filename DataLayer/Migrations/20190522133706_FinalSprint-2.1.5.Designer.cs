@@ -4,14 +4,16 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20190522133706_FinalSprint-2.1.5")]
+    partial class FinalSprint215
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,25 +226,6 @@ namespace DataLayer.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("BizData.Entities.Usuario_Visa", b =>
-                {
-                    b.Property<int>("Usuario_VisaID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("UsuarioId");
-
-                    b.Property<int?>("VisaID");
-
-                    b.HasKey("Usuario_VisaID");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.HasIndex("VisaID");
-
-                    b.ToTable("Usuario_Visa");
-                });
-
             modelBuilder.Entity("BizData.Entities.Viaje", b =>
                 {
                     b.Property<int>("ViajeID")
@@ -284,7 +267,11 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<string>("UsuarioId");
+
                     b.HasKey("VisaID");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Visas");
                 });
@@ -455,17 +442,6 @@ namespace DataLayer.Migrations
                         .HasForeignKey("VisaID");
                 });
 
-            modelBuilder.Entity("BizData.Entities.Usuario_Visa", b =>
-                {
-                    b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany("Visas")
-                        .HasForeignKey("UsuarioId");
-
-                    b.HasOne("BizData.Entities.Visa", "Visa")
-                        .WithMany("Usuarios")
-                        .HasForeignKey("VisaID");
-                });
-
             modelBuilder.Entity("BizData.Entities.Viaje", b =>
                 {
                     b.HasOne("BizData.Entities.Ciudad", "Ciudad")
@@ -483,6 +459,13 @@ namespace DataLayer.Migrations
                     b.HasOne("BizData.Entities.Pais", "Pais")
                         .WithMany()
                         .HasForeignKey("PaisID");
+                });
+
+            modelBuilder.Entity("BizData.Entities.Visa", b =>
+                {
+                    b.HasOne("BizData.Entities.Usuario")
+                        .WithMany("Visas")
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

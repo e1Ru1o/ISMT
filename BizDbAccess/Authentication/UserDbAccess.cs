@@ -50,6 +50,11 @@ namespace BizDbAccess.Authentication
             return _userManager.Users.ToList();
         }
 
+        public Usuario GetUsuario(string Id)
+        {
+            return _context.Users.Find(Id);
+        }
+
         public async Task<Usuario> UpdateAsync(Usuario entity, Usuario user)
         {
             if (user == null)
@@ -70,6 +75,30 @@ namespace BizDbAccess.Authentication
         public Usuario Update(Usuario entity, Usuario usuario)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosNotFinished(Usuario usuario)
+        {
+            var itinerarios = from it in usuario.Itinerarios
+                              where it.Estado != Estado.Realizado && it.Estado != Estado.Cancelado
+                              select it;
+            return itinerarios;
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosDone(Usuario usuario)
+        {
+            var itinerarios = from it in usuario.Itinerarios
+                              where it.Estado == Estado.Realizado
+                              select it;
+            return itinerarios;
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosCanceled(Usuario usuario)
+        {
+            var itinerarios = from it in usuario.Itinerarios
+                              where it.Estado == Estado.Cancelado
+                              select it;
+            return itinerarios;
         }
 
         public Itinerario GetItinerario(string userID, int iterID)
