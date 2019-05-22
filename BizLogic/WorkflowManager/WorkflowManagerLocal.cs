@@ -214,7 +214,7 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public Pais CurrentVisaPais(Itinerario itinerario)
+        private Pais CurrentVisaPais(Itinerario itinerario)
         {
             foreach (var viaje in itinerario.Viajes)
             {
@@ -265,7 +265,7 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public void ManageActionRealizacion(Itinerario itinerario)
+        public void RealizarItinerario(Itinerario itinerario)
         {
             itinerario.Estado = Estado.Realizado;
 

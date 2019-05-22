@@ -98,6 +98,8 @@ namespace ServiceLayer.WorkFlowServices
             return viaje.ViajeID;
         }
 
+
+
         public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
         {
             return _userDbAccess.GetItinerariosNotFinished(usuario);
@@ -118,11 +120,59 @@ namespace ServiceLayer.WorkFlowServices
             return _itinerarioDbAccess.GetItinerariosEstado(estado, user);
         }
 
-        public void CancelItinerario(int itinerarioId, string usuario, string comentario)
+        public void ManageActionAprobarJefeArea(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+        }
+        
+        public void ManageActionRechazarJefeArea(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+        }
+
+        public void ManageActionAprobarDecano(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+        }
+
+        public void ManageActionRechazarDecano(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+        }
+
+        public void ManageActionAprobarRector(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+        }
+
+        public void ManageActionRechazarRector(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+        }
+
+        public void RealizarItinerario(int itinerarioId)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            _workflowManagerLocal.RealizarItinerario(itinerario);
+        }
+
+        public void CancelItinerario(int itinerarioId, string usuarioId, string comentario)
         {
             var trip = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            var user = _userDbAccess.GetUsuario(usuario);
-            _workflowManagerLocal.CancelarItinerario(trip, user, comentario);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
     }
 }
