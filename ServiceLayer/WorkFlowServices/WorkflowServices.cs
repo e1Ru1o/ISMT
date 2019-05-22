@@ -56,12 +56,14 @@ namespace ServiceLayer.WorkFlowServices
             _visaDbAccess = new VisaDbAccess(context);
         }
 
-       public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
+       public int RegisterItinerarioAsync(ItinerarioCommand cmd, string claimTipoInstitucion)
         {
             var iters = _userDbAccess.GetAllItinerarios();
-            //cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioID);
-            cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID);
+            cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID); //await _userManager.FindByIdAsync(cmd.UsuarioID);
+
             var itinerario = _runnerItinerario.RunAction(cmd);
+
+            _workflowManagerLocal.CrearViaje(itinerario, claimTipoInstitucion);
 
             return itinerario.ItinerarioID;
         }
@@ -183,9 +185,7 @@ namespace ServiceLayer.WorkFlowServices
                 return;
             }
         }
-
         
-
         public void RealizarItinerario(int itinerarioId)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);

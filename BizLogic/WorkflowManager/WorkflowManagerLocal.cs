@@ -1,4 +1,4 @@
-﻿using BizData.Entities;
+using BizData.Entities;
 using BizDbAccess.GenericInterfaces;
 using DataLayer.EfCode;
 using System.Linq;
@@ -216,31 +216,42 @@ namespace BizLogic.WorkflowManager
 
         private Pais CurrentVisaPais(Itinerario itinerario)
         {
-            //foreach (var viaje in itinerario.Viajes)
-            //{
-            //    var visas_pais = from visa in viaje.Pais.Visas
-            //                     select visa.Visa;
-            //    var visas_region = from visa in viaje.Pais.Region.Visas
-            //                       select visa;
+            bool change = false;
+            var visas_usuario = from visa in itinerario.Usuario.Visas
+                                select visa.Visa;
+            
+            foreach (var viaje in itinerario.Viajes)
+            {
+                change = false;
+                var visas_pais = from visa in viaje.Pais.Visas
+                                 select visa.Visa;
+                var visas_region = from visa in viaje.Pais.Region.Visas
+                                   select visa.Visa;
+                                    
+                IEnumerable<Visa> visas;
+                if (visas_region is null && visas_pais is null)
+                    continue;
+                else if (visas_pais is null)
+                    visas = visas_region;
+                else if (visas_region is null)
+                    visas = visas_pais;
+                else
+                    visas = visas_pais.Concat(visas_region);
 
-            //    IEnumerable<Visa> visas;
-            //    if (visas_region is null && visas_pais is null)
-            //        continue;
-            //    else if (visas_pais is null)
-            //        visas = visas_region;
-            //    else if (visas_region is null)
-            //        visas = visas_pais;
-            //    else
-            //        visas = visas_pais.Concat(visas_region);
+                foreach (var visa in visas)
+                    if (visas_usuario.Contains(visa))
+                    {
+                        change = true;
+                        break;
+                    }
 
-            //    foreach (var visa in visas)
-            //        if (itinerario.Usuario.Visas.Contains(visa))
-            //            break;
+                if (change)
+                    continue;
 
-            //    return viaje.Pais;
-            //}
-          
-           return null;
+                return viaje.Pais;
+            }
+
+            return null;
         }
 
         public void CrearViaje(Itinerario itinerario, string claimTipoUsuario)
@@ -249,6 +260,7 @@ namespace BizLogic.WorkflowManager
             {
                 Estado = Estado.Creado,
                 Itinerario = itinerario,
+                Usuario = itinerario.Usuario,
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
