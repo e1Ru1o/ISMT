@@ -1,3 +1,39 @@
 ﻿@model IEnumerable<TripViewModel>
 
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Viajes";
+}
+
+<form method="post">
+    <CENTER>
+        <h1>Viajes actuales</h1>
+        <table>
+            <tr>
+                <th>
+                    Fecha de viaje
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr id=@item.ID>
+                    <td>
+                        @item.Identifier
+                    </td>
+                    <td>
+                        @item.Status
+                    </td>
+                    <td>
+                        <button class="button" type="submit" value=@item.ID name="canceled"><span>Cancelar</span></button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </CENTER>
+</form>
+
 

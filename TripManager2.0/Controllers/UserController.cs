@@ -57,13 +57,24 @@ namespace TripManager2._0.Controllers
             
             return View(trip);
         }
-           
+
+        [HttpGet]
         public async Task<IActionResult> ViewTrips()
         {
-            var getter = new GetterAll(_getterUtils, _context);
-            var data = (await _userManager.GetUserAsync(User)).Itinerarios
-                .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.status));
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            var data = services.GetItinerarioNotFinished(user)
+                .Select(x => new TripViewModel(DateTime.Now, DateTime.Now, x.Estado.ToString(), x.ItinerarioID));
             return View(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ViewTrips(int canceled)
+        {
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            services.CancelItinerario(canceled, user, "El usuario cancelo su viaje");
+            return RedirectToAction("ViewTrips");
         }
 
         [HttpPost]
