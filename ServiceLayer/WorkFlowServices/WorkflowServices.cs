@@ -33,6 +33,7 @@ namespace ServiceLayer.WorkFlowServices
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly CiudadDbAccess _ciudadDbAccess;
         private readonly UserDbAccess _userDbAccess;
+        private readonly VisaDbAccess _visaDbAccess;
 
         private readonly WorkflowManagerLocal _workflowManagerLocal;
 
@@ -54,6 +55,7 @@ namespace ServiceLayer.WorkFlowServices
             _ciudadDbAccess = new CiudadDbAccess(_context);
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
             _workflowManagerLocal = new WorkflowManagerLocal(context);
+            _visaDbAccess = new VisaDbAccess(context);
         }
 
        public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
@@ -190,6 +192,41 @@ namespace ServiceLayer.WorkFlowServices
             var trip = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
+        }
+
+        public async void SetPassportToUser(int iterID, string userToUpdID, string updatorID, string comment)
+        {
+            var iter = _itinerarioDbAccess.GetItinerario(iterID);
+            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
+            var updator = await _userManager.FindByIdAsync(updatorID);
+
+            userToUpd.HasPassport = true;
+            await _userManager.UpdateAsync(userToUpd);
+            _context.Commit();
+        }
+
+        public async void SetVisaToUser(int visaID, string userToUpdID, string updatorID)
+        {
+            var visa = _visaDbAccess.GetVisa(visaID);
+            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
+            var updator = await _userManager.FindByIdAsync(updatorID);
+
+            var user_visa = new Usuario_Visa()
+            {
+                Usuario = userToUpd,
+                Visa = visa
+            };
+
+            if (userToUpd.Visas == null)
+                userToUpd.Visas = new List<Usuario_Visa>();
+            if (visa.Usuarios == null)
+                visa.Usuarios = new List<Usuario_Visa>();
+
+            userToUpd.Visas.Add(user_visa);
+            visa.Usuarios.Add(user_visa);
+
+            await _userManager.UpdateAsync(userToUpd);
+            visa = _visaDbAccess.Update(visa, _visaDbAccess.GetVisa(visaID));
         }
 
     }
