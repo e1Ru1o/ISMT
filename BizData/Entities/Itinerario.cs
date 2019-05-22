@@ -25,7 +25,6 @@ namespace BizData.Entities
 
     public class Itinerario
     { 
-        public string status { get; set; }
         public int ItinerarioID { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
