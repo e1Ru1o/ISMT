@@ -30,8 +30,6 @@ namespace BizData.Entities
         public DateTime? FechaFin { get; set; }
         public Estado Estado { get; set; }
 
-        public string UsuarioID { get; set; }
-        [ForeignKey("UsuarioID")]
         public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Viaje> Viajes { get; set; }
 
@@ -45,14 +43,6 @@ namespace BizData.Entities
                         yield return viaje.Pais;
             }
             set { }
-        }
-
-        [NotMapped]
-        public IEnumerable<Ciudad> GetCiudades { get {
-                if (Viajes != null)
-                    foreach (var viaje in Viajes)
-                        yield return viaje.Ciudad;
-            } set { }
         }
 
         [NotMapped]

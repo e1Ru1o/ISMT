@@ -18,7 +18,6 @@ namespace DataLayer.EfCode
         public DbSet<Viaje> Viajes { get; set; }
         public DbSet<Institucion> Instituciones { get; set; }
         public DbSet<Itinerario> Itinerarios { get; set; }
-        public DbSet<Ciudad> Ciudades { get; set; }
         public DbSet<Region> Regiones { get; set; }
         public DbSet<Region_Visa> Regiones_Visa { get; set; }
         public DbSet<Pais> Paises { get; set; }

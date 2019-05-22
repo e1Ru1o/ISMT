@@ -75,7 +75,7 @@ namespace TripManager2._0.Controllers
 
             for (int i = 0; i < vm.Country.Count(); i++)
             {
-                var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
+                var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.City[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
                 services.RegisterViajeAsync(viajeCmd);
             }
 
@@ -103,39 +103,6 @@ namespace TripManager2._0.Controllers
             return RedirectToAction("ViewTrips");
         }
         
-        [HttpGet]
-        public IActionResult EditCiudad()
-        {
-            var getter = new GetterAll(_getterUtils, _context);
-            return View(getter.GetAll("Ciudad"));
-        }
-         [HttpPost]
-        public IActionResult EditCiudad(int id)
-        {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
-            var getter = new GetterAll(_getterUtils, _context);
-            var ciudad = ((getter.GetAll("Ciudad")) as IEnumerable<Ciudad>).Where(x=>x.CiudadID==id).Single();
-            service.RemoveCiudad(ciudad);
-            return View(getter.GetAll("Ciudad"));
-        }
-        [HttpPost]
-        public IActionResult AddCiudad(CiudadCommand cmd)
-        {
-
-            if(ModelState.IsValid)
-            {
-                AdminService service = new AdminService(_context, _userManager, _getterUtils);
-                service.RegisterCiudad(cmd, out var errors);
-                return RedirectToAction("EditCiudad");
-            }
-            cmd.Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre);
-            return View(cmd);
-        }
-        [HttpGet]
-        public IActionResult AddCiudad()
-        {
-            return View(new CiudadCommand { Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre)});
-        }
 
         [HttpGet]
         public IActionResult EditPais()
