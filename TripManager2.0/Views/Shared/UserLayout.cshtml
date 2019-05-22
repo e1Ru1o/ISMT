@@ -59,7 +59,7 @@
             <a asp-action="ViewTrips" asp-controller="User"><i class="fa fa-angle-right"></i> Viajes actuales</a>
         </div>
 
-        @if (User.HasClaim("Permission", "Admin"))
+        @if (!User.HasClaim("Institucion", "Trabajador") && User.Claims.Where(x => x.Type == "Institucion").Count() != 0)
         {
             <button class="dropdown-btn">
                 <i class="fa fa-angle-double-right"></i>
@@ -68,10 +68,18 @@
             </button>
             <div class="dropdown-container">
                 <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorizacion de viaje</a>
-                <a asp-controller="Reports" asp-action="ReportTwo"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
-                <a asp-controller="Reports" asp-action="ReportFour"><i class="fa fa-angle-right"></i> Otorgar visas</a>
-                <a asp-controller="Reports" asp-action="ReportFive"><i class="fa fa-angle-right"></i> Aprobar viaje</a>
+                @if (User.HasClaim("Institucion", "Passport"))
+                {
+                    <a asp-controller="Reports" asp-action="ReportTwo"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
+                }
+                @if (User.HasClaim("Institucion", "Visa"))
+                {
+                    <a asp-controller="Reports" asp-action="ReportFour"><i class="fa fa-angle-right"></i> Otorgar visas</a>
+                }
             </div>
+        }
+        @if (User.HasClaim("Permission", "Admin"))
+        {
             <button class="dropdown-btn">
                 <i class="fa fa-angle-double-right"></i>
                 Acciones
@@ -87,17 +95,6 @@
             </div>
         }
 
-        @if (User.HasClaim("Permission", "Admin"))
-        {
-            <button class="dropdown-btn">
-                <i class="fa fa-angle-double-right"></i>
-                Juramento de Admin
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-container">
-                <p>Un gran poder conlleva una gran responsabilidad</p>
-            </div>
-        }
 
     </div>
     <div class="container">

@@ -53,7 +53,7 @@ namespace TripManager2._0.Controllers
             var data = services.GetItinerariosEstado(
                 Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"), 
                 user
-            );
+            ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, user));
             return View(data);
         }
 
@@ -72,5 +72,18 @@ namespace TripManager2._0.Controllers
 
             return Redirect("AuthorizeTrip");
         }
+
+        //[HttpGet]
+        //[Authorize("Boss")]
+        //public async Task<IActionResult> AuthorizeTrip()
+        //{
+        //    var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+        //    var user = await _userManager.GetUserAsync(User);
+        //    var data = services.GetItinerariosEstado(
+        //        Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"),
+        //        user
+        //    ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, user));
+        //    return View(data);
+        //}
     }
 }

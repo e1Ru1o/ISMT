@@ -264,29 +264,19 @@ namespace BizLogic.WorkflowManager
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
-            _context.Commit();
 
             if (claimTipoUsuario == "Trabajador")
-            {
                 itinerario.Estado = Estado.PendienteAprobacionJefeArea;
-                return;
-            }
-            if (claimTipoUsuario == "JefeArea")
-            {
+            else if (claimTipoUsuario == "JefeArea")
                 itinerario.Estado = Estado.PendienteAprobacionDecano;
-                return;
-            }
-            if (claimTipoUsuario == "Decano")
-            {
+            else if (claimTipoUsuario == "Decano")
                 itinerario.Estado = Estado.PendienteAprobacionDecano;
-                return;
-            }
-            if (claimTipoUsuario == "Rector")
+            else
             {
                 itinerario.Estado = Estado.PendientePasaporte;
                 ManageActionPasaporte(itinerario, Action.Ignorar, null, null);
-                return;
             }
+            _context.Commit();
         }
 
         public void RealizarItinerario(Itinerario itinerario)
