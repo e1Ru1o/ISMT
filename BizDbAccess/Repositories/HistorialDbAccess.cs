@@ -38,7 +38,7 @@ namespace BizDbAccess.Repositories
         public Historial GetHistorial(Estado estadoViaje, Itinerario viaje)
         {
             return _context.Historial.Where(h => h.Estado == estadoViaje &&
-                                                 h.Itinerario.UsuarioID == viaje.UsuarioID)
+                                                 h.Itinerario.Usuario == viaje.Usuario)
                                                  .SingleOrDefault();
         }
     }

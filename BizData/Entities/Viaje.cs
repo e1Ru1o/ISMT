@@ -13,12 +13,12 @@ namespace BizData.Entities
     {
         public int ViajeID { get; set; }
         public string MotivoViaje { get; set; }
+        public string Ciudad { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         
         public virtual Itinerario Itinerario { get; set; }
         public virtual Pais Pais { get; set; }
-        public virtual Ciudad Ciudad { get; set; }
         public virtual Institucion Institucion { get; set; }
     }
 }
