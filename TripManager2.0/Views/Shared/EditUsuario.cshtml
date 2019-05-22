@@ -52,7 +52,7 @@
                    FirstLastName = item.FirstLastName,
                    SecondLastName = item.SecondLastName,
                    SecondName = item.SecondName,
-                   Password = "P9n$",
+                   Password = "P9n$", //TODO: [Karl Lewis] Why this password are here?
                    Level=User.Claims.Where(x=>x.Type=="Permission").Select(x=>x.Value).Single()
                })
                 </td>

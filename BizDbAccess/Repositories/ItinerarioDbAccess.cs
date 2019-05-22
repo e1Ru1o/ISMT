@@ -60,7 +60,7 @@ namespace BizDbAccess.Repositories
         public IEnumerable<Itinerario> GetItinerariosEstado(Estado estado, Usuario user)
         {
             var itinerarios = from it in _context.Itinerarios
-                              where it.Estado == estado && it.Usuario != user
+                              where it.Estado == estado && it.Usuario.Id != user.Id
                               select it;
             return itinerarios;
         }

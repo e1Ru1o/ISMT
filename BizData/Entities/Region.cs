@@ -10,6 +10,6 @@ namespace BizData.Entities
         public string Nombre { get; set; }
 
         public virtual ICollection<Pais> Paises { get; set; }
-        public virtual ICollection<Visa> Visas { get; set; }
+        public virtual ICollection<Region_Visa> Visas { get; set; }
     }
 }

@@ -15,6 +15,11 @@ namespace TripManager2._0.ViewModels
         {
             Identifier = s.Date.ToString().Split()[0] + " --> " + f.Date.ToString().Split()[0];
             ID = iId;
+        }
+
+        public TripViewModel(DateTime s, DateTime f, string status)
+        {
+            Identifier = s.Date.ToString() + " --> " + f.Date.ToString();
             Status = status;
         }
     }

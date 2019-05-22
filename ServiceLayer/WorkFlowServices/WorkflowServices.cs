@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,6 +79,24 @@ namespace ServiceLayer.WorkFlowServices
             _context.Commit();
         }
 
+        public Itinerario GetItinerario(int id)
+        {
+            return _itinerarioDbAccess.GetItinerario(id);
+        }
+
+        public void CalculateDates(Itinerario iter)
+        {
+            var initials = iter.Viajes.Select(v => v.FechaInicio).ToList();
+            initials.Sort();
+            iter.FechaInicio = initials.First();
+
+            var finals = iter.Viajes.Select(v => v.FechaFin).ToList();
+            finals.Sort();
+            iter.FechaFin = finals.First();
+
+            _context.Commit();
+        }
+
         public long RegisterViajeAsync(ViajeCommand cmd)
         {
             //cmd.Ciudad = _ciudadDbAccess.GetCiudad(cmd.CiudadName);
@@ -97,6 +116,8 @@ namespace ServiceLayer.WorkFlowServices
 
             return viaje.ViajeID;
         }
+
+
 
         public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
         {
@@ -118,9 +139,58 @@ namespace ServiceLayer.WorkFlowServices
             return _itinerarioDbAccess.GetItinerariosEstado(estado, user);
         }
 
-        public void CancelItinerario(int itinerarioId, Usuario usuario, string comentario)
+        public void ManageActionAprobarJefeArea(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+        }
+        
+        public void ManageActionRechazarJefeArea(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+        }
+
+        public void ManageActionAprobarDecano(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+        }
+
+        public void ManageActionRechazarDecano(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+        }
+
+        public void ManageActionAprobarRector(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+        }
+
+        public void ManageActionRechazarRector(int itinerarioId, string usuarioId, string comentario)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+        }
+
+        public void RealizarItinerario(int itinerarioId)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            _workflowManagerLocal.RealizarItinerario(itinerario);
+        }
+
+        public void CancelItinerario(int itinerarioId, string usuarioId, string comentario)
         {
             var trip = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
     }
