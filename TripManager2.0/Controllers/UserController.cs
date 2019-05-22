@@ -49,9 +49,9 @@ namespace TripManager2._0.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-        	var getter = new GetterAll(_getterUtils, _context);
-        	var data = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
-            
+            var getter = new GetterAll(_getterUtils, _context);
+            var data = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
+
             return View(data);
         }
 
@@ -80,6 +80,7 @@ namespace TripManager2._0.Controllers
             }
 
             services.CalculateDates(services.GetItinerario(iterID));
+
             return View("Welcome");
         }
 
@@ -101,174 +102,6 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.GetUserAsync(User);
             services.CancelItinerario(canceled, user.Id, "El usuario cancelo su viaje");
             return RedirectToAction("ViewTrips");
-        }
-        
-
-        [HttpGet]
-        public IActionResult EditPais()
-        {
-            var getter = new GetterAll(_getterUtils, _context);
-            return View(getter.GetAll("Pais"));
-        }
-        [HttpPost]
-        public IActionResult EditPais(int id)
-        {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
-            var getter = new GetterAll(_getterUtils, _context);
-            var pais = ((getter.GetAll("Pais")) as IEnumerable<Pais>).Where(x => x.PaisID == id).Single();
-            service.RemovePais(pais);
-            return View(getter.GetAll("Pais"));
-        }
-
-        [HttpPost]
-        public IActionResult AddPais(PaisCommand cmd)
-        {
-
-            if (ModelState.IsValid)
-            {
-                AdminService service = new AdminService(_context, _userManager, _getterUtils);
-                service.RegisterPais(cmd, out var errors);
-                return RedirectToAction("EditPais");
-            }
-
-            var getter = new GetterAll(_getterUtils, _context);
-            cmd.Regiones=(getter.GetAll("Region") as IEnumerable<Region>).Select(x=>x.Nombre);
-            return View(cmd);
-        }
-        [HttpGet]
-        public IActionResult AddPais()
-        {
-            var cmd = new PaisCommand();
-            cmd.Regiones = (new GetterAll(_getterUtils, _context).GetAll("Region") as IEnumerable<Region>).Select(x => x.Nombre);
-            return View(cmd);
-        }
-        [HttpGet]
-        public IActionResult EditInstitucion()
-        {
-            var getter = new GetterAll(_getterUtils, _context);
-            return View(getter.GetAll("Institucion"));
-        }
-        [HttpPost]
-        public IActionResult EditInstitucion(int id)
-        {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
-            var getter = new GetterAll(_getterUtils, _context);
-            var ins = ((getter.GetAll("Institucion")) as IEnumerable<Institucion>).Where(x => x.InstitucionID == id).Single();
-            service.RemoveInstitucion(ins);
-            return View(getter.GetAll("Institucion"));
-        }
-
-        [HttpPost]
-        public IActionResult AddInstitucion(NameOnlyViewModel cmd)
-        {
-
-            if (ModelState.IsValid)
-            {
-                AdminService service = new AdminService(_context, _userManager, _getterUtils);
-                service.RegisterInstitucion(cmd, out var errors);
-                return RedirectToAction("EditInstitucion");
-            }
-
-            return View(cmd);
-        }
-        [HttpGet]
-        public IActionResult AddInstitucion()
-        {
-            return View(new NameOnlyViewModel());
-        }
-        [HttpGet]
-        public IActionResult EditRegion()
-        {
-            var getter = new GetterAll(_getterUtils, _context);
-            return View(getter.GetAll("Region"));
-        }
-        [HttpPost]
-        public IActionResult EditRegion(int id)
-        {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
-            var getter = new GetterAll(_getterUtils, _context);
-            var ins = ((getter.GetAll("Region")) as IEnumerable<Region>).Where(x => x.RegionID == id).Single();
-            service.RemoveRegion(ins);
-            return View(getter.GetAll("Region"));
-        }
-        [HttpPost]
-        public IActionResult AddRegion(NameOnlyViewModel cmd)
-        {
-
-            if (ModelState.IsValid)
-            {
-                AdminService service = new AdminService(_context, _userManager, _getterUtils);
-                service.RegisterRegion(cmd, out var errors);
-                return RedirectToAction("EditRegion");
-            }
-
-            return View(cmd);
-        }
-        [HttpGet]
-        public IActionResult AddRegion()
-        {
-            return View(new NameOnlyViewModel());
-        }
-
-        public IActionResult EditUsuario()
-        {
-            GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
-            return View(getter.GetAll("Usuario"));
-        }
-
-        public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)
-        {
-           
-            GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
-            GetterAll getter1 = new GetterAll(_getterUtils, _context);
-            if (ModelState.IsValid)
-            {
-
-                var user = await _userManager.FindByEmailAsync(cmd.Email);
-                LoginService loginService = new LoginService(_context, _signInManager, _userManager);
-                var us = cmd.ToUsuario();
-                await loginService.EditUserAsync(us, (getter.GetAll("Usuario") as IEnumerable<Usuario>).Where(x => x.Email == cmd.EditEmail).Single());
-                return RedirectToAction("EditUsuario", "User");
-            }
-            return View(cmd);
-        }
-        [HttpGet]
-        public async Task<IActionResult> PendingUsers()
-        {
-            GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
-            List<Usuario> pending = new List<Usuario>();
-            foreach (var item in getter.GetAll("Usuario"))
-            {
-                if ((await _userManager.GetClaimsAsync(item as Usuario)).Any(c => c.Type == "Pending" && c.Value == "true"))
-                    pending.Add(item as Usuario);
-            }
-
-            PendingUsersViewModel vm = new PendingUsersViewModel()
-            {
-                Usuarios = pending,
-            };
-
-            return View(vm);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PendingUsers(PendingUsersViewModel vm)
-        {
-        
-            var user = await _userManager.FindByIdAsync(vm.userID);
-            await _userManager.RemoveClaimAsync(user, new Claim("Pending", "true"));
-            await _userManager.AddClaimAsync(user, new Claim("Pending", "false"));
-            await _userManager.AddClaimAsync(user, new Claim("Permission", "inversionista"));
-            _context.Commit();
-
-            GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
-            List<Usuario> pending = new List<Usuario>();
-            foreach (var item in getter.GetAll("Usuario"))
-            {
-                if ((await _userManager.GetClaimsAsync(item as Usuario)).Any(c => c.Type == "Pending" && c.Value == "true"))
-                    pending.Add(item as Usuario);
-            }
-            return RedirectToAction("PendingUsers", "User");
         }
 
     }
