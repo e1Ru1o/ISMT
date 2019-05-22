@@ -50,6 +50,11 @@ namespace BizDbAccess.Authentication
             return _userManager.Users.ToList();
         }
 
+        public Usuario GetUsuario(string Id)
+        {
+            return _context.Users.Find(Id);
+        }
+
         public async Task<Usuario> UpdateAsync(Usuario entity, Usuario user)
         {
             if (user == null)
