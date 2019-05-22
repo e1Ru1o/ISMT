@@ -287,7 +287,7 @@ namespace BizLogic.WorkflowManager
             {
                 Estado = itinerario.Estado,
                 Itinerario = itinerario,
-                Usuario = null,
+                Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
             };

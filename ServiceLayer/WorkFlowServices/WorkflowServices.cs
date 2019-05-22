@@ -118,10 +118,11 @@ namespace ServiceLayer.WorkFlowServices
             return _itinerarioDbAccess.GetItinerariosEstado(estado, user);
         }
 
-        public void CancelItinerario(int itinerarioId, Usuario usuario, string comentario)
+        public void CancelItinerario(int itinerarioId, string usuario, string comentario)
         {
             var trip = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
+            var user = _userDbAccess.GetUsuario(usuario);
+            _workflowManagerLocal.CancelarItinerario(trip, user, comentario);
         }
     }
 }

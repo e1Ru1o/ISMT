@@ -73,7 +73,7 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            services.CancelItinerario(canceled, user, "El usuario cancelo su viaje");
+            services.CancelItinerario(canceled, user.Id, "El usuario cancelo su viaje");
             return RedirectToAction("ViewTrips");
         }
 
