@@ -68,9 +68,8 @@ namespace TripManager2._0.Controllers
                 UsuarioID = _userManager.GetUserId(User)
             };
 
-            await services.RegisterItinerarioAsync(iterCmd);
+            var iterID = await services.RegisterItinerarioAsync(iterCmd);
             var user = await _userManager.GetUserAsync(User);
-            var iterID = user.Itinerarios.Last().ItinerarioID;
 
             for (int i = 0; i < vm.Country.Count(); i++)
             {
@@ -80,6 +79,9 @@ namespace TripManager2._0.Controllers
                 var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
                 services.RegisterViajeAsync(viajeCmd);
             }
+
+            var iter = services.GetItinerario(iterID);
+            services.CalculateDates(iter);
 
             return View("Welcome");
         }
