@@ -48,19 +48,22 @@ namespace TripManager2._0.Controllers
         [Authorize("Boss")]
         public async Task<IActionResult> AuthorizeTrip()
         {
-            //TODO: [TENORIO] add an access restriction to this method that verify [Authorize("Institucion") where Value != "Trabajador"]
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            //TODO: [Juanda] put on data the Itinerarios collection correspondent to Itinerarios that user may approbe
-            
-            //(user, $"aprobacion de {User.Claims.Where(x => x.Type == "Institucion").Single().Value}");
-            var data = new List<Itinerario>();
+            var data = services.GetItinerariosEstado(
+                Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"), 
+                user
+            );
             return View(data);
         }
 
         [HttpPost]
-        public IActionResult AuthorizeTrip(int id)
+        public async Task<IActionResult> AuthorizeTrip(int id, int action)
         {
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            
+            
             return Redirect("AuthorizeTrip");
         }
     }
