@@ -7,7 +7,7 @@
 
 <div class="main">
     <form method="post">
-
+        <input hidden="hidden" id="canceled" name="canceled">
         <h1>Viajes actuales</h1>
         <table>
             <tr>
@@ -30,10 +30,10 @@
                         @item.Status
                     </td>
                     <td>
-                       <button class="button" type="button" value=@item.ID name="canceled"><span>Detalles</span></button>
+                        <button class="button" type="button" onclick="getRowId(this, 'canceled');"><span>Detalles</span></button>
                     </td>
                     <td>
-                        <button class="button" type="submit" value=@item.ID name="canceled"><span>Cancelar</span></button>
+                        <button class="button" type="submit" onclick="getRowId(this, 'canceled');"><span>Cancelar</span></button>
                     </td>
                 </tr>
             }
@@ -41,4 +41,8 @@
 
     </form>
 </div>
+
+
+
+
 

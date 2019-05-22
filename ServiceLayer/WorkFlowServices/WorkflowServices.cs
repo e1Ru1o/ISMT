@@ -136,47 +136,55 @@ namespace ServiceLayer.WorkFlowServices
             return _itinerarioDbAccess.GetItinerariosEstado(estado, user);
         }
 
-        public void ManageActionAprobarJefeArea(int itinerarioId, string usuarioId, string comentario)
+        public void ManageActionAprobar(int itinerarioId, string usuarioId, string comentario)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
-            _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+
+            if(itinerario.Estado == Estado.PendienteAprobacionJefeArea)
+            {
+                _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+
+            if (itinerario.Estado == Estado.PendienteAprobacionDecano)
+            {
+                _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+
+            if (itinerario.Estado == Estado.PendienteAprobacionRector)
+            {
+                _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
         }
         
-        public void ManageActionRechazarJefeArea(int itinerarioId, string usuarioId, string comentario)
+        public void ManageActionRechazar(int itinerarioId, string usuarioId, string comentario)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
-            _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+
+            if (itinerario.Estado == Estado.PendienteAprobacionJefeArea)
+            {
+                _workflowManagerLocal.ManageActionJefeArea(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
+
+            if (itinerario.Estado == Estado.PendienteAprobacionDecano)
+            {
+                _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
+
+            if (itinerario.Estado == Estado.PendienteAprobacionRector)
+            {
+                _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
         }
 
-        public void ManageActionAprobarDecano(int itinerarioId, string usuarioId, string comentario)
-        {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            var usuario = _userDbAccess.GetUsuario(usuarioId);
-            _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
-        }
-
-        public void ManageActionRechazarDecano(int itinerarioId, string usuarioId, string comentario)
-        {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            var usuario = _userDbAccess.GetUsuario(usuarioId);
-            _workflowManagerLocal.ManageActionDecano(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
-        }
-
-        public void ManageActionAprobarRector(int itinerarioId, string usuarioId, string comentario)
-        {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            var usuario = _userDbAccess.GetUsuario(usuarioId);
-            _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
-        }
-
-        public void ManageActionRechazarRector(int itinerarioId, string usuarioId, string comentario)
-        {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            var usuario = _userDbAccess.GetUsuario(usuarioId);
-            _workflowManagerLocal.ManageActionRector(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
-        }
+        
 
         public void RealizarItinerario(int itinerarioId)
         {

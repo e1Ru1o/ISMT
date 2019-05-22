@@ -239,8 +239,8 @@ namespace BizLogic.WorkflowManager
 
             //    return viaje.Pais;
             //}
-
-            return null;
+          
+           return null;
         }
 
         public void CrearViaje(Itinerario itinerario, string claimTipoUsuario)
