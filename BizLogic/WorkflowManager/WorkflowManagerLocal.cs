@@ -221,7 +221,7 @@ namespace BizLogic.WorkflowManager
                 var visas_pais = from visa in viaje.Pais.Visas
                                  select visa.Visa;
                 var visas_region = from visa in viaje.Pais.Region.Visas
-                                   select visa;
+                                   select visa.Visa;
 
                 IEnumerable<Visa> visas;
                 if (visas_region is null && visas_pais is null)
