@@ -42,4 +42,7 @@ function drop() {
 }
 drop()
 
+function getRowId(caller, id) {
+    document.getElementById(id).value = caller.parentElement.parentElement.id;
+}
 

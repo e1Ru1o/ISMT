@@ -45,18 +45,138 @@ namespace DataLayer.EfCode
                 await _userManager.CreateAsync(raul, "T3n!");
                 await _userManager.AddClaimAsync(raul, new Claim("Permission", "Admin"));
                 await _userManager.AddClaimAsync(raul, new Claim("Pending", "false"));
-                await _userManager.AddClaimAsync(raul, new Claim("Cargo", "comun"));
+                await _userManager.AddClaimAsync(raul, new Claim("Institucion", "Rector"));
+                await _userManager.AddClaimAsync(raul, new Claim("Passport", "true"));
+                await _userManager.AddClaimAsync(raul, new Claim("Visa", "true"));
 
-                var region = new Region
-                {
-                    Nombre = "Ninguna"
-                };
+                // Regiones
+                var region = new Region { Nombre = "Ninguna"};
+                _ctx.Regiones.Add(region);
+                _ctx.SaveChanges();
 
-                var cuba = new Pais()
+                region = new Region { Nombre = "America" };
+                _ctx.Regiones.Add(region);
+                _ctx.SaveChanges();
+
+                region = new Region { Nombre = "Europa" };
+                _ctx.Regiones.Add(region);
+                _ctx.SaveChanges();
+
+                region = new Region { Nombre = "Pangea" };
+                _ctx.Regiones.Add(region);
+                _ctx.SaveChanges();
+
+                //Paises
+                var pais = new Pais()
                 {
                     Nombre = "Cuba",
-                    Region = region
+                    Region = _ctx.Regiones.Find(1)
                 };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Panama",
+                    Region = _ctx.Regiones.Find(1)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Uruguay",
+                    Region = _ctx.Regiones.Find(1)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Italia",
+                    Region = _ctx.Regiones.Find(2)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Alemania",
+                    Region = _ctx.Regiones.Find(2)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Inglaterra",
+                    Region = _ctx.Regiones.Find(2)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Sudafrica",
+                    Region = _ctx.Regiones.Find(3)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Australia",
+                    Region = _ctx.Regiones.Find(3)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                pais = new Pais()
+                {
+                    Nombre = "Japon",
+                    Region = _ctx.Regiones.Find(3)
+                };
+                _ctx.Paises.Add(pais);
+                _ctx.SaveChanges();
+
+                //Visas
+                var visa = new Visa() { Name = "URUGUAY_VISA" };
+                _ctx.Visas.Add(visa);
+                _ctx.SaveChanges();
+
+                visa = new Visa() { Name = "EXCHANGE" };
+                _ctx.Visas.Add(visa);
+                _ctx.SaveChanges();
+
+                visa = new Visa() { Name = "PANGEA_VISA" };
+                _ctx.Visas.Add(visa);
+                _ctx.SaveChanges();
+
+                //Visa_Pais
+                var visa_pais = new Pais_Visa()
+                {
+                    Pais = _ctx.Paises.Find(2),
+                    Visa = _ctx.Visas.Find(0)
+                };
+                _ctx.Paises_Visas.Add(visa_pais);
+                _ctx.SaveChanges();
+
+                //Visa_Region
+                var visa_region = new Region_Visa()
+                {
+                    Visa = _ctx.Visas.Find(1),
+                    Region = _ctx.Regiones.Find(2)
+                };
+                _ctx.Regiones_Visa.Add(visa_region);
+                _ctx.SaveChanges();
+
+                visa_region = new Region_Visa()
+                {
+                    Visa = _ctx.Visas.Find(2),
+                    Region = _ctx.Regiones.Find(3)
+                };
+                _ctx.Regiones_Visa.Add(visa_region);
+                _ctx.SaveChanges();
 
                 /*var filepath = Path.Combine(_hosting.ContentRootPath, "wwwroot/json/usuarios.json");
                 var json = File.ReadAllText(filepath);

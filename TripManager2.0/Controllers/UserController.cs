@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using TripManager2._0.ViewModels;
-using System.Linq;
 using ServiceLayer.AccountServices;
 using BizLogic.Authentication;
 using System.Threading.Tasks;
@@ -66,7 +65,7 @@ namespace TripManager2._0.Controllers
                 UsuarioID = _userManager.GetUserId(User)
             };
 
-            await services.RegisterItinerarioAsync(iterCmd);
+            services.RegisterItinerarioAsync(iterCmd, User.Claims.Where(x=> x.Type == "Institucion").Single().Value);
             var user = await _userManager.GetUserAsync(User);
             var iterID = user.Itinerarios.Last().ItinerarioID;
 
@@ -76,9 +75,11 @@ namespace TripManager2._0.Controllers
 
             for (int i = 0; i < vm.Country.Count(); i++)
             {
-                var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
+                var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.City[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
                 services.RegisterViajeAsync(viajeCmd);
             }
+
+            services.CalculateDates(services.GetItinerario(iterID));
 
             return View("Welcome");
         }

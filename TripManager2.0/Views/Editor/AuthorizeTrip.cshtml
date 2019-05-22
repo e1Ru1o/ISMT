@@ -1,0 +1,63 @@
+﻿@model IEnumerable<UserTripViewModel>
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Viajes";
+}
+
+<div class="main">
+    <form method="post">
+        <h1>Viajes actuales</h1>
+        <input hidden="hidden" id="trip" name="tripId">
+        <input hidden="hidden" id="usr" name="userId">
+        <input hidden="hidden" id="op" name="action">
+        <table>
+            <tr>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Fecha de viaje
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr id="@item.ID">
+                    <td>
+                        @item.Owner
+                    </td>
+                    <td>
+                        @item.Identifier
+                    </td>
+                    <td>
+                        @item.Status
+                    </td>
+                    <td>
+                        <button class="button" type="submit" value="@item.uID" onclick="setValues(this, '0');"><span>Aprobar</span></button>
+                    </td>
+                    <td>
+                        <button class="button" type="submit" value="@item.uID" onclick="setValues(this, '1');"><span>Rechazar</span></button>
+                    </td>
+                    <td>
+                        <button class="button" type="submit" value="@item.uID" onclick="setValues(this, '2');"><span>Cancelar</span></button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </form>
+</div>
+
+<script>
+    function setValues(caller, option) {
+        getRowId(caller, 'trip');
+        document.getElementById('op').value = option;
+        document.getElementById('user').value = caller.value;
+    }
+</script>
+
