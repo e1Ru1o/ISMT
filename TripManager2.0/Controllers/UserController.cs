@@ -80,6 +80,8 @@ namespace TripManager2._0.Controllers
                 services.RegisterViajeAsync(viajeCmd);
             }
 
+            services.CalculateDates(services.GetItinerario(iterID));
+
             return View("Welcome");
         }
 

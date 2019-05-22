@@ -62,8 +62,14 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            
-            
+
+            if (action == 0)
+                services.ManageActionAprobar(id, user.Id, "");
+            else if (action == 1)
+                services.ManageActionRechazar(id, user.Id, "");
+            else
+                services.CancelItinerario(id, user.Id, "");
+
             return Redirect("AuthorizeTrip");
         }
     }
