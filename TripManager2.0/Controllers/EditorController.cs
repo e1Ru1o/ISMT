@@ -45,6 +45,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpGet]
+        [Authorize("Boss")]
         public async Task<IActionResult> AuthorizeTrip()
         {
             //TODO: [TENORIO] add an access restriction to this method that verify [Authorize("Institucion") where Value != "Trabajador"]
