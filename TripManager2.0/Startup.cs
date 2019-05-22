@@ -101,7 +101,7 @@ namespace TripManager2._0
 
                 cfg.AddPolicy(
                     "Boss",
-                    policyBuilder => policyBuilder.RequireAssertion(ctx =>
+                    policyBuilder => policyBuilder.RequireClaim("Institucion").RequireAssertion(ctx =>
                     {
                         return !ctx.User.HasClaim("Institucion", "Trabajador");
                     }));

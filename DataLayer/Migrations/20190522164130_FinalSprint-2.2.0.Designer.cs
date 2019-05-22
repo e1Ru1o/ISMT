@@ -4,20 +4,39 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20190522164130_FinalSprint-2.2.0")]
+    partial class FinalSprint220
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("BizData.Entities.Ciudad", b =>
+                {
+                    b.Property<int>("CiudadID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Nombre");
+
+                    b.Property<int?>("PaisID");
+
+                    b.HasKey("CiudadID");
+
+                    b.HasIndex("PaisID");
+
+                    b.ToTable("Ciudades");
+                });
 
             modelBuilder.Entity("BizData.Entities.Historial", b =>
                 {
@@ -69,11 +88,11 @@ namespace DataLayer.Migrations
 
                     b.Property<DateTime?>("FechaInicio");
 
-                    b.Property<string>("UsuarioId");
+                    b.Property<string>("UsuarioID");
 
                     b.HasKey("ItinerarioID");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("Itinerarios");
                 });
@@ -232,7 +251,7 @@ namespace DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Ciudad");
+                    b.Property<int?>("CiudadID");
 
                     b.Property<DateTime?>("FechaFin");
 
@@ -247,6 +266,8 @@ namespace DataLayer.Migrations
                     b.Property<int?>("PaisID");
 
                     b.HasKey("ViajeID");
+
+                    b.HasIndex("CiudadID");
 
                     b.HasIndex("InstitucionID");
 
@@ -380,6 +401,13 @@ namespace DataLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("BizData.Entities.Ciudad", b =>
+                {
+                    b.HasOne("BizData.Entities.Pais", "Pais")
+                        .WithMany()
+                        .HasForeignKey("PaisID");
+                });
+
             modelBuilder.Entity("BizData.Entities.Historial", b =>
                 {
                     b.HasOne("BizData.Entities.Itinerario", "Itinerario")
@@ -395,7 +423,7 @@ namespace DataLayer.Migrations
                 {
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
                         .WithMany("Itinerarios")
-                        .HasForeignKey("UsuarioId");
+                        .HasForeignKey("UsuarioID");
                 });
 
             modelBuilder.Entity("BizData.Entities.Pais", b =>
@@ -442,6 +470,10 @@ namespace DataLayer.Migrations
 
             modelBuilder.Entity("BizData.Entities.Viaje", b =>
                 {
+                    b.HasOne("BizData.Entities.Ciudad", "Ciudad")
+                        .WithMany()
+                        .HasForeignKey("CiudadID");
+
                     b.HasOne("BizData.Entities.Institucion", "Institucion")
                         .WithMany()
                         .HasForeignKey("InstitucionID");
