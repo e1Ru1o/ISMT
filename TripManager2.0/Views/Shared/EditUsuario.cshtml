@@ -44,17 +44,7 @@
 
 
                 <td>
-                    @Html.ActionLink("editar", "UpdateUsuario", "Admin", new RegisterUsuarioCommand
-               {
-                   EditEmail = item.UserName,
-                   Email = item.UserName,
-                   FirstName = item.FirstName,
-                   FirstLastName = item.FirstLastName,
-                   SecondLastName = item.SecondLastName,
-                   SecondName = item.SecondName,
-                   Password = "P9n$",
-                   
-               })
+                    <a href="/Admin/UpdateUsuario?email=@item.UserName">editar</a>
                 </td>
             </tr>
         }

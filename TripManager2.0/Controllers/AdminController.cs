@@ -41,7 +41,7 @@ namespace TripManager2._0.Controllers
             _userManager = userManager;
         }
 
-      
+
         [HttpGet]
         public IActionResult EditCiudad()
         {
@@ -189,28 +189,109 @@ namespace TripManager2._0.Controllers
         }
 
 
+        [HttpPost]
         public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)
         {
 
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             GetterAll getter1 = new GetterAll(_getterUtils, _context);
-            var user = (getter.GetAll("Usuario") as IEnumerable<Usuario>).Where(x => x.Email == cmd.EditEmail).Single();
-            var claim = (await _userManager.GetClaimsAsync(user)).Where(x => x.Type == "Permission").Select(x => x.Value).Single();
-            if (cmd.Level == null)
-                cmd.Level = claim;
+            var user = await _userManager.FindByEmailAsync(cmd.Email);
             if (ModelState.IsValid)
             {
 
                 //var user = await _userManager.FindByEmailAsync(cmd.Email);
                 LoginService loginService = new LoginService(_context, _signInManager, _userManager);
+                var claim = (await _userManager.GetClaimsAsync(user)).Where(x => x.Type == "Permission").Select(x => x.Value).Single();
+                await _userManager.RemoveClaimAsync(user, new Claim("Permission", claim));
+                await _userManager.AddClaimAsync(user, new Claim("Permission", cmd.Level));
+
+                try
+                {
+                    await _userManager.RemoveClaimAsync(user, new Claim("Passport", "True"));
+                }
+                finally
+                {
+                    if (cmd.Passaport == "True")
+                        await _userManager.AddClaimAsync(user, new Claim("Passport", "True"));
+                }
+                try
+                {
+                    await _userManager.RemoveClaimAsync(user, new Claim("Visa", "True"));
+                }
+                finally
+                {
+                    if (cmd.Visa == "True")
+                        await _userManager.AddClaimAsync(user, new Claim("Visa", "True"));
+                }
+                string ins = null;
+                try
+                {
+                    ins = (await _userManager.GetClaimsAsync(user)).Where(x => x.Type == "Institucion").Select(x => x.Value).Single();
+
+                    await _userManager.RemoveClaimAsync(user, new Claim("Institucion", ins));
+                }catch{ }
+                finally
+                {
+                    if (cmd.Institucion !="None") 
+                        await _userManager.AddClaimAsync(user, new Claim("Institucion", cmd.Institucion));
+                }
                 var us = cmd.ToUsuario();
-                await loginService.EditUserAsync(us, (getter.GetAll("Usuario") as IEnumerable<Usuario>).Where(x => x.Email == cmd.EditEmail).Single());
-                return RedirectToAction("EditUsuario", "User");
+                await loginService.EditUserAsync(us, user);
+                return RedirectToAction("EditUsuario", "Admin");
             }
             return View(cmd);
         }
         [HttpGet]
-        public async Task<IActionResult> PendingAdmins()
+        public async Task<IActionResult> UpdateUsuario(string email)
+        {
+
+
+            var item = await _userManager.FindByEmailAsync(email);
+            var claims = (await _userManager.GetClaimsAsync(item));
+            var level = claims.Where(x => x.Type == "Permission").Select(x => x.Value).Single();
+            string passport,visa,institucion;
+            try
+            {
+                passport = claims.Where(x => x.Type == "Passport").Select(x => x.Value).Single();
+            }
+            catch
+            {
+                passport = "False";
+            }
+            try
+            {
+                visa = claims.Where(x => x.Type == "Visa").Select(x => x.Value).Single();
+            }
+            catch
+            {
+               visa = "False";
+            }
+            try
+            {
+                institucion = claims.Where(x => x.Type == "Institucion").Select(x => x.Value).Single();
+            }
+            catch
+            {
+                institucion = "None";
+            }
+            var cmd = new RegisterUsuarioCommand
+            {
+                EditEmail = item.UserName,
+                Email = item.UserName,
+                FirstName = item.FirstName,
+                FirstLastName = item.FirstLastName,
+                SecondLastName = item.SecondLastName,
+                SecondName = item.SecondName,
+                Password = "P9n$",
+                Passaport = passport,
+                Institucion = institucion,
+                Visa=visa,
+                Level = level,
+            };
+            return View(cmd);
+        }
+        [HttpGet]
+        public async Task<IActionResult> PendingUsers()
         {
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             List<Usuario> pending = new List<Usuario>();
@@ -228,7 +309,7 @@ namespace TripManager2._0.Controllers
             return View(vm);
         }
 
-        [HttpPost]
+
         public async Task<IActionResult> PendingUsers(PendingUsersViewModel vm)
         {
 
