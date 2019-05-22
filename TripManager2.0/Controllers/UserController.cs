@@ -41,9 +41,15 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpGet]
-        public IActionResult Welcome()
+        public async Task<IActionResult> Welcome()
         {
-            return View();
+            AdminService _adminService = new AdminService(_context, _userManager, _getterUtils);
+            WelcomeViewModel vm = new WelcomeViewModel();
+            var t = await _adminService.FillNotificationsAsync();
+            vm.UserPendings = t.UserPendings;
+            vm.ViajesUpdated = t.ViajesUpdated;
+
+            return View(vm);
         }
 
         [HttpGet]
