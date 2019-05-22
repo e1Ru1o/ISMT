@@ -1,0 +1,45 @@
+﻿@using BizData.Entities
+@model IEnumerable<Viaje>
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Viaje";
+}
+
+<div class="main">
+    <form>
+        <table>
+            <tr>
+                <th>
+                    Pais
+                </th>
+                <th>
+                    Ciudad
+                </th>
+                <th>
+                    Fecha de Inicio
+                </th>
+                <th>
+                    Fecha de Fin
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Pais.Nombre
+                    </td>
+                    <td>
+                        @item.Ciudad
+                    </td>
+                    <td>
+                        @item.FechaInicio
+                    </td>
+                    <td>
+                        @item.FechaFin
+                    </td>
+                </tr>
+            }
+        </table>
+    </form>
+</div>
