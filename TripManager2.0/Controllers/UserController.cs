@@ -52,31 +52,8 @@ namespace TripManager2._0.Controllers
         {
         	var getter = new GetterAll(_getterUtils, _context);
         	var data = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
-        	var trip = new ViajeViewModel();
-        	trip.Posibilities = data.ToList();
             
-            return View(trip);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ViewTrips()
-        {
-            //TODO: [KARL LEWIS] When you create TripDetailsView add funtionality to the DetailsButton in the View correspondent to this method
-            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
-            var user = await _userManager.GetUserAsync(User);
-            //TODO: [TENORIO] When you fill the time fields of the Itinerario replace `DateTime.Now` putting the Start and End dates appropiately, use only `.Date`
-            var data = services.GetItinerarioNotFinished(user)
-                .Select(x => new TripViewModel(DateTime.Now.Date, DateTime.Now.Date, x.Estado.ToString(), x.ItinerarioID));
             return View(data);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ViewTrips(int canceled)
-        {
-            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
-            var user = await _userManager.GetUserAsync(User);
-            services.CancelItinerario(canceled, user, "El usuario cancelo su viaje");
-            return RedirectToAction("ViewTrips");
         }
 
         [HttpPost]
@@ -93,11 +70,12 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.GetUserAsync(User);
             var iterID = user.Itinerarios.Last().ItinerarioID;
 
+            for (int i = 0; i < vm.Motivo.Count; ++i)
+                if (vm.Motivo[i] is null)
+                    vm.Motivo[i] = "";
+
             for (int i = 0; i < vm.Country.Count(); i++)
             {
-                while (vm.Motivo.Count() < vm.Country.Count())
-                    vm.Motivo.Add("");
-
                 var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
                 services.RegisterViajeAsync(viajeCmd);
             }
@@ -105,17 +83,28 @@ namespace TripManager2._0.Controllers
             return View("Welcome");
         }
 
-        public IActionResult Print(TableUserViewModel text)
+        [HttpGet]
+        public async Task<IActionResult> ViewTrips()
         {
-            GetterAll getter;
-            if(text.Table.ToString() == "Usuario")
-                getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
-            else
-                getter = new GetterAll(_getterUtils, _context);
-            var result = getter.GetAll(text.Table.ToString());
-
-            return View("Display" + text.Table.ToString(), result);
+            //TODO: [KARL LEWIS] When you create TripDetailsView add funtionality to the DetailsButton in the View correspondent to this method
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            //TODO: [TENORIO] When you fill the time fields of the Itinerario replace `DateTime.Now` putting the Start and End dates appropiately, use only `.Date`
+            var test = DateTime.Now.Date;
+            var data = services.GetItinerarioNotFinished(user)
+                .Select(x => new TripViewModel(DateTime.Now.Date, DateTime.Now.Date, x.Estado.ToString(), x.ItinerarioID));
+            return View(data);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ViewTrips(int canceled)
+        {
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            services.CancelItinerario(canceled, user, "El usuario cancelo su viaje");
+            return RedirectToAction("ViewTrips");
+        }
+        
         [HttpGet]
         public IActionResult EditCiudad()
         {
