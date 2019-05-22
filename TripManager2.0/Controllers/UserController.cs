@@ -58,6 +58,27 @@ namespace TripManager2._0.Controllers
             return View(trip);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ViewTrips()
+        {
+            //TODO: [KARL LEWIS] When you create TripDetailsView add funtionality to the DetailsButton in the View correspondent to this method
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            //TODO: [TENORIO] When you fill the time fields of the Itinerario replace `DateTime.Now` putting the Start and End dates appropiately, use only `.Date`
+            var data = services.GetItinerarioNotFinished(user)
+                .Select(x => new TripViewModel(DateTime.Now.Date, DateTime.Now.Date, x.Estado.ToString(), x.ItinerarioID));
+            return View(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ViewTrips(int canceled)
+        {
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            services.CancelItinerario(canceled, user, "El usuario cancelo su viaje");
+            return RedirectToAction("ViewTrips");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(ViajeViewModel vm)
         {
@@ -245,7 +266,7 @@ namespace TripManager2._0.Controllers
 
         public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)
         {
-
+           
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             GetterAll getter1 = new GetterAll(_getterUtils, _context);
             if (ModelState.IsValid)
@@ -281,6 +302,7 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public async Task<IActionResult> PendingUsers(PendingUsersViewModel vm)
         {
+        
             var user = await _userManager.FindByIdAsync(vm.userID);
             await _userManager.RemoveClaimAsync(user, new Claim("Pending", "true"));
             await _userManager.AddClaimAsync(user, new Claim("Pending", "false"));

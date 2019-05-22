@@ -5,6 +5,7 @@ using BizDbAccess.Repositories;
 using BizDbAccess.Utils;
 using BizLogic.Workflow;
 using BizLogic.Workflow.Concrete;
+using BizLogic.WorkflowManager;
 using Microsoft.AspNetCore.Identity;
 using ServiceLayer.BizRunners;
 using System;
@@ -31,7 +32,9 @@ namespace ServiceLayer.WorkFlowServices
         private readonly PaisDbAccess _paisDbAccess;
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly CiudadDbAccess _ciudadDbAccess;
-        private readonly UserDbAccess _userDbAccess; 
+        private readonly UserDbAccess _userDbAccess;
+
+        private readonly WorkflowManagerLocal _workflowManagerLocal;
 
         public WorkflowServices(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils, SignInManager<Usuario> signInManager)
         {
@@ -50,6 +53,7 @@ namespace ServiceLayer.WorkFlowServices
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _ciudadDbAccess = new CiudadDbAccess(_context);
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
+            _workflowManagerLocal = new WorkflowManagerLocal(context);
         }
 
        public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
@@ -111,6 +115,32 @@ namespace ServiceLayer.WorkFlowServices
             var viaje = _runnerViaje.RunAction(cmd);
 
             return viaje.ViajeID;
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
+        {
+            return _userDbAccess.GetItinerariosNotFinished(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioDone(Usuario usuario)
+        {
+            return _userDbAccess.GetItinerariosDone(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerarioCanceled(Usuario usuario)
+        {
+            return _userDbAccess.GetItinerariosCanceled(usuario);
+        }
+
+        public IEnumerable<Itinerario> GetItinerariosEstado(Estado estado, Usuario user)
+        {
+            return _itinerarioDbAccess.GetItinerariosEstado(estado, user);
+        }
+
+        public void CancelItinerario(int itinerarioId, Usuario usuario, string comentario)
+        {
+            var trip = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
     }
 }
