@@ -9,6 +9,13 @@ namespace TripManager2._0.ViewModels
     {
         public string Identifier { get; set; }
         public string Status { get; set; }
+        public int ID { get; set; }
+
+        public TripViewModel(DateTime s, DateTime f, string status, int iId)
+        {
+            Identifier = s.Date.ToString() + " --> " + f.Date.ToString();
+            ID = iId;
+        }
 
         public TripViewModel(DateTime s, DateTime f, string status)
         {

@@ -66,6 +66,26 @@ namespace TripManager2._0.Controllers
             return View(data);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ViewTrips()
+        {
+            //TODO: [KARL LEWIS] When you create TripDetailsView add funtionality to the DetailsButton in the View correspondent to this method
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            var data = services.GetItinerarioNotFinished(user)
+                .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID));
+            return View(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ViewTrips(int canceled)
+        {
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+            services.CancelItinerario(canceled, user, "El usuario cancelo su viaje");
+            return RedirectToAction("ViewTrips");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(ViajeViewModel vm)
         {
@@ -76,9 +96,8 @@ namespace TripManager2._0.Controllers
                 UsuarioID = _userManager.GetUserId(User)
             };
 
-            await services.RegisterItinerarioAsync(iterCmd);
+            var iterID = await services.RegisterItinerarioAsync(iterCmd);
             var user = await _userManager.GetUserAsync(User);
-            var iterID = user.Itinerarios.Last().ItinerarioID;
 
             for (int i = 0; i < vm.Country.Count(); i++)
             {
@@ -88,6 +107,9 @@ namespace TripManager2._0.Controllers
                 var viajeCmd = new ViajeCommand(iterID, user.Id, vm.Country[i], vm.Motivo[i], vm.Start[i], vm.End[i]);
                 services.RegisterViajeAsync(viajeCmd);
             }
+
+            var iter = services.GetItinerario(iterID);
+            services.CalculateDates(iter);
 
             return View("Welcome");
         }
