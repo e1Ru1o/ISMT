@@ -31,7 +31,6 @@ namespace ServiceLayer.WorkFlowServices
         private readonly ViajeDbAccess _viajeDbAccess;
         private readonly PaisDbAccess _paisDbAccess;
         private readonly InstitucionDbAccess _institucionDbAccess;
-        private readonly CiudadDbAccess _ciudadDbAccess;
         private readonly UserDbAccess _userDbAccess;
         private readonly VisaDbAccess _visaDbAccess;
 
@@ -52,7 +51,6 @@ namespace ServiceLayer.WorkFlowServices
             _viajeDbAccess = new ViajeDbAccess(_context);
             _paisDbAccess = new PaisDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
-            _ciudadDbAccess = new CiudadDbAccess(_context);
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
             _workflowManagerLocal = new WorkflowManagerLocal(context);
             _visaDbAccess = new VisaDbAccess(context);
@@ -61,8 +59,8 @@ namespace ServiceLayer.WorkFlowServices
        public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
         {
             var iters = _userDbAccess.GetAllItinerarios();
-            cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioID);
-
+            //cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioID);
+            cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID);
             var itinerario = _runnerItinerario.RunAction(cmd);
 
             return itinerario.ItinerarioID;
@@ -101,7 +99,6 @@ namespace ServiceLayer.WorkFlowServices
 
         public long RegisterViajeAsync(ViajeCommand cmd)
         {
-            //cmd.Ciudad = _ciudadDbAccess.GetCiudad(cmd.CiudadName);
             //cmd.Institucion = _institucionDbAccess.GetInstitucion(cmd.InstitucionName);
             cmd.Pais = _paisDbAccess.GetPais(cmd.PaisName);
 
