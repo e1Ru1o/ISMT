@@ -56,12 +56,13 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal = new WorkflowManagerLocal(context);
         }
 
-       public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
+       public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd, string claimTipoInstitucion)
         {
             var iters = _userDbAccess.GetAllItinerarios();
             cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioID);
-
             var itinerario = _runnerItinerario.RunAction(cmd);
+
+            _workflowManagerLocal.CrearViaje(itinerario, claimTipoInstitucion);
 
             return itinerario.ItinerarioID;
         }
@@ -184,9 +185,7 @@ namespace ServiceLayer.WorkFlowServices
                 return;
             }
         }
-
         
-
         public void RealizarItinerario(int itinerarioId)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);

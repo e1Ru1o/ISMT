@@ -66,7 +66,7 @@ namespace TripManager2._0.Controllers
                 UsuarioID = _userManager.GetUserId(User)
             };
 
-            await services.RegisterItinerarioAsync(iterCmd);
+            await services.RegisterItinerarioAsync(iterCmd, User.Claims.Where(x=> x.Type == "Institucion").Single().Value);
             var user = await _userManager.GetUserAsync(User);
             var iterID = user.Itinerarios.Last().ItinerarioID;
 
