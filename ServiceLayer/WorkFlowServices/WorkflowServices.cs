@@ -31,8 +31,8 @@ namespace ServiceLayer.WorkFlowServices
         private readonly ViajeDbAccess _viajeDbAccess;
         private readonly PaisDbAccess _paisDbAccess;
         private readonly InstitucionDbAccess _institucionDbAccess;
-        private readonly CiudadDbAccess _ciudadDbAccess;
         private readonly UserDbAccess _userDbAccess;
+        private readonly VisaDbAccess _visaDbAccess;
 
         private readonly WorkflowManagerLocal _workflowManagerLocal;
 
@@ -51,17 +51,19 @@ namespace ServiceLayer.WorkFlowServices
             _viajeDbAccess = new ViajeDbAccess(_context);
             _paisDbAccess = new PaisDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
-            _ciudadDbAccess = new CiudadDbAccess(_context);
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
             _workflowManagerLocal = new WorkflowManagerLocal(context);
+            _visaDbAccess = new VisaDbAccess(context);
         }
 
-       public async Task<int> RegisterItinerarioAsync(ItinerarioCommand cmd)
+       public int RegisterItinerarioAsync(ItinerarioCommand cmd, string claimTipoInstitucion)
         {
             var iters = _userDbAccess.GetAllItinerarios();
-            cmd.Usuario = await _userManager.FindByIdAsync(cmd.UsuarioID);
+            cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID); //await _userManager.FindByIdAsync(cmd.UsuarioID);
 
             var itinerario = _runnerItinerario.RunAction(cmd);
+
+            _workflowManagerLocal.CrearViaje(itinerario, claimTipoInstitucion);
 
             return itinerario.ItinerarioID;
         }
@@ -99,7 +101,6 @@ namespace ServiceLayer.WorkFlowServices
 
         public long RegisterViajeAsync(ViajeCommand cmd)
         {
-            //cmd.Ciudad = _ciudadDbAccess.GetCiudad(cmd.CiudadName);
             //cmd.Institucion = _institucionDbAccess.GetInstitucion(cmd.InstitucionName);
             cmd.Pais = _paisDbAccess.GetPais(cmd.PaisName);
 
@@ -116,8 +117,6 @@ namespace ServiceLayer.WorkFlowServices
 
             return viaje.ViajeID;
         }
-
-
 
         public IEnumerable<Itinerario> GetItinerarioNotFinished(Usuario usuario)
         {
@@ -186,9 +185,7 @@ namespace ServiceLayer.WorkFlowServices
                 return;
             }
         }
-
         
-
         public void RealizarItinerario(int itinerarioId)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
@@ -201,5 +198,41 @@ namespace ServiceLayer.WorkFlowServices
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
+
+        public async void SetPassportToUser(int iterID, string userToUpdID, string updatorID, string comment)
+        {
+            var iter = _itinerarioDbAccess.GetItinerario(iterID);
+            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
+            var updator = await _userManager.FindByIdAsync(updatorID);
+
+            userToUpd.HasPassport = true;
+            await _userManager.UpdateAsync(userToUpd);
+            _context.Commit();
+        }
+
+        public async void SetVisaToUser(int visaID, string userToUpdID, string updatorID)
+        {
+            var visa = _visaDbAccess.GetVisa(visaID);
+            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
+            var updator = await _userManager.FindByIdAsync(updatorID);
+
+            var user_visa = new Usuario_Visa()
+            {
+                Usuario = userToUpd,
+                Visa = visa
+            };
+
+            if (userToUpd.Visas == null)
+                userToUpd.Visas = new List<Usuario_Visa>();
+            if (visa.Usuarios == null)
+                visa.Usuarios = new List<Usuario_Visa>();
+
+            userToUpd.Visas.Add(user_visa);
+            visa.Usuarios.Add(user_visa);
+
+            await _userManager.UpdateAsync(userToUpd);
+            visa = _visaDbAccess.Update(visa, _visaDbAccess.GetVisa(visaID));
+        }
+
     }
 }

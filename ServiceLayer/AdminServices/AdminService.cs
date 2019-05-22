@@ -23,14 +23,12 @@ namespace ServiceLayer.AdminServices
         private readonly UserManager<Usuario> _userManager;
         private readonly GetterUtils _getterUtils;
 
-        private readonly RunnerWriteDb<CiudadCommand, Ciudad> _runnerCiudad;
         private readonly RunnerWriteDb<NameOnlyViewModel, Institucion> _runnerInstitucion;
         private readonly RunnerWriteDb<PaisCommand, Pais> _runnerPais;
         private readonly RunnerWriteDb<VisaCommand, Visa> _runnerVisa;
         private readonly RunnerWriteDb<NameOnlyViewModel, Region> _runnerRegion;
 
         private readonly PaisDbAccess _paisDbAccess;
-        private readonly CiudadDbAccess _ciudadDbAccess;
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly Pais_VisaDbAccess _pais_VisaDbAccess;
         private readonly VisaDbAccess _visaDbAccess;
@@ -42,8 +40,6 @@ namespace ServiceLayer.AdminServices
             _userManager = userManager;
             _getterUtils = getterUtils;
 
-            _runnerCiudad = new RunnerWriteDb<CiudadCommand, Ciudad>(
-                new RegisterCiudadAction(new CiudadDbAccess(_context)), _context);
             _runnerInstitucion = new RunnerWriteDb<NameOnlyViewModel, Institucion>(
                 new RegisterInstitucionAction(new InstitucionDbAccess(_context)), _context);
             _runnerPais = new RunnerWriteDb<PaisCommand, Pais>(
@@ -54,40 +50,10 @@ namespace ServiceLayer.AdminServices
                 new RegisterRegionAction(new RegionDbAccess(_context)), _context);
 
             _paisDbAccess = new PaisDbAccess(_context);
-            _ciudadDbAccess = new CiudadDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _pais_VisaDbAccess = new Pais_VisaDbAccess(_context);
             _visaDbAccess = new VisaDbAccess(_context);
             _regionDbAccess = new RegionDbAccess(_context);
-        }
-
-        public long RegisterCiudad(CiudadCommand cmd, out IImmutableList<ValidationResult> errors)
-        {
-            cmd.Pais = _paisDbAccess.GetPais(cmd.paisName);
-
-            var ciudad = _runnerCiudad.RunAction(cmd);
-
-            if (_runnerCiudad.HasErrors)
-            {
-                errors = _runnerCiudad.Errors;
-                return -1;
-            }
-
-            errors = null;
-            return ciudad.CiudadID;
-        }
-
-        public Ciudad UpdateCiudad(Ciudad entity, Ciudad toUpd)
-        {
-            var ciudad = _ciudadDbAccess.Update(entity, toUpd);
-            _context.Commit();
-            return ciudad;
-        }
-
-        public void RemoveCiudad(Ciudad entity)
-        {
-            _ciudadDbAccess.Delete(entity);
-            _context.Commit();
         }
 
         public long RegisterInstitucion(NameOnlyViewModel vm, out IImmutableList<ValidationResult> errors)

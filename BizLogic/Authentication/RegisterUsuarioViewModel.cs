@@ -32,8 +32,14 @@ namespace BizLogic.Authentication
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        public  string EditEmail { get; set; }
+        public string EditEmail { get; set; }
 
         public string Level { get; set; }
+
+        public string Passaport { get; set; }
+
+        public string Visa { get; set; }
+
+        public string Institucion { get; set; }
     }
 }
