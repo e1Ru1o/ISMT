@@ -36,7 +36,7 @@
                     </form>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="FirstPage">Inicio</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Welcome">Inicio</a>
                         </li>
                     </ul>
                 </div>
@@ -70,10 +70,10 @@
                 <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-container">
-                <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorizacion de viaje</a>
+                <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorización de viaje</a>
                 @if (User.HasClaim("Passport", "True"))
                 {
-                    <a asp-controller="Editor" asp-action="AuthorizePassport"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
+                    <a asp-controller="Editor" asp-action="AuthorizePassport"><i class="fa fa-angle-right"></i> Entregar pasaporte</a>
                 }
                 @if (User.HasClaim("Visa", "True"))
                 {
@@ -91,7 +91,7 @@
             </button>
             <div class="dropdown-container">
                 <a asp-controller="Admin" asp-action="EditPais"><i class="fa fa-angle-right"></i> Pais</a>
-                <a asp-controller="Admin" asp-action="EditRegion"><i class="fa fa-angle-right"></i> Region</a>
+                <a asp-controller="Admin" asp-action="EditRegion"><i class="fa fa-angle-right"></i> Región</a>
                 <a asp-controller="Admin" asp-action="EditUsuario"><i class="fa fa-angle-right"></i> Usuarios</a>
                 <a asp-controller="Admin" asp-action="PendingUsers"><i class="fa fa-angle-right"></i> Usuarios Pendientes</a>
             </div>

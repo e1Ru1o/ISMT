@@ -11,13 +11,13 @@
 </head>
 <body>
     <CENTER>
-        <h1>No tienes notificaciones.</h1>
-        <h1>La verdad es q ni lo se ;-)</h1>
         @if (User.HasClaim("Permission", "Common"))
         {
             <p>
                 Desde aquí podrá usar todas las herramientas que la aplicación ofrece.
             </p>
+            <br />
+            <h2>Notificaciones:</h2>
             <br />
             if (!Model.ViajesUpdated.Any())
             {
@@ -30,7 +30,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteVisas).ToList())
                     {
-                            <p>@item</p>
+                            <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -38,7 +38,8 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendientePasaporte).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
+
                     }
                 }
 
@@ -46,7 +47,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionJefeArea).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -54,7 +55,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionDecano).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -62,7 +63,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionRector).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -72,13 +73,13 @@
 
                 if (misViajes.Count() == 0)
                 {
-                    <p>Sus viajes viajes no han sufrido cambios.</p>
+                    <p>Sus viajes no han sido modificados.</p>
                 }
                 else
                 {
                     foreach (var item in misViajes)
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
 
                 }
@@ -98,9 +99,36 @@
             {
                 <p>No hay usuarios pendientes.</p>
             }
-            foreach (var item in Model.UserPendings)
+            else
             {
-                <p>@item</p>
+                int cant = Model.UserPendings.Count();
+
+                if (cant == 1)
+                {
+                    <p>Hay @cant usuario pendiente.</p>
+                }
+                else
+                {
+                    <p>Hay @cant usuarios pendientes.</p>
+                }
+
+                <br />
+                <h2>Sus Viajes:</h2>
+                var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+
+                if (misViajes.Count() == 0)
+                {
+                    <p>Sus viajes no han sido modificados.</p>
+                }
+                else
+                {
+                    foreach (var item in misViajes)
+                    {
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
+                    }
+
+                }
+
             }
 
         }
