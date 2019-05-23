@@ -51,7 +51,9 @@
 
 
 <script>
-    dismark_selection();
+    var op = document.getElementsByTagName('option');
+    for (var i = 0; i < op.length; ++i)
+        op[i].selected = false;
 
     function send(caller, action) {
         var sel = document.getElementsByTagName('select')
