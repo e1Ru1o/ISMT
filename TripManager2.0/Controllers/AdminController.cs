@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using TripManager2._0.ViewModels;
-using System.Linq;
 using ServiceLayer.AccountServices;
 using BizLogic.Authentication;
 using System.Threading.Tasks;
@@ -47,33 +46,6 @@ namespace TripManager2._0.Controllers
         {
             var getter = new GetterAll(_getterUtils, _context);
             return View(getter.GetAll("Ciudad"));
-        }
-        [HttpPost]
-        public IActionResult EditCiudad(int id)
-        {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
-            var getter = new GetterAll(_getterUtils, _context);
-            var ciudad = ((getter.GetAll("Ciudad")) as IEnumerable<Ciudad>).Where(x => x.CiudadID == id).Single();
-            service.RemoveCiudad(ciudad);
-            return View(getter.GetAll("Ciudad"));
-        }
-        [HttpPost]
-        public IActionResult AddCiudad(CiudadCommand cmd)
-        {
-
-            if (ModelState.IsValid)
-            {
-                AdminService service = new AdminService(_context, _userManager, _getterUtils);
-                service.RegisterCiudad(cmd, out var errors);
-                return RedirectToAction("EditCiudad");
-            }
-            cmd.Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre);
-            return View(cmd);
-        }
-        [HttpGet]
-        public IActionResult AddCiudad()
-        {
-            return View(new CiudadCommand { Paises = (new GetterAll(_getterUtils, _context).GetAll("Pais") as IEnumerable<Pais>).Select(x => x.Nombre) });
         }
 
         [HttpGet]

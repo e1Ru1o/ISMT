@@ -158,7 +158,7 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public Pais ManageActionVisas(Itinerario itinerario, Action action, Usuario usuario, string comentario)
+        public void ManageActionVisas(Itinerario itinerario, Action action, Usuario usuario, string comentario)
         {
             var historial_entity = new Historial
             {
@@ -168,7 +168,7 @@ namespace BizLogic.WorkflowManager
 
             if (action == Action.Ignorar)
             {
-                Pais pais = CurrentVisaPais(itinerario);
+                Pais pais = CurrentVisaItinerario(itinerario);
 
                 if (pais is null)
                 {
@@ -177,15 +177,14 @@ namespace BizLogic.WorkflowManager
                     _context.Commit();
 
                     itinerario.Estado = Estado.PendienteRealizacion;
-                    return pais;
                 }
 
-                return pais;
+                return;
             }
 
             if (action == Action.Aprobar)
             {
-                Pais pais = CurrentVisaPais(itinerario);
+                Pais pais = CurrentVisaItinerario(itinerario);
 
                 if (pais is null)
                 {
@@ -196,10 +195,9 @@ namespace BizLogic.WorkflowManager
                     _context.Commit();
 
                     itinerario.Estado = Estado.PendienteRealizacion;
-                    return pais;
                 }
 
-                return pais;
+                return;
             }
 
             else
@@ -210,11 +208,11 @@ namespace BizLogic.WorkflowManager
                 _historial.Add(historial_entity);
                 _context.Commit();
 
-                return null;
+                return ;
             }
         }
 
-        private Pais CurrentVisaPais(Itinerario itinerario)
+        public Pais CurrentVisaItinerario(Itinerario itinerario)
         {
             bool change = false;
             var visas_usuario = from visa in itinerario.Usuario.Visas

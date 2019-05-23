@@ -203,18 +203,29 @@ namespace ServiceLayer.WorkFlowServices
         {
             var iter = _itinerarioDbAccess.GetItinerario(iterID);
             var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
-            var updator = await _userManager.FindByIdAsync(updatorID);
+            var updator = _userDbAccess.GetUsuario(updatorID);
 
             userToUpd.HasPassport = true;
             await _userManager.UpdateAsync(userToUpd);
             _context.Commit();
+
+            _workflowManagerLocal.ManageActionPasaporte(iter, BizLogic.WorkflowManager.Action.Aprobar, updator, comment);
         }
 
-        public async void SetVisaToUser(int visaID, string userToUpdID, string updatorID)
+        public void ManageActionRechazarPasaporte(int itinerarioId, string usuarioId, string comentario)
         {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+
+            _workflowManagerLocal.ManageActionPasaporte(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+        }
+
+        public async void SetVisaToUser(int itinerarioId, int visaID, string userToUpdID, string updatorID)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var visa = _visaDbAccess.GetVisa(visaID);
             var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
-            var updator = await _userManager.FindByIdAsync(updatorID);
+            var updator = _userDbAccess.GetUsuario(updatorID);
 
             var user_visa = new Usuario_Visa()
             {
@@ -232,7 +243,23 @@ namespace ServiceLayer.WorkFlowServices
 
             await _userManager.UpdateAsync(userToUpd);
             visa = _visaDbAccess.Update(visa, _visaDbAccess.GetVisa(visaID));
+
+            _workflowManagerLocal.ManageActionVisas(itinerario, BizLogic.WorkflowManager.Action.Aprobar, updator, null);
         }
 
+        public void ManageActionRechazarVisa(int itinerarioId, int visaId, string usuarioId)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            var visa = _visaDbAccess.GetVisa(visaId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+
+            _workflowManagerLocal.ManageActionVisas(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, $" Visa {visa.Name} rechazada");
+        }
+
+        public Pais GetVisasItinerario(int itinerarioId)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            return _workflowManagerLocal.CurrentVisaItinerario(itinerario);
+        }
     }
 }
