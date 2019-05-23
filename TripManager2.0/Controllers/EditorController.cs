@@ -145,6 +145,15 @@ namespace TripManager2._0.Controllers
         public IActionResult CreateVisa(VisaViewModel vm)
         {
             //TODO: [TENORIO] save the visa. Remember that one of the two list may be null
+            AdminService service = new AdminService(_context, _userManager, _getterUtils);
+            VisaCommand cmd = new VisaCommand()
+            {
+                paisesNames = vm.paisesNames,
+                regionesName = vm.regionesName
+            };
+
+            service.RegisterVisa(cmd, out var errors);
+
             return RedirectToAction("Welcome", "User");
         }
 

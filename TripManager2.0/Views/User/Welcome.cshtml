@@ -1,5 +1,5 @@
 ﻿@using TripManager2._0.ViewModels
-@model UserViewModel
+@model WelcomeViewModel
 
 @{
     Layout = "UserLayout";
@@ -13,6 +13,97 @@
     <CENTER>
         <h1>No tienes notificaciones.</h1>
         <h1>La verdad es q ni lo se ;-)</h1>
+        @if (User.HasClaim("Permission", "Common"))
+        {
+            <p>
+                Desde aquí podrá usar todas las herramientas que la aplicación ofrece.
+            </p>
+            <br />
+            if (!Model.ViajesUpdated.Any())
+            {
+                <p>No hay cambios en los viajes.</p>
+
+            }
+            else
+            {
+                if (User.Claims.Where(c => c.Type == "Visa").Any())
+                {
+                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteVisas).ToList())
+                    {
+                            <p>@item</p>
+                    }
+                }
+
+                if (User.Claims.Where(c => c.Type == "Passport").Any())
+                {
+                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendientePasaporte).ToList())
+                    {
+                        <p>@item</p>
+                    }
+                }
+
+                if (User.HasClaim("Institucion", "JefeArea"))
+                {
+                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionJefeArea).ToList())
+                    {
+                        <p>@item</p>
+                    }
+                }
+
+                if (User.HasClaim("Institucion", "Decano"))
+                {
+                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionDecano).ToList())
+                    {
+                        <p>@item</p>
+                    }
+                }
+
+                if (User.HasClaim("Institucion", "Rector"))
+                {
+                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionRector).ToList())
+                    {
+                        <p>@item</p>
+                    }
+                }
+
+                <br />
+                <h2>Sus Viajes:</h2>
+                var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+
+                if (misViajes.Count() == 0)
+                {
+                    <p>Sus viajes viajes no han sufrido cambios.</p>
+                }
+                else
+                {
+                    foreach (var item in misViajes)
+                    {
+                        <p>@item</p>
+                    }
+
+                }
+            }
+        }
+        else
+        {
+            <p>
+                Desde aquí podrá regular la aplicación.
+            </p>
+            <br />
+            <h2>Notificaciones:</h2>
+            <br />
+            <h4>Usuarios Pendientes de autorización:</h4>
+
+            if (!Model.UserPendings.Any())
+            {
+                <p>No hay usuarios pendientes.</p>
+            }
+            foreach (var item in Model.UserPendings)
+            {
+                <p>@item</p>
+            }
+
+        }
     </CENTER>
 </body>
 

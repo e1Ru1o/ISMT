@@ -149,23 +149,29 @@ namespace ServiceLayer.AdminServices
 
         public long RegisterVisa(VisaCommand cmd, out IImmutableList<ValidationResult> errors)
         {
-            cmd.Regiones = _regionDbAccess.GetAll().Zip(cmd.regionesName, (Region r, string s) =>
+            if (cmd.regionesName != null)
             {
-                return r.Nombre == s ? r : null;
-            })
-            .Where(r => r != null)
-            .ToList();
+                cmd.Regiones = _regionDbAccess.GetAll().Zip(cmd.regionesName, (Region r, string s) =>
+                {
+                    return r.Nombre == s ? r : null;
+                })
+                .Where(r => r != null)
+                .ToList();
 
-            cmd.RegionesVisas = BuildListOfRegion_Visa(cmd.Regiones, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+                cmd.RegionesVisas = BuildListOfRegion_Visa(cmd.Regiones, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+            }
 
-            cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
+            if (cmd.paisesNames != null)
             {
-                return p.Nombre == s ? p : null;
-            })
-            .Where(p => p != null)
-            .ToList();
+                cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
+                {
+                    return p.Nombre == s ? p : null;
+                })
+                .Where(p => p != null)
+                .ToList();
 
-            cmd.PaisesVisas = BuildListOfPais_Visa(cmd.Paises, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+                cmd.PaisesVisas = BuildListOfPais_Visa(cmd.Paises, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+            }
 
             var visa =  _runnerVisa.RunAction(cmd);
 
@@ -219,7 +225,7 @@ namespace ServiceLayer.AdminServices
             _context.Commit();
         }
 
-        public async Task<(List<string> UserPendings, bool Paises, bool Regiones)> FillNotificationsAsync()
+        public async Task<(List<string> UserPendings, List<Itinerario> ViajesUpdated)> FillNotificationsAsync()
         {
             //check for pending users
             List<string> UserPendings = new List<string>();
@@ -231,13 +237,10 @@ namespace ServiceLayer.AdminServices
 
             GetterAll getter = new GetterAll(_getterUtils, _context);
 
-            //check for empty provincias
-            bool Paises = getter.GetAll("Pais").Any();
+            List<Itinerario> ViajesUpdated = getter.GetAll("Itinerario").Where(i => (i as Itinerario).Update != 0).Select(i => i as Itinerario).ToList();
 
-            //check for empty UOs
-            bool Regiones = getter.GetAll("Region").Any();
-
-            return (UserPendings, Paises, Regiones);
+            return (UserPendings, ViajesUpdated);
         }
+
     }
 }
