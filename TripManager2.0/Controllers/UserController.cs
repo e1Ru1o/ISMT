@@ -49,13 +49,14 @@ namespace TripManager2._0.Controllers
             var t = await _adminService.FillNotificationsAsync();
             vm.UserPendings = t.UserPendings;
             vm.ViajesUpdated = t.ViajesUpdated;
-
+            int notifications = 0;
 
             if (vm.ViajesUpdated.Any() && User.HasClaim("Permission", "Common"))
             {
                 if (User.Claims.Where(c => c.Type == "Visa").Any())
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteVisas).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -66,6 +67,7 @@ namespace TripManager2._0.Controllers
                 if (User.Claims.Where(c => c.Type == "Passport").Any())
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendientePasaporte).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -76,6 +78,7 @@ namespace TripManager2._0.Controllers
                 if (User.Claims.Where(c => c.Type == "JefeArea").Any())
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -86,6 +89,7 @@ namespace TripManager2._0.Controllers
                 if (User.Claims.Where(c => c.Type == "Decano").Any())
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -96,6 +100,7 @@ namespace TripManager2._0.Controllers
                 if (User.Claims.Where(c => c.Type == "Rector").Any())
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -104,6 +109,7 @@ namespace TripManager2._0.Controllers
                 }
 
                 var misViajes = vm.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+                notifications += misViajes.Count();
                 if (misViajes.Count() != 0)
                 {
                     for (int i = 0; i < misViajes.Count(); i++)
@@ -113,6 +119,8 @@ namespace TripManager2._0.Controllers
                     }
                 }
             }
+            vm.Notifications = notifications;
+
             return View(vm);
         }
 

@@ -70,7 +70,7 @@
                 <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-container">
-                <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorizacion de viaje</a>
+                <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorización de viaje</a>
                 @if (User.HasClaim("Passport", "True"))
                 {
                     <a asp-controller="Editor" asp-action="AuthorizePassport"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
@@ -91,7 +91,7 @@
             </button>
             <div class="dropdown-container">
                 <a asp-controller="Admin" asp-action="EditPais"><i class="fa fa-angle-right"></i> Pais</a>
-                <a asp-controller="Admin" asp-action="EditRegion"><i class="fa fa-angle-right"></i> Region</a>
+                <a asp-controller="Admin" asp-action="EditRegion"><i class="fa fa-angle-right"></i> Región</a>
                 <a asp-controller="Admin" asp-action="EditUsuario"><i class="fa fa-angle-right"></i> Usuarios</a>
                 <a asp-controller="Admin" asp-action="PendingUsers"><i class="fa fa-angle-right"></i> Usuarios Pendientes</a>
             </div>
