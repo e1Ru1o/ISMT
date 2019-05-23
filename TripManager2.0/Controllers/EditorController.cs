@@ -114,17 +114,9 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GiveVisa(int itinerarioId, int visaId, int action)
+        public async Task<IActionResult> GiveVisa(string uID, int vID, int action)
         {
-            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
-            var user = await _userManager.GetUserAsync(User);
-
-            if (action == 0)
-                services.SetVisaToUser(itinerarioId, visaId, user.Id);
-            else if (action == 1)
-                services.ManageActionRechazarVisa(itinerarioId, visaId, user.Id);
-            else
-                services.CancelItinerario(itinerarioId, user.Id, "");
+            
             
             return RedirectToAction("GiveVisa");
         }
