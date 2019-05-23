@@ -35,11 +35,15 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("UsuarioId");
 
+                    b.Property<string>("UsuarioTargetId");
+
                     b.HasKey("HistorialID");
 
                     b.HasIndex("ItinerarioID");
 
                     b.HasIndex("UsuarioId");
+
+                    b.HasIndex("UsuarioTargetId");
 
                     b.ToTable("Historial");
                 });
@@ -389,8 +393,12 @@ namespace DataLayer.Migrations
                         .HasForeignKey("ItinerarioID");
 
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("HistorialUpdater")
                         .HasForeignKey("UsuarioId");
+
+                    b.HasOne("BizData.Entities.Usuario", "UsuarioTarget")
+                        .WithMany("HistorialTarget")
+                        .HasForeignKey("UsuarioTargetId");
                 });
 
             modelBuilder.Entity("BizData.Entities.Itinerario", b =>

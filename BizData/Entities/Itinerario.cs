@@ -20,7 +20,8 @@ namespace BizData.Entities
         AprobadasVisas,
         PendienteRealizacion,
         Realizado,
-        Cancelado
+        Cancelado,
+        Pendiente
     }
 
     public class Itinerario
@@ -33,6 +34,7 @@ namespace BizData.Entities
 
         public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Viaje> Viajes { get; set; }
+        public virtual ICollection<Historial> Historial { get; set; }
 
         [NotMapped]
         public IEnumerable<Pais> GetPaises
