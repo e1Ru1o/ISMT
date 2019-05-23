@@ -272,7 +272,12 @@ namespace ServiceLayer.WorkFlowServices
             var data = new HashSet<(Usuario, IEnumerable<Visa>)>();
 
             foreach (var user in usuarios)
-                data.Add((user, _workflowManagerLocal.ManageVisas(user)));
+            {
+                var visas = _workflowManagerLocal.ManageVisas(user);
+                if (visas.Count() != 0)
+                    data.Add((user, visas));
+            }
+                
 
             return data;
         }
