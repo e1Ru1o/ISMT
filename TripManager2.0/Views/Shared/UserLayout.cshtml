@@ -70,7 +70,7 @@
                 <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorizacion de viaje</a>
                 @if (User.HasClaim("Passport", "True"))
                 {
-                    <a asp-controller="Reports" asp-action="ReportTwo"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
+                    <a asp-controller="Editor" asp-action="AuthorizePassport"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
                 }
                 @if (User.HasClaim("Visa", "True"))
                 {

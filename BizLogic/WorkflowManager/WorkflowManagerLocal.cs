@@ -26,7 +26,6 @@ namespace BizLogic.WorkflowManager
             {
                 Itinerario = itinerario,
                 Usuario = usuario,
-                UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
             };
@@ -56,7 +55,6 @@ namespace BizLogic.WorkflowManager
             {
                 Itinerario = itinerario,
                 Usuario = usuario,
-                UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
             };
@@ -87,7 +85,6 @@ namespace BizLogic.WorkflowManager
                 Estado = Estado.AprobadoRector,
                 Itinerario = itinerario,
                 Usuario = usuario,
-                UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
             };
@@ -116,8 +113,7 @@ namespace BizLogic.WorkflowManager
         {
             var historial_entity = new Historial
             {
-                Fecha = DateTime.Now,
-                UsuarioTarget = usuarioItinerario
+                Fecha = DateTime.Now
             };
 
             if (action == Action.Ignorar)
@@ -184,7 +180,6 @@ namespace BizLogic.WorkflowManager
         {
             var historial_entity = new Historial
             {
-                UsuarioTarget = itinerario.Usuario,
                 Itinerario = itinerario,
                 Fecha = DateTime.Now
             };
@@ -286,7 +281,6 @@ namespace BizLogic.WorkflowManager
             {
                 Estado = Estado.Creado,
                 Itinerario = itinerario,
-                UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
@@ -329,7 +323,6 @@ namespace BizLogic.WorkflowManager
             {
                 Estado = itinerario.Estado,
                 Itinerario = itinerario,
-                UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
@@ -345,7 +338,6 @@ namespace BizLogic.WorkflowManager
                 Estado = itinerario.Estado,
                 Itinerario = itinerario,
                 Usuario = usuario,
-                UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
             };
