@@ -296,6 +296,7 @@ namespace BizLogic.WorkflowManager
             {
                 Estado = Estado.Creado,
                 Itinerario = itinerario,
+                UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
@@ -352,6 +353,7 @@ namespace BizLogic.WorkflowManager
             {
                 Estado = itinerario.Estado,
                 Itinerario = itinerario,
+                UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
