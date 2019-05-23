@@ -216,6 +216,17 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.ManageActionPasaporte(usuario, action, updator, comentario);
         }
 
+        public IEnumerable<Usuario> GetUsuariosPendientePasaporte(Usuario usuario)
+        {
+            var itinerarios = GetItinerariosEstado(Estado.PendienteVisas, usuario);
+            HashSet<Usuario> data = new HashSet<Usuario>();
+
+            foreach (var itinerario in itinerarios)
+                data.Add(itinerario.Usuario);
+
+            return data;
+        }
+
         public async void SetVisaToUser(int itinerarioId, int visaID, string updatorID)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);

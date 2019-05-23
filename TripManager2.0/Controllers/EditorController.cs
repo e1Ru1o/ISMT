@@ -79,7 +79,7 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetItinerariosEstado(Estado.PendientePasaporte, user);
+            var data = services.GetUsuariosPendientePasaporte(user);
             return View(data);
         }
 
@@ -105,7 +105,7 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetItinerariosEstado(Estado.PendienteVisas, user);
+            var data = services.GetUsuariosPendientePasaporte(user);
 
             return View(data);
         }
