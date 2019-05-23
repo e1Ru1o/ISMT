@@ -140,7 +140,7 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public IActionResult CreateVisa(VisaViewModel vm)
         {
-            
+            //TODO: [TENORIO] save the visa. Remember that one of the two list may be null
             return RedirectToAction("Welcome", "User");
         }
     }
