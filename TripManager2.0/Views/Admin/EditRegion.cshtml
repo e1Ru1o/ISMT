@@ -24,14 +24,14 @@
             <tr>
                 @Html.Partial("Region", item)
                 <td>
-                    <a href="/Admin/UpdateRegion" class="button"><span>Update</span></a>
+                    <a href="/Admin/UpdateRegion?id=@item.RegionID" class="button"><span>Update</span></a>
                 </td>
             </tr>
 
         }
         <tr>
             <td>
-                @Html.ActionLink("Agregar", "AddRegion", "Admin", new NameOnlyViewModel())
+                <a href="/Admin/AddRegion" class="button"> <span>Agregar </span></a>
             </td>
             <td></td>
         </tr>

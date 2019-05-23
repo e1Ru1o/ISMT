@@ -121,22 +121,24 @@ namespace TripManager2._0.Controllers
             return View(new NameOnlyViewModel());
         }
         [HttpGet]
-        public IActionResult UpdateRegion()
+        public IActionResult UpdateRegion(int id)
         {
-
-            return View(new NameOnlyViewModel());
+            var getter = new GetterAll(_getterUtils, _context);
+            var region = (getter.GetAll("Region") as IEnumerable<Region>).Where(x => x.RegionID==id).Single();
+            return View(new RegionViewModel { Nombre = region.Nombre, Id = region.RegionID });
         }
         [HttpPost]
-        public IActionResult UpdateRegion(NameOnlyViewModel cmd)
+        public IActionResult UpdateRegion(RegionViewModel cmd)
         {
             var getter = new GetterAll(_getterUtils, _context);
             if (ModelState.IsValid)
             {
 
-                var region = (getter.GetAll("Region") as IEnumerable<Region>).Where(x => x.Nombre == cmd.Nombre).Single();
+                var region = (getter.GetAll("Region") as IEnumerable<Region>).Where(x => x.RegionID== cmd.Id).Single();
                 AdminService service = new AdminService(_context, _userManager, _getterUtils);
 
                 service.UpdateRegion(new Region { Nombre = cmd.Nombre }, region);
+                return RedirectToAction("EditRegion");
             }
 
            

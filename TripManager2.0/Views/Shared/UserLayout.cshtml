@@ -59,7 +59,7 @@
             <div class="dropdown-container">
                 <a asp-action="Create" asp-controller="User"><i class="fa fa-angle-right"></i> Nuevo viaje</a>
                 <a asp-action="ViewTrips" asp-controller="User"><i class="fa fa-angle-right"></i> Viajes actuales</a>
-            </div>            
+            </div>
         }
 
         @if (!User.HasClaim("Institucion", "Trabajador") && User.Claims.Where(x => x.Type == "Institucion").Count() != 0)
@@ -79,7 +79,9 @@
                 {
                     <a asp-controller="Editor" asp-action="GiveVisa"><i class="fa fa-angle-right"></i> Otorgar visas</a>
                     <a asp-controller="Editor" asp-action="CreateVisa"><i class="fa fa-angle-right"></i> Crear visas</a>
+                    <a asp-controller="Editor" asp-action="EditVisa"><i class="fa fa-angle-right"></i> Visas </a>
                 }
+
             </div>
         }
         @if (User.HasClaim("Permission", "Admin"))
