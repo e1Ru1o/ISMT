@@ -53,28 +53,28 @@ namespace TripManager2._0.Controllers
             var data = services.GetItinerariosEstado(
                 Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"),
                 user
-            );
+            ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, x.Usuario));
             return View(data);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizeTrip(int id, int action)
+        public async Task<IActionResult> AuthorizeTrip(int tripId, int action)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
 
             if (action == 0)
-                services.ManageActionAprobar(id, user.Id, "");
+                services.ManageActionAprobar(tripId, user.Id, "");
             else if (action == 1)
-                services.ManageActionRechazar(id, user.Id, "");
+                services.ManageActionRechazar(tripId, user.Id, "");
             else
-                services.CancelItinerario(id, user.Id, "");
+                services.CancelItinerario(tripId, user.Id, "");
 
             return Redirect("AuthorizeTrip");
         }
 
-        [Authorize("Passport")]
         [HttpGet]
+        [Authorize("Passport")]
         public async Task<IActionResult> AuthorizePassport()
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
@@ -104,7 +104,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize("Visa")]
-        public async Task<IActionResult> AuthorizeVisa()
+        public async Task<IActionResult> GiveVisa()
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
@@ -114,20 +114,50 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizeVisa(string usuarioId, int visaId, int action)
+        public async Task<IActionResult> GiveVisa(string uID, int vID, int action)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
 
             if (action == 0)
             {
-                services.SetVisaToUser(usuarioId, visaId, user.Id);
-                services.ManageActionVisa(usuarioId, user.Id, visaId, BizLogic.WorkflowManager.Action.Aprobar);
+                services.SetVisaToUser(uID, vID, user.Id);
+                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Aprobar);
             }
             else if (action == 1)
-                services.ManageActionVisa(usuarioId, user.Id, visaId, BizLogic.WorkflowManager.Action.Rechazar);
+                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Rechazar);
             
-            return Redirect("AuthorizeVisa");
+            
+            return RedirectToAction("GiveVisa");
         }
+
+        [HttpGet]
+        [Authorize("Visa")]
+        public IActionResult CreateVisa()
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var countries = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
+            var regions = getter.GetAll("Region").Select(x => (x as Region).Nombre);
+            return View(new VisaViewModel() { paisesNames = countries, regionesName = regions});
+        }
+
+        [HttpPost]
+        public IActionResult CreateVisa(VisaViewModel vm)
+        {
+            //TODO: [TENORIO] save the visa. Remember that one of the two list may be null
+            AdminService service = new AdminService(_context, _userManager, _getterUtils);
+            VisaCommand cmd = new VisaCommand()
+            {
+                Nombre = vm.Nombre,
+                paisesNames = vm.paisesNames,
+                regionesName = vm.regionesName
+            };
+
+            service.RegisterVisa(cmd, out var errors);
+
+            return RedirectToAction("Welcome", "User");
+        }
+
+
     }
 }

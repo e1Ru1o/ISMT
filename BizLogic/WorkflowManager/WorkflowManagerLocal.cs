@@ -223,17 +223,22 @@ namespace BizLogic.WorkflowManager
                 change = false;
                 var visas = GetVisasPais(viaje.Pais);
 
-                foreach (var visa in visas)
-                    if (visas_usuario.Contains(visa))
-                    {
-                        change = true;
-                        break;
-                    }
+                if (visas.Count() != 0)
+                {
+                    foreach (var visa in visas)
+                        if (visas_usuario.Contains(visa))
+                        {
+                            change = true;
+                            break;
+                        }
 
-                if (change)
+                    if (change)
+                        continue;
+
+                    return viaje.Pais;
+                }
+                else
                     continue;
-
-                return viaje.Pais;
             }
 
             return null;
@@ -269,7 +274,10 @@ namespace BizLogic.WorkflowManager
             };
 
             if (action == Action.Ignorar)
+            {
+
                 historial_entity.Estado = Estado.AprobadasVisas;
+            }
             else if (action == Action.Aprobar)
             {
                 historial_entity.Estado = Estado.AprobadasVisas;
@@ -281,6 +289,7 @@ namespace BizLogic.WorkflowManager
                 historial_entity.Comentario = $"Rechazada visa {visa}";
             }
 
+            _historial.Add(historial_entity);
             _context.Commit();
         }
         

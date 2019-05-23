@@ -37,7 +37,6 @@
                 <label>Nivel de Autorizacion</label>
                 <select asp-for="Level" class="form-control">
                     <option value="Normal">Normal</option>
-                    <option value="Editor">Editor</option>
                     <option value="Admin">Administrador</option>
 
                 </select>
@@ -79,7 +78,7 @@
                 <div>
                     <label class="container">
                         Trabajador
-                        <input type="radio" value="Tabajador" asp-for="Institucion">
+                        <input type="radio" value="Trabajador" asp-for="Institucion">
                         <span class="checkmark"></span>
                     </label>
                     <label class="container">
@@ -107,6 +106,7 @@
             <input asp-for="ConfirmPassword" value="P9n$" hidden="hidden" />
             <input asp-for="Password" value="P9n$" hidden="hidden" />
             <button class="btn" type="submit"> Enviar</button>
+        </div>
 
     </CENTER>
 </form>

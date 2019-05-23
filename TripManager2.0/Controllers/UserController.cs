@@ -41,9 +41,79 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpGet]
-        public IActionResult Welcome()
+        public async Task<IActionResult> Welcome()
         {
-            return View();
+            AdminService _adminService = new AdminService(_context, _userManager, _getterUtils);
+            WorkflowServices _workflowServices = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            WelcomeViewModel vm = new WelcomeViewModel();
+            var t = await _adminService.FillNotificationsAsync();
+            vm.UserPendings = t.UserPendings;
+            vm.ViajesUpdated = t.ViajesUpdated;
+
+
+            if (vm.ViajesUpdated.Any() && User.HasClaim("Permission", "Common"))
+            {
+                if (User.Claims.Where(c => c.Type == "Visa").Any())
+                {
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteVisas).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        data[i].Update = 0;
+                        _workflowServices.UpdateItinerario(data[i], data[i]);
+                    }
+                }
+
+                if (User.Claims.Where(c => c.Type == "Passport").Any())
+                {
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendientePasaporte).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        data[i].Update = 0;
+                        _workflowServices.UpdateItinerario(data[i], data[i]);
+                    }
+                }
+
+                if (User.Claims.Where(c => c.Type == "JefeArea").Any())
+                {
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        data[i].Update = 0;
+                        _workflowServices.UpdateItinerario(data[i], data[i]);
+                    }
+                }
+
+                if (User.Claims.Where(c => c.Type == "Decano").Any())
+                {
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        data[i].Update = 0;
+                        _workflowServices.UpdateItinerario(data[i], data[i]);
+                    }
+                }
+
+                if (User.Claims.Where(c => c.Type == "Rector").Any())
+                {
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector).ToList();
+                    for (int i = 0; i < data.Count(); i++)
+                    {
+                        data[i].Update = 0;
+                        _workflowServices.UpdateItinerario(data[i], data[i]);
+                    }
+                }
+
+                var misViajes = vm.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+                if (misViajes.Count() != 0)
+                {
+                    for (int i = 0; i < misViajes.Count(); i++)
+                    {
+                        misViajes[i].Update = 0;
+                        _workflowServices.UpdateItinerario(misViajes[i], misViajes[i]);
+                    }
+                }
+            }
+            return View(vm);
         }
 
         [HttpGet]
@@ -81,7 +151,7 @@ namespace TripManager2._0.Controllers
 
             services.CalculateDates(services.GetItinerario(iterID));
 
-            return View("Welcome");
+            return RedirectToAction("Welcome");
         }
 
         [HttpGet]

@@ -40,7 +40,13 @@ namespace TripManager2._0
             services.AddIdentity<Usuario, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequireDigit = false;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireNonAlphanumeric = false;
+                cfg.Password.RequireUppercase = false;
                 cfg.Password.RequiredLength = 4;
+                cfg.Password.RequiredUniqueChars = 0;
+
             })
             .AddEntityFrameworkStores<EfCoreContext>();
 

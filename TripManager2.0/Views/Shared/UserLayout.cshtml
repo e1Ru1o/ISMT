@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] - TripManager2._0</title>
+    <title>@ViewData["Title"] - TripManager</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="~/favicon.ico">
     <environment include="Development">
@@ -22,7 +22,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand">TripManager2._0</a>
+                <a class="navbar-brand">TripManager</a>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <form>
                         <ul class="navbar-nav ">
@@ -49,17 +49,20 @@
         </div>
 
         <a asp-action="Edit" asp-controller="Account"><i class="fa fa-angle-right"></i> Editar perfil</a>
-        <button class="dropdown-btn">
-            <i class="fa fa-angle-double-right"></i>
-            Viajes
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-container">
-            <a asp-action="Create" asp-controller="User"><i class="fa fa-angle-right"></i> Nuevo viaje</a>
-            <a asp-action="ViewTrips" asp-controller="User"><i class="fa fa-angle-right"></i> Viajes actuales</a>
-        </div>
+        @if (User.Claims.Where(x => x.Type == "Institucion").Count() != 0)
+        {
+            <button class="dropdown-btn">
+                <i class="fa fa-angle-double-right"></i>
+                Viajes
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-container">
+                <a asp-action="Create" asp-controller="User"><i class="fa fa-angle-right"></i> Nuevo viaje</a>
+                <a asp-action="ViewTrips" asp-controller="User"><i class="fa fa-angle-right"></i> Viajes actuales</a>
+            </div>            
+        }
 
-        @if (User.HasClaim("Permission", "Admin"))
+        @if (!User.HasClaim("Institucion", "Trabajador") && User.Claims.Where(x => x.Type == "Institucion").Count() != 0)
         {
             <button class="dropdown-btn">
                 <i class="fa fa-angle-double-right"></i>
@@ -68,10 +71,19 @@
             </button>
             <div class="dropdown-container">
                 <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorizacion de viaje</a>
-                <a asp-controller="Reports" asp-action="ReportTwo"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
-                <a asp-controller="Reports" asp-action="ReportFour"><i class="fa fa-angle-right"></i> Otorgar visas</a>
-                <a asp-controller="Reports" asp-action="ReportFive"><i class="fa fa-angle-right"></i> Aprobar viaje</a>
+                @if (User.HasClaim("Passport", "True"))
+                {
+                    <a asp-controller="Editor" asp-action="AuthorizePassport"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
+                }
+                @if (User.HasClaim("Visa", "True"))
+                {
+                    <a asp-controller="Editor" asp-action="GiveVisa"><i class="fa fa-angle-right"></i> Otorgar visas</a>
+                    <a asp-controller="Editor" asp-action="CreateVisa"><i class="fa fa-angle-right"></i> Crear visas</a>
+                }
             </div>
+        }
+        @if (User.HasClaim("Permission", "Admin"))
+        {
             <button class="dropdown-btn">
                 <i class="fa fa-angle-double-right"></i>
                 Acciones
@@ -80,24 +92,11 @@
             <div class="dropdown-container">
                 <a asp-controller="Admin" asp-action="EditPais"><i class="fa fa-angle-right"></i> Pais</a>
                 <a asp-controller="Admin" asp-action="EditRegion"><i class="fa fa-angle-right"></i> Region</a>
-                <a asp-controller="Admin" asp-action="EditCiudad"><i class="fa fa-angle-right"></i> Ciudad</a>
-                <a asp-controller="Admin" asp-action="EditInstitucion"><i class="fa fa-angle-right"></i> Institucion</a>
                 <a asp-controller="Admin" asp-action="EditUsuario"><i class="fa fa-angle-right"></i> Usuarios</a>
                 <a asp-controller="Admin" asp-action="PendingUsers"><i class="fa fa-angle-right"></i> Usuarios Pendientes</a>
             </div>
         }
 
-        @if (User.HasClaim("Permission", "Admin"))
-        {
-            <button class="dropdown-btn">
-                <i class="fa fa-angle-double-right"></i>
-                Juramento de Admin
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-container">
-                <p>Un gran poder conlleva una gran responsabilidad</p>
-            </div>
-        }
 
     </div>
     <div class="container">
@@ -109,7 +108,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - TripManager2._0
+            &copy; 2019 - TripManager
         </div>
     </footer>
 

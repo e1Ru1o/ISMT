@@ -1,0 +1,61 @@
+﻿@using BizLogic.Administration
+@model VisaViewModel
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Nueva Visa";
+}
+
+<div class="main">
+    <form method="post">
+        <CENTER>
+            <h1>Nueva visa</h1>
+            <div class="form-group">
+                <label asp-for="Nombre">Nombre</label>
+                <input asp-for="Nombre" class="form-control col-md-4" required/>
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+                <div style="display: flex; justify-content: center;">
+                    <div class="form-group">
+                        <label asp-for="paisesNames">Paises</label>
+                        <select asp-for="paisesNames" class="form-control" multiple>
+                            @foreach (var item in Model.paisesNames)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label>Regiones:</label>
+                        <select asp-for="regionesName" class="form-control" multiple>
+                            @foreach (var item in Model.regionesName)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </select>
+                   </div>
+            </div>
+            <button class="button" type="submit" onclick="check_selected()"><span>Crear</span></button>
+        </CENTER>
+    </form>
+</div>
+
+<script>
+    var op = document.getElementsByTagName('option');
+    for (var i = 0; i < op.length; ++i)
+        op[i].selected = false;
+
+    function check_selected() {
+        var sel = document.getElementsByTagName('select');
+        sel[0].required = false;
+        sel[1].required = false;
+
+        var op = document.getElementsByTagName('option');
+        var count = 0;
+        for (var i = 0; i < op.length; ++i)
+            if (op[i].selected)
+                ++count;
+        if (count == 0)
+            sel[0].required = true;
+    }
+</script>
