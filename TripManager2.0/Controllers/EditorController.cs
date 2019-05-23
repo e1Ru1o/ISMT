@@ -148,6 +148,7 @@ namespace TripManager2._0.Controllers
             AdminService service = new AdminService(_context, _userManager, _getterUtils);
             VisaCommand cmd = new VisaCommand()
             {
+                Nombre = vm.Nombre,
                 paisesNames = vm.paisesNames,
                 regionesName = vm.regionesName
             };
