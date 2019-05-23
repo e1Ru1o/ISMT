@@ -199,13 +199,14 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
 
-        public async void SetPassportToUser(int iterID, string userToUpdID, string updatorID, string comment)
+        public async void SetPassportToUser(int iterID, string updatorID, string comment)
         {
             var iter = _itinerarioDbAccess.GetItinerario(iterID);
-            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
             var updator = _userDbAccess.GetUsuario(updatorID);
 
+            var userToUpd = iter.Usuario;
             userToUpd.HasPassport = true;
+
             await _userManager.UpdateAsync(userToUpd);
             _context.Commit();
 
@@ -220,11 +221,11 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.ManageActionPasaporte(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
         }
 
-        public async void SetVisaToUser(int itinerarioId, int visaID, string userToUpdID, string updatorID)
+        public async void SetVisaToUser(int itinerarioId, int visaID, string updatorID)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var visa = _visaDbAccess.GetVisa(visaID);
-            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
+            var userToUpd = itinerario.Usuario;
             var updator = _userDbAccess.GetUsuario(updatorID);
 
             var user_visa = new Usuario_Visa()
