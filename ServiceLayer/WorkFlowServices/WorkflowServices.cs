@@ -199,26 +199,32 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
 
-        public async void SetPassportToUser(int iterID, string updatorID, string comment)
+        public async void SetPassportToUser(string usuarioID)
         {
-            var iter = _itinerarioDbAccess.GetItinerario(iterID);
-            var updator = _userDbAccess.GetUsuario(updatorID);
-
-            var userToUpd = iter.Usuario;
-            userToUpd.HasPassport = true;
-
-            await _userManager.UpdateAsync(userToUpd);
+            var usuario = _userDbAccess.GetUsuario(usuarioID);
+            
+            usuario.HasPassport = true;
+            await _userManager.UpdateAsync(usuario);
             _context.Commit();
-
-            _workflowManagerLocal.ManageActionPasaporte(iter, BizLogic.WorkflowManager.Action.Aprobar, updator, comment);
         }
 
-        public void ManageActionRechazarPasaporte(int itinerarioId, string usuarioId, string comentario)
+        public void ManageActionPasaporte(string usuarioId, string updatorId, BizLogic.WorkflowManager.Action action, string comentario)
         {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
+            var updator = _userDbAccess.GetUsuario(updatorId);
 
-            _workflowManagerLocal.ManageActionPasaporte(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+            _workflowManagerLocal.ManageActionPasaporte(usuario, action, updator, comentario);
+        }
+
+        public IEnumerable<Usuario> GetUsuariosPendientePasaporte(Usuario usuario)
+        {
+            var itinerarios = GetItinerariosEstado(Estado.PendientePasaporte, usuario);
+            HashSet<Usuario> data = new HashSet<Usuario>();
+
+            foreach (var itinerario in itinerarios)
+                data.Add(itinerario.Usuario);
+
+            return data;
         }
 
         public async void SetVisaToUser(int itinerarioId, int visaID, string updatorID)
@@ -260,7 +266,7 @@ namespace ServiceLayer.WorkFlowServices
         public Pais GetVisasItinerario(int itinerarioId)
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            return _workflowManagerLocal.CurrentVisaItinerario(itinerario);
+            return _workflowManagerLocal.CurrentPaisItinerario(itinerario);
         }
     }
 }
