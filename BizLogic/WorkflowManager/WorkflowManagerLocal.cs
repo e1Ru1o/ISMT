@@ -22,6 +22,8 @@ namespace BizLogic.WorkflowManager
 
         public void ManageActionJefeArea(Itinerario itinerario, Action action, Usuario usuario, string comentario)
         {
+            itinerario.Update = 1;
+
             var historial_entity = new Historial
             {
                 Itinerario = itinerario,
@@ -43,8 +45,9 @@ namespace BizLogic.WorkflowManager
 
             if (action == Action.Rechazar)
             {
-                historial_entity.Estado = itinerario.Estado;
+                historial_entity.Estado = Estado.Pendiente;
                 _historial.Add(historial_entity);
+                itinerario.Estado = Estado.Pendiente;
                 _context.Commit();
                 return;
             }
@@ -52,6 +55,8 @@ namespace BizLogic.WorkflowManager
 
         public void ManageActionDecano(Itinerario itinerario, Action action, Usuario usuario, string comentario)
         {
+            itinerario.Update = 1;
+
             var historial_entity = new Historial
             {
                 Itinerario = itinerario,
@@ -75,6 +80,7 @@ namespace BizLogic.WorkflowManager
             {
                 historial_entity.Estado = itinerario.Estado;
                 _historial.Add(historial_entity);
+                itinerario.Estado = Estado.Pendiente;
                 _context.Commit();
                 return;
             }
@@ -82,6 +88,8 @@ namespace BizLogic.WorkflowManager
 
         public void ManageActionRector(Itinerario itinerario, Action action, Usuario usuario, string comentario)
         {
+            itinerario.Update = 1;
+
             var historial_entity = new Historial
             {
                 Estado = Estado.AprobadoRector,
@@ -107,6 +115,7 @@ namespace BizLogic.WorkflowManager
             {
                 historial_entity.Estado = itinerario.Estado;
                 _historial.Add(historial_entity);
+                itinerario.Estado = Estado.Pendiente;
                 _context.Commit();
                 return;
             }
@@ -130,7 +139,10 @@ namespace BizLogic.WorkflowManager
 
                     foreach (var itinerario in usuarioItinerario.Itinerarios)
                         if (itinerario.Estado == Estado.PendientePasaporte)
+                        {
+                            itinerario.Update = 1;
                             itinerario.Estado = Estado.PendienteVisas;
+                        }
 
                     _context.Commit();
                     ManageVisas(usuarioItinerario);
@@ -149,7 +161,10 @@ namespace BizLogic.WorkflowManager
 
                 foreach (var itinerario in usuarioItinerario.Itinerarios)
                     if (itinerario.Estado == Estado.PendientePasaporte)
+                    {
+                        itinerario.Update = 1;
                         itinerario.Estado = Estado.PendienteVisas;
+                    }
 
                 _context.Commit();
                 ManageVisas(usuarioItinerario);
@@ -163,6 +178,14 @@ namespace BizLogic.WorkflowManager
                 historial_entity.Usuario = usuario;
                 historial_entity.Comentario = comentario;
                 _historial.Add(historial_entity);
+
+                foreach (var itinerario in usuarioItinerario.Itinerarios)
+                    if (itinerario.Estado == Estado.PendientePasaporte)
+                    {
+                        itinerario.Update = 1;
+                        itinerario.Estado = Estado.Pendiente;
+                    }
+
                 _context.Commit();
                 return;
             }
@@ -172,9 +195,11 @@ namespace BizLogic.WorkflowManager
                 foreach (var itinerario in usuarioItinerario.Itinerarios)
                     if (itinerario.Estado == Estado.PendientePasaporte)
                     {
+                        itinerario.Update = 1;
                         itinerario.Estado = Estado.Cancelado;
-                        _context.Commit();
                     }
+
+                _context.Commit();
             }
         }
 
@@ -192,6 +217,7 @@ namespace BizLogic.WorkflowManager
 
                 if (currentPais is null)
                 {
+                    itinerario.Update = 1;
                     itinerario.Estado = Estado.PendienteRealizacion;
 
                     var historial_entity = new Historial()
@@ -301,6 +327,8 @@ namespace BizLogic.WorkflowManager
             };
             _historial.Add(historial_entity);
 
+            itinerario.Update = 1;
+
             if (claimTipoUsuario == "Trabajador")
             {
                 itinerario.Estado = Estado.PendienteAprobacionJefeArea;
@@ -333,6 +361,7 @@ namespace BizLogic.WorkflowManager
 
         public void RealizarItinerario(Itinerario itinerario)
         {
+            itinerario.Update = 1;
             itinerario.Estado = Estado.Realizado;
 
             var historial_entity = new Historial
@@ -347,6 +376,7 @@ namespace BizLogic.WorkflowManager
 
         public void CancelarItinerario(Itinerario itinerario, Usuario usuario, string comentario)
         {
+            itinerario.Update = 1;
             itinerario.Estado = Estado.Cancelado;
 
             var historial_entity = new Historial
@@ -357,6 +387,24 @@ namespace BizLogic.WorkflowManager
                 Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
+            };
+            _historial.Add(historial_entity);
+            _context.Commit();
+        }
+
+        public void ManageItinerarioPendiente(Itinerario itinerario)
+        {
+            var estado = itinerario.Historial.OrderBy(hist => hist.Fecha);
+            itinerario.Estado = estado.ElementAt(estado.Count() - 2).Estado;
+            itinerario.Update = 1;
+            _context.Commit();
+
+            var historial_entity = new Historial()
+            {
+                Estado = itinerario.Estado,
+                Itinerario = itinerario,
+                UsuarioTarget = itinerario.Usuario,
+                Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
             _context.Commit();

@@ -281,5 +281,11 @@ namespace ServiceLayer.WorkFlowServices
 
             return data;
         }
+
+        public void ContinuarItinerario(int itinerarioId)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            _workflowManagerLocal.ManageItinerarioPendiente(itinerario);
+        }
     }
 }
