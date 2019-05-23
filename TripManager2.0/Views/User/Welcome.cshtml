@@ -4,6 +4,7 @@
 @{
     Layout = "UserLayout";
     ViewData["Title"] = "Usuarios";
+    var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
 }
 
 <head>
@@ -19,71 +20,7 @@
             <br />
             <h2>Notificaciones:</h2>
             <br />
-            if (!Model.ViajesUpdated.Any())
-            {
-                <p>No hay cambios en los viajes.</p>
 
-            }
-            else
-            {
-                if (User.Claims.Where(c => c.Type == "Visa").Any())
-                {
-                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteVisas).ToList())
-                    {
-                            <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                    }
-                }
-
-                if (User.Claims.Where(c => c.Type == "Passport").Any())
-                {
-                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendientePasaporte).ToList())
-                    {
-                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-
-                    }
-                }
-
-                if (User.HasClaim("Institucion", "JefeArea"))
-                {
-                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionJefeArea).ToList())
-                    {
-                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                    }
-                }
-
-                if (User.HasClaim("Institucion", "Decano"))
-                {
-                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionDecano).ToList())
-                    {
-                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                    }
-                }
-
-                if (User.HasClaim("Institucion", "Rector"))
-                {
-                    foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionRector).ToList())
-                    {
-                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                    }
-                }
-
-                <br />
-                <h2>Sus Viajes:</h2>
-                var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
-
-                if (misViajes.Count() == 0)
-                {
-                    <p>Sus viajes no han sido modificados.</p>
-                }
-                else
-                {
-                    foreach (var item in misViajes)
-                    {
-                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                    }
-
-                }
-            }
         }
         else
         {
@@ -98,6 +35,7 @@
             if (!Model.UserPendings.Any())
             {
                 <p>No hay usuarios pendientes.</p>
+                <br />
             }
             else
             {
@@ -113,25 +51,79 @@
                 }
 
                 <br />
-                <h2>Sus Viajes:</h2>
-                var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
 
-                if (misViajes.Count() == 0)
+            }
+        }
+
+       @if (!Model.ViajesUpdated.Any())
+        {
+            <p>No hay cambios en los viajes.</p>
+        }
+        else
+        {
+
+            if (User.Claims.Where(c => c.Type == "Visa").Any())
+            {
+                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteVisas).ToList())
                 {
-                    <p>Sus viajes no han sido modificados.</p>
-                }
-                else
-                {
-                    foreach (var item in misViajes)
-                    {
                         <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                    }
+                }
+            }
+
+            if (User.Claims.Where(c => c.Type == "Passport").Any())
+            {
+                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendientePasaporte).ToList())
+                {
+                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
 
                 }
+            }
 
+            if (User.HasClaim("Institucion", "JefeArea"))
+            {
+                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionJefeArea).ToList())
+                {
+                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
+                }
+            }
+
+            if (User.HasClaim("Institucion", "Decano"))
+            {
+                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionDecano).ToList())
+                {
+                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
+                }
+            }
+
+            if (User.HasClaim("Institucion", "Rector"))
+            {
+                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionRector).ToList())
+                {
+                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
+                }
+            }
+        
+        }
+        
+
+        <br />
+        <h2>Sus Viajes:</h2>
+        
+
+        @if (misViajes.Count() == 0)
+        {
+            <p>Sus viajes no han sido modificados.</p>
+        }
+        else
+        {
+            foreach (var item in misViajes)
+            {
+                <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
             }
 
         }
+
+        
     </CENTER>
 </body>
 
