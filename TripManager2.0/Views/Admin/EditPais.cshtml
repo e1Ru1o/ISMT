@@ -1,38 +1,40 @@
 ﻿@using BizData.Entities
 @using BizLogic.Shared
-@model IEnumerable<Region>
+@model IEnumerable<Pais>
 
 @{
     Layout = "UserLayout";
     ViewData["Title"] = "Pais";
 }
 <div class="main">
+    <h1>Paises</h1>
     <form method="post">
-        <h1>Region</h1>
-        <table border="0">
+        <table>
             <tr>
-
                 <th>
                     Nombre
                 </th>
-
                 <th>
+                    Region
                 </th>
+                <th></th>
             </tr>
             @foreach (var item in Model)
             {
                 <tr>
-                    @Html.Partial("Region", item)
+                    @Html.Partial("Pais", item)
                     <td>
-                        <button type="submit" name="id" class="button" value=@item.RegionID> Eliminar</button>
+                        <a href="/Admin/UpdatePais?key=@item.PaisID" class="button"> <span>Update </span></a>
                     </td>
                 </tr>
 
             }
             <tr>
                 <td>
-                    @Html.ActionLink("Agregar", "AddRegion", "Admin", new NameOnlyViewModel())
+                    <a href="/Admin/AddPais" class="button"> <span>Agregar </span></a>
+                  
                 </td>
+                <td></td>
                 <td></td>
             </tr>
         </table>
