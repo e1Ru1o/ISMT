@@ -81,7 +81,7 @@ namespace TripManager2._0.Controllers
 
             services.CalculateDates(services.GetItinerario(iterID));
 
-            return View("Welcome");
+            return RedirectToAction("Welcome");
         }
 
         [HttpGet]

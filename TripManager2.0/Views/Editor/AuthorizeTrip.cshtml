@@ -9,7 +9,6 @@
     <form method="post">
         <h1>Viajes actuales</h1>
         <input hidden="hidden" id="trip" name="tripId">
-        <input hidden="hidden" id="usr" name="userId">
         <input hidden="hidden" id="op" name="action">
         <table>
             <tr>
@@ -40,13 +39,13 @@
                         @item.Status
                     </td>
                     <td>
-                        <button class="button" type="submit" value="@item.uID" onclick="setValues(this, '0');"><span>Aprobar</span></button>
+                        <button class="button" type="submit" onclick="setValues(this, '0');"><span>Aprobar</span></button>
                     </td>
                     <td>
-                        <button class="button" type="submit" value="@item.uID" onclick="setValues(this, '1');"><span>Rechazar</span></button>
+                        <button class="button" type="submit" onclick="setValues(this, '1');"><span>Rechazar</span></button>
                     </td>
                     <td>
-                        <button class="button" type="submit" value="@item.uID" onclick="setValues(this, '2');"><span>Cancelar</span></button>
+                        <button class="button" type="submit" onclick="setValues(this, '2');"><span>Cancelar</span></button>
                     </td>
                     <td>
                         <a href="/Admin/Viaje?id=@item.ID" class="button"><span>Detalles</span></a>
@@ -61,7 +60,6 @@
     function setValues(caller, option) {
         getRowId(caller, 'trip');
         document.getElementById('op').value = option;
-        document.getElementById('user').value = caller.value;
     }
 </script>
 
