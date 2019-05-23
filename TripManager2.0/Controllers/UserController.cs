@@ -49,7 +49,7 @@ namespace TripManager2._0.Controllers
             vm.UserPendings = t.UserPendings;
             vm.ViajesUpdated = t.ViajesUpdated;
 
-            return View(vm);
+            return View();
         }
 
         [HttpGet]
