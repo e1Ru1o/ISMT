@@ -27,24 +27,24 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <th>
+                    <td>
                         @item.FirstName
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         @item.FirstLastName
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         @item.Email
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         <button class="button" type="submit" value="@item.Id" name="usuarioId" onclick="setValues( '0');"><span>Aprobar</span></button>
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         <button class="button" type="submit" value="@item.Id" name="id" onclick="setValues( '1');"><span>Rechazar</span></button>
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         <button class="button" type="submit" value="@item.Id" name="id" onclick="setValues( '2');"><span>Cancelar</span></button>
-                    </th>
+                    </td>
                 </tr>
             }
         </table>

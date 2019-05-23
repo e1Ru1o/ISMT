@@ -73,8 +73,8 @@ namespace TripManager2._0.Controllers
             return Redirect("AuthorizeTrip");
         }
 
-        [Authorize("Passport")]
         [HttpGet]
+        [Authorize("Passport")]
         public async Task<IActionResult> AuthorizePassport()
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
@@ -90,7 +90,10 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             if (action == 0)
+            {
+                services.SetPassportToUser(usuarioId);
                 services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Aprobar, "");
+            }
             else if (action == 1)
                 services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Rechazar, "");
             else
