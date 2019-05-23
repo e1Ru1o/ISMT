@@ -126,11 +126,10 @@ namespace BizLogic.WorkflowManager
 
                     foreach (var itinerario in usuarioItinerario.Itinerarios)
                         if (itinerario.Estado == Estado.PendientePasaporte)
-                        {
                             itinerario.Estado = Estado.PendienteVisas;
-                            _context.Commit();
-                            ManageActionVisas(itinerario, Action.Ignorar, null, null);
-                        }
+
+                    _context.Commit();
+                    ManageVisas(usuarioItinerario);
                 }
 
                 return;
@@ -146,11 +145,10 @@ namespace BizLogic.WorkflowManager
 
                 foreach (var itinerario in usuarioItinerario.Itinerarios)
                     if (itinerario.Estado == Estado.PendientePasaporte)
-                    {
                         itinerario.Estado = Estado.PendienteVisas;
-                        _context.Commit();
-                        ManageActionVisas(itinerario, Action.Ignorar, null, null);
-                    }
+
+                _context.Commit();
+                ManageVisas(usuarioItinerario);
 
                 return;
             }
@@ -176,59 +174,56 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public void ManageActionVisas(Itinerario itinerario, Action action, Usuario usuario, string comentario)
+        public IEnumerable<Visa> ManageVisas(Usuario usuario)
         {
-            var historial_entity = new Historial
-            {
-                Itinerario = itinerario,
-                Fecha = DateTime.Now
-            };
+            var visas_usuario = from visa in usuario.Visas
+                                select visa.Visa;
 
-            if (action == Action.Ignorar)
-            {
-                Pais pais = CurrentPaisItinerario(itinerario);
+            var itinerarios = usuario.Itinerarios.Where(it => it.Estado == Estado.PendienteVisas);
+            var visas = new HashSet<Visa>();
 
-                if (pais is null)
+            foreach (var itinerario in itinerarios)
+            {
+                var currentPais = CurrentPaisItinerario(itinerario, visas_usuario);
+
+                if (currentPais is null)
+                    ManageActionVisas(usuario, Action.Ignorar, null, null);
+                else
                 {
-                    historial_entity.Estado = Estado.AprobadasVisas;
-                    _historial.Add(historial_entity);
-                    itinerario.Estado = Estado.PendienteRealizacion;
-                    _context.Commit();
+                    foreach (var visa in GetVisasPais(currentPais))
+                        visas.Add(visa);
                 }
-
-                return;
             }
 
-            if (action == Action.Aprobar)
-            {
-                Pais pais = CurrentPaisItinerario(itinerario);
-
-                if (pais is null)
-                {
-                    historial_entity.Estado = Estado.AprobadasVisas;
-                    historial_entity.Usuario = usuario;
-                    historial_entity.Comentario = comentario;
-                    _historial.Add(historial_entity);
-                    itinerario.Estado = Estado.PendienteRealizacion;
-                    _context.Commit();
-                }
-
-                return;
-            }
-
-            else
-            {
-                historial_entity.Estado = itinerario.Estado;
-                historial_entity.Usuario = usuario;
-                historial_entity.Comentario = comentario;
-                _historial.Add(historial_entity);
-                _context.Commit();
-
-                return ;
-            }
+            return visas;
         }
 
-        public IEnumerable<Visa> GetVisasPais(Pais pais)
+        private Pais CurrentPaisItinerario(Itinerario itinerario, IEnumerable<Visa> visas_usuario)
+        {
+            bool change = false;
+
+            foreach (var viaje in itinerario.Viajes)
+            {
+                change = false;
+                var visas = GetVisasPais(viaje.Pais);
+
+                foreach (var visa in visas)
+                    if (visas_usuario.Contains(visa))
+                    {
+                        change = true;
+                        break;
+                    }
+
+                if (change)
+                    continue;
+
+                return viaje.Pais;
+            }
+
+            return null;
+        }
+
+        private IEnumerable<Visa> GetVisasPais(Pais pais)
         {
             var visas_pais = from visa in pais.Visas
                              select visa.Visa;
@@ -248,33 +243,30 @@ namespace BizLogic.WorkflowManager
             return visas;
         }
 
-        public Pais CurrentPaisItinerario(Itinerario itinerario)
+        public void ManageActionVisas(Usuario usuarioTarget, Action action, Usuario usuario, string visa)
         {
-            bool change = false;
-            var visas_usuario = from visa in itinerario.Usuario.Visas
-                                select visa.Visa;
-            
-            foreach (var viaje in itinerario.Viajes)
+            var historial_entity = new Historial()
             {
-                change = false;
-                var visas = GetVisasPais(viaje.Pais);                  
+                Usuario = usuario,
+                Fecha = DateTime.Now
+            };
 
-                foreach (var visa in visas)
-                    if (visas_usuario.Contains(visa))
-                    {
-                        change = true;
-                        break;
-                    }
-
-                if (change)
-                    continue;
-
-                return viaje.Pais;
+            if (action == Action.Ignorar)
+                historial_entity.Estado = Estado.AprobadasVisas;
+            else if (action == Action.Aprobar)
+            {
+                historial_entity.Estado = Estado.AprobadasVisas;
+                historial_entity.Comentario = $"Aprobada visa {visa}";
+            }
+            else
+            {
+                historial_entity.Estado = Estado.PendienteVisas;
+                historial_entity.Comentario = $"Rechazada visa {visa}";
             }
 
-            return null;
+            _context.Commit();
         }
-
+        
         public void CrearViaje(Itinerario itinerario, string claimTipoUsuario)
         {
             var historial_entity = new Historial

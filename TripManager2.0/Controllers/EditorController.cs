@@ -108,7 +108,7 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetUsuariosPendientePasaporte(user);
+            var data = services.GetVisasUsuarioVisasPendiente(user);
 
             return View(data);
         }
@@ -116,6 +116,16 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public async Task<IActionResult> GiveVisa(string uID, int vID, int action)
         {
+            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (action == 0)
+            {
+                services.SetVisaToUser(usuarioId, visaId, user.Id);
+                services.ManageActionVisa(usuarioId, user.Id, visaId, BizLogic.WorkflowManager.Action.Aprobar);
+            }
+            else if (action == 1)
+                services.ManageActionVisa(usuarioId, user.Id, visaId, BizLogic.WorkflowManager.Action.Rechazar);
             
             
             return RedirectToAction("GiveVisa");
