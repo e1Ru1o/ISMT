@@ -4,7 +4,7 @@
 
 <div class="main">
     <h1>Pasaportes Pendientes</h1>
-    <input hidden="hidden" id="type" name="type">
+    <input hidden="hidden" id="type" name="action">
     <form method="post">
         <table>
             <tr>
@@ -16,6 +16,10 @@
                 </th>
                 <th>
                     Correo
+                </th>
+                <th>
+                </th>
+                <th>
                 </th>
                 <th>
                 </th>
@@ -33,7 +37,7 @@
                         @item.Email
                     </th>
                     <th>
-                        <button class="button" type="submit" value="@item.Id" name="id" onclick="setValues( '0');"><span>Aprobar</span></button>
+                        <button class="button" type="submit" value="@item.Id" name="usuarioId" onclick="setValues( '0');"><span>Aprobar</span></button>
                     </th>
                     <th>
                         <button class="button" type="submit" value="@item.Id" name="id" onclick="setValues( '1');"><span>Rechazar</span></button>
