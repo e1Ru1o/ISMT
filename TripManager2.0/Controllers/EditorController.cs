@@ -124,7 +124,7 @@ namespace TripManager2._0.Controllers
             else
                 services.CancelItinerario(itinerarioId, user.Id, "");
             
-            return Redirect("AuthorizeVisa");
+            return RedirectToAction("GiveVisa");
         }
 
         [HttpGet]
