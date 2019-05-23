@@ -75,7 +75,7 @@ namespace TripManager2._0.Controllers
                     }
                 }
 
-                if (User.Claims.Where(c => c.Type == "JefeArea").Any())
+                if (User.HasClaim("Institucion", "JefeArea"))
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea).ToList();
                     notifications += data.Count();
@@ -86,7 +86,7 @@ namespace TripManager2._0.Controllers
                     }
                 }
 
-                if (User.Claims.Where(c => c.Type == "Decano").Any())
+                if (User.HasClaim("Institucion", "Decano"))
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano).ToList();
                     notifications += data.Count();
@@ -97,7 +97,7 @@ namespace TripManager2._0.Controllers
                     }
                 }
 
-                if (User.Claims.Where(c => c.Type == "Rector").Any())
+                if (User.HasClaim("Institucion", "Rector"))
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector).ToList();
                     notifications += data.Count();

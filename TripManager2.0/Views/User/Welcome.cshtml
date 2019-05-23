@@ -17,6 +17,8 @@
                 Desde aquí podrá usar todas las herramientas que la aplicación ofrece.
             </p>
             <br />
+            <h2>Notificaciones:</h2>
+            <br />
             if (!Model.ViajesUpdated.Any())
             {
                 <p>No hay cambios en los viajes.</p>
@@ -28,7 +30,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteVisas).ToList())
                     {
-                            <p>@item</p>
+                            <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -36,7 +38,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendientePasaporte).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
 
                     }
                 }
@@ -45,7 +47,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionJefeArea).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -53,7 +55,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionDecano).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -61,7 +63,7 @@
                 {
                     foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionRector).ToList())
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
                 }
 
@@ -71,13 +73,13 @@
 
                 if (misViajes.Count() == 0)
                 {
-                    <p>Sus viajes viajes no han sufrido cambios.</p>
+                    <p>Sus viajes no han sido modificados.</p>
                 }
                 else
                 {
                     foreach (var item in misViajes)
                     {
-                        <p>@item</p>
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
                     }
 
                 }
@@ -109,6 +111,24 @@
                 {
                     <p>Hay @cant usuarios pendientes.</p>
                 }
+
+                <br />
+                <h2>Sus Viajes:</h2>
+                var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+
+                if (misViajes.Count() == 0)
+                {
+                    <p>Sus viajes no han sido modificados.</p>
+                }
+                else
+                {
+                    foreach (var item in misViajes)
+                    {
+                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
+                    }
+
+                }
+
             }
 
         }
