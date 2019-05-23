@@ -204,7 +204,7 @@ namespace ServiceLayer.WorkFlowServices
             var usuario = _userDbAccess.GetUsuario(usuarioID);
             
             usuario.HasPassport = true;
-            await _userManager.UpdateAsync(usuario);
+            //await _userManager.UpdateAsync(usuario);
             _context.Commit();
         }
 
@@ -247,8 +247,9 @@ namespace ServiceLayer.WorkFlowServices
             userToUpd.Visas.Add(user_visa);
             visa.Usuarios.Add(user_visa);
 
-            await _userManager.UpdateAsync(userToUpd);
+            //await _userManager.UpdateAsync(userToUpd);
             visa = _visaDbAccess.Update(visa, _visaDbAccess.GetVisa(visaID));
+            _context.Commit();
         }
 
         public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action)

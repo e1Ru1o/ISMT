@@ -121,11 +121,11 @@ namespace TripManager2._0.Controllers
 
             if (action == 0)
             {
-                services.SetVisaToUser(usuarioId, visaId, user.Id);
-                services.ManageActionVisa(usuarioId, user.Id, visaId, BizLogic.WorkflowManager.Action.Aprobar);
+                services.SetVisaToUser(uID, vID, user.Id);
+                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Aprobar);
             }
             else if (action == 1)
-                services.ManageActionVisa(usuarioId, user.Id, visaId, BizLogic.WorkflowManager.Action.Rechazar);
+                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Rechazar);
             
             
             return RedirectToAction("GiveVisa");

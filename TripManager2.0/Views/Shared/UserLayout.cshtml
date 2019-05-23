@@ -77,7 +77,7 @@
                 }
                 @if (User.HasClaim("Visa", "True"))
                 {
-                    <a asp-controller="Reports" asp-action="ReportFour"><i class="fa fa-angle-right"></i> Otorgar visas</a>
+                    <a asp-controller="Editor" asp-action="GiveVisa"><i class="fa fa-angle-right"></i> Otorgar visas</a>
                     <a asp-controller="Editor" asp-action="CreateVisa"><i class="fa fa-angle-right"></i> Crear visas</a>
                 }
             </div>

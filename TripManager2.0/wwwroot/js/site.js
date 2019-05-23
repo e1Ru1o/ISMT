@@ -47,7 +47,7 @@ function getRowId(caller, id) {
 }
 
 function dismark_selection() {
-    var op = document.getElementsByTagName('option');
+    var op = doc.getElementsByTagName('option');
     for (var i = 0; i < op.length; ++i)
         op[i].selected = false;
 }
