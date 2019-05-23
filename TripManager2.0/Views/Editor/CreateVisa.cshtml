@@ -1,0 +1,26 @@
+﻿@using BizLogic.Administration
+@model VisaViewModel
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Nueva Visa";
+}
+
+<div class="main">
+    <form method="post">
+        <CENTER>
+            <h1>Nueva visa</h1>
+            <div class="form-group">
+                <label asp-for="Nombre">Nombre</label>
+                <input asp-for="Nombre" class="form-control"/>
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+                <div style="display: flex; justify-content: space-around;">
+                    <label asp-for="paisesNames">Nombre</label>
+                    <select asp-for="paisesNames" multiple></select>
+                    <label asp-for="regionesName">Nombre</label>
+                    <select asp-for="regionesName" multiple></select>
+                </div>
+            </div>
+        </CENTER>
+    </form>
+</div>

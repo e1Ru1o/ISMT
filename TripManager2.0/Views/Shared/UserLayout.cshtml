@@ -68,13 +68,14 @@
             </button>
             <div class="dropdown-container">
                 <a asp-controller="Editor" asp-action="AuthorizeTrip"><i class="fa fa-angle-right"></i> Autorizacion de viaje</a>
-                @if (User.HasClaim("Institucion", "Passport"))
+                @if (User.HasClaim("Passport", "True"))
                 {
                     <a asp-controller="Reports" asp-action="ReportTwo"><i class="fa fa-angle-right"></i> Entregar passaporte</a>
                 }
-                @if (User.HasClaim("Institucion", "Visa"))
+                @if (User.HasClaim("Visa", "True"))
                 {
                     <a asp-controller="Reports" asp-action="ReportFour"><i class="fa fa-angle-right"></i> Otorgar visas</a>
+                    <a asp-controller="Editor" asp-action="CreateVisa"><i class="fa fa-angle-right"></i> Crear visas</a>
                 }
             </div>
         }

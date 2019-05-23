@@ -13,10 +13,8 @@ namespace BizLogic.Administration
         //this is for the user to pick the desired country to have a visa with, and the instructed above makes sure that no previous
         //relationship is established with the name of the chosen visa and this countries. This is more useful when the visa with name
         //Nombre is edited. Call GetPaisesWithoutVisa from the razor page when you already get the name in case that you don't have it previosly.
-        [Required]
         public IEnumerable<string> paisesNames { get; set; }
 
-        [Required]
         public IEnumerable<string> regionesName { get; set; }
     }
 }

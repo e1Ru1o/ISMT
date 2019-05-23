@@ -53,22 +53,22 @@ namespace TripManager2._0.Controllers
             var data = services.GetItinerariosEstado(
                 Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"),
                 user
-            ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, user));
+            ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, x.Usuario));
             return View(data);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizeTrip(int id, int action)
+        public async Task<IActionResult> AuthorizeTrip(int tripId, int action)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
 
             if (action == 0)
-                services.ManageActionAprobar(id, user.Id, "");
+                services.ManageActionAprobar(tripId, user.Id, "");
             else if (action == 1)
-                services.ManageActionRechazar(id, user.Id, "");
+                services.ManageActionRechazar(tripId, user.Id, "");
             else
-                services.CancelItinerario(id, user.Id, "");
+                services.CancelItinerario(tripId, user.Id, "");
 
             return Redirect("AuthorizeTrip");
         }
@@ -80,6 +80,7 @@ namespace TripManager2._0.Controllers
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
             var data = services.GetItinerariosEstado(Estado.PendientePasaporte, user);
+
             return View(data);
         }
 
@@ -124,6 +125,23 @@ namespace TripManager2._0.Controllers
                 services.CancelItinerario(itinerarioId, user.Id, "");
             
             return Redirect("AuthorizeVisa");
+        }
+
+        [HttpGet]
+        [Authorize("Visa")]
+        public IActionResult CreateVisa()
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var countries = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
+            var regions = getter.GetAll("Region").Select(x => (x as Region).Nombre);
+            return View(new VisaViewModel() { paisesNames = countries, regionesName = regions});
+        }
+
+        [HttpPost]
+        public IActionResult CreateVisa(VisaViewModel vm)
+        {
+            
+            return RedirectToAction("Welcome", "User");
         }
     }
 }
