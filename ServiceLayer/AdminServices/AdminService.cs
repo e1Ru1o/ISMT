@@ -151,25 +151,29 @@ namespace ServiceLayer.AdminServices
         {
             if (cmd.regionesName != null)
             {
-                cmd.Regiones = _regionDbAccess.GetAll().Zip(cmd.regionesName, (Region r, string s) =>
-                {
-                    return r.Nombre == s ? r : null;
-                })
-                .Where(r => r != null)
-                .ToList();
+                var aux = new List<Region>();
+                foreach (var name in cmd.regionesName)
+                    foreach (var region in _regionDbAccess.GetAll())
+                    {
+                        if (region.Nombre == name)
+                            aux.Add(region);
+                    }
 
+                cmd.Regiones = aux;
                 cmd.RegionesVisas = BuildListOfRegion_Visa(cmd.Regiones, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
             }
 
             if (cmd.paisesNames != null)
             {
-                cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
-                {
-                    return p.Nombre == s ? p : null;
-                })
-                .Where(p => p != null)
-                .ToList();
+                var aux = new List<Pais>();
+                foreach (var name in cmd.paisesNames)
+                    foreach (var pais in _paisDbAccess.GetAll())
+                    {
+                        if (pais.Nombre == name)
+                            aux.Add(pais);
+                    }
 
+                cmd.Paises = aux;
                 cmd.PaisesVisas = BuildListOfPais_Visa(cmd.Paises, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
             }
 
