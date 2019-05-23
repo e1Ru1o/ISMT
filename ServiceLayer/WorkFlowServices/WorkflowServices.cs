@@ -227,11 +227,10 @@ namespace ServiceLayer.WorkFlowServices
             return data;
         }
 
-        public async void SetVisaToUser(int itinerarioId, int visaID, string updatorID)
+        public async void SetVisaToUser(string usuarioId, int visaID, string updatorID)
         {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var visa = _visaDbAccess.GetVisa(visaID);
-            var userToUpd = itinerario.Usuario;
+            var userToUpd = _userDbAccess.GetUsuario(usuarioId);
             var updator = _userDbAccess.GetUsuario(updatorID);
 
             var user_visa = new Usuario_Visa()
@@ -250,23 +249,31 @@ namespace ServiceLayer.WorkFlowServices
 
             await _userManager.UpdateAsync(userToUpd);
             visa = _visaDbAccess.Update(visa, _visaDbAccess.GetVisa(visaID));
-
-            _workflowManagerLocal.ManageActionVisas(itinerario, BizLogic.WorkflowManager.Action.Aprobar, updator, null);
         }
 
-        public void ManageActionRechazarVisa(int itinerarioId, int visaId, string usuarioId)
+        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action)
         {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             var visa = _visaDbAccess.GetVisa(visaId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
+            var updator = _userDbAccess.GetUsuario(updaterId);
 
-            _workflowManagerLocal.ManageActionVisas(itinerario, BizLogic.WorkflowManager.Action.Rechazar, usuario, $" Visa {visa.Name} rechazada");
+            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name);
         }
 
-        public Pais GetVisasItinerario(int itinerarioId)
+        public IEnumerable<(Usuario, IEnumerable<Visa>)> GetVisasUsuarioVisasPendiente(Usuario usuario)
         {
-            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
-            return _workflowManagerLocal.CurrentPaisItinerario(itinerario);
+            var itinerarios = GetItinerariosEstado(Estado.PendienteVisas, usuario);
+            HashSet<Usuario> usuarios = new HashSet<Usuario>();
+
+            foreach (var itinerario in itinerarios)
+                usuarios.Add(itinerario.Usuario);
+
+            var data = new HashSet<(Usuario, IEnumerable<Visa>)>();
+
+            foreach (var user in usuarios)
+                data.Add((user, _workflowManagerLocal.ManageVisas(user)));
+
+            return data;
         }
     }
 }
