@@ -38,7 +38,6 @@ namespace BizLogic.Workflow
                 Pais = Pais,
                 FechaInicio = FechaInicio,
                 FechaFin = FechaFin,
-                Itinerario = Itinerario,
                 Ciudad = CiudadName
                // Institucion = Institucion
             };

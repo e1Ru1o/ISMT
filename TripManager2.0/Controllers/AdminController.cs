@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using TripManager2._0.ViewModels;
-using System.Linq;
 using ServiceLayer.AccountServices;
 using BizLogic.Authentication;
 using System.Threading.Tasks;

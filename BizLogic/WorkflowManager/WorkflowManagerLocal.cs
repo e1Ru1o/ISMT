@@ -34,9 +34,9 @@ namespace BizLogic.WorkflowManager
             {
                 historial_entity.Estado = Estado.AprobadoJefeArea;
                 _historial.Add(historial_entity);
+                itinerario.Estado = Estado.PendienteAprobacionDecano;
                 _context.Commit();
 
-                itinerario.Estado = Estado.PendienteAprobacionDecano;
                 return;
             }
 
@@ -63,9 +63,9 @@ namespace BizLogic.WorkflowManager
             {
                 historial_entity.Estado = Estado.AprobadoDecano;
                 _historial.Add(historial_entity);
+                itinerario.Estado = Estado.PendienteAprobacionRector;
                 _context.Commit();
 
-                itinerario.Estado = Estado.PendienteAprobacionRector;
                 return;
             }
 
@@ -93,9 +93,9 @@ namespace BizLogic.WorkflowManager
             {
                 historial_entity.Estado = Estado.AprobadoRector;
                 _historial.Add(historial_entity);
+                itinerario.Estado = Estado.PendientePasaporte;
                 _context.Commit();
 
-                itinerario.Estado = Estado.PendientePasaporte;
                 ManageActionPasaporte(itinerario, Action.Ignorar, null, null);
                 return;
             }
@@ -124,9 +124,9 @@ namespace BizLogic.WorkflowManager
                     historial_entity.Estado = Estado.AprobadoPasaporte;
                     historial_entity.Itinerario = itinerario;
                     _historial.Add(historial_entity);
+                    itinerario.Estado = Estado.PendienteVisas;
                     _context.Commit();
 
-                    itinerario.Estado = Estado.PendienteVisas;
                     ManageActionVisas(itinerario, Action.Ignorar, null, null);
                 }
 
@@ -140,9 +140,9 @@ namespace BizLogic.WorkflowManager
                 historial_entity.Usuario = usuario;
                 historial_entity.Comentario = comentario;
                 _historial.Add(historial_entity);
+                itinerario.Estado = Estado.PendienteVisas;
                 _context.Commit();
 
-                itinerario.Estado = Estado.PendienteVisas;
                 ManageActionVisas(itinerario, Action.Ignorar, null, null);
                 return;
             }
@@ -158,7 +158,7 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public Pais ManageActionVisas(Itinerario itinerario, Action action, Usuario usuario, string comentario)
+        public void ManageActionVisas(Itinerario itinerario, Action action, Usuario usuario, string comentario)
         {
             var historial_entity = new Historial
             {
@@ -168,24 +168,22 @@ namespace BizLogic.WorkflowManager
 
             if (action == Action.Ignorar)
             {
-                Pais pais = CurrentVisaPais(itinerario);
+                Pais pais = CurrentVisaItinerario(itinerario);
 
                 if (pais is null)
                 {
                     historial_entity.Estado = Estado.AprobadasVisas;
                     _historial.Add(historial_entity);
-                    _context.Commit();
-
                     itinerario.Estado = Estado.PendienteRealizacion;
-                    return pais;
+                    _context.Commit();
                 }
 
-                return pais;
+                return;
             }
 
             if (action == Action.Aprobar)
             {
-                Pais pais = CurrentVisaPais(itinerario);
+                Pais pais = CurrentVisaItinerario(itinerario);
 
                 if (pais is null)
                 {
@@ -193,13 +191,11 @@ namespace BizLogic.WorkflowManager
                     historial_entity.Usuario = usuario;
                     historial_entity.Comentario = comentario;
                     _historial.Add(historial_entity);
-                    _context.Commit();
-
                     itinerario.Estado = Estado.PendienteRealizacion;
-                    return pais;
+                    _context.Commit();
                 }
 
-                return pais;
+                return;
             }
 
             else
@@ -210,11 +206,11 @@ namespace BizLogic.WorkflowManager
                 _historial.Add(historial_entity);
                 _context.Commit();
 
-                return null;
+                return ;
             }
         }
 
-        private Pais CurrentVisaPais(Itinerario itinerario)
+        public Pais CurrentVisaItinerario(Itinerario itinerario)
         {
             bool change = false;
             var visas_usuario = from visa in itinerario.Usuario.Visas
@@ -264,29 +260,19 @@ namespace BizLogic.WorkflowManager
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
-            _context.Commit();
 
             if (claimTipoUsuario == "Trabajador")
-            {
                 itinerario.Estado = Estado.PendienteAprobacionJefeArea;
-                return;
-            }
-            if (claimTipoUsuario == "JefeArea")
-            {
+            else if (claimTipoUsuario == "JefeArea")
                 itinerario.Estado = Estado.PendienteAprobacionDecano;
-                return;
-            }
-            if (claimTipoUsuario == "Decano")
-            {
+            else if (claimTipoUsuario == "Decano")
                 itinerario.Estado = Estado.PendienteAprobacionDecano;
-                return;
-            }
-            if (claimTipoUsuario == "Rector")
+            else
             {
                 itinerario.Estado = Estado.PendientePasaporte;
                 ManageActionPasaporte(itinerario, Action.Ignorar, null, null);
-                return;
             }
+            _context.Commit();
         }
 
         public void RealizarItinerario(Itinerario itinerario)
