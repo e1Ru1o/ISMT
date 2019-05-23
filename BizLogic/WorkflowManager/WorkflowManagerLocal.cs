@@ -273,21 +273,18 @@ namespace BizLogic.WorkflowManager
                 Fecha = DateTime.Now
             };
 
-            if (action == Action.Ignorar)
-            {
-
-                historial_entity.Estado = Estado.AprobadasVisas;
-            }
-            else if (action == Action.Aprobar)
+            if (action == Action.Aprobar)
             {
                 historial_entity.Estado = Estado.AprobadasVisas;
                 historial_entity.Comentario = $"Aprobada visa {visa}";
             }
-            else
+            else if (action == Action.Rechazar)
             {
                 historial_entity.Estado = Estado.PendienteVisas;
                 historial_entity.Comentario = $"Rechazada visa {visa}";
             }
+            else
+                return;
 
             _historial.Add(historial_entity);
             _context.Commit();
