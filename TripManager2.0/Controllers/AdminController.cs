@@ -20,7 +20,7 @@ using System.Security.Claims;
 
 namespace TripManager2._0.Controllers
 {
-    [Authorize]
+    [Authorize("Admin")]
     [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public class AdminController : Controller
     {
@@ -152,7 +152,6 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)
         {
-
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             GetterAll getter1 = new GetterAll(_getterUtils, _context);
             var user = await _userManager.FindByEmailAsync(cmd.Email);

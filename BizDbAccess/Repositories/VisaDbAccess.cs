@@ -36,7 +36,7 @@ namespace BizDbAccess.Repositories
 
             toUpd.Name = entity.Name ?? toUpd.Name;
             toUpd.Paises = toUpd.Paises == null ? entity.Paises : (toUpd.Paises.Concat(entity.Paises)).ToList();
-            toUpd.Usuarios = toUpd.Usuarios == null ? entity.Usuarios : (toUpd.Usuarios.Concat(entity.Usuarios)).ToList();
+            toUpd.Usuarios = toUpd.Usuarios == null || toUpd.Usuarios.Count() == 0 ? entity.Usuarios : (toUpd.Usuarios.Concat(entity.Usuarios)).ToList();
 
             _context.Visas.Update(toUpd);
             return toUpd;

@@ -56,16 +56,19 @@ namespace ServiceLayer.WorkFlowServices
             _visaDbAccess = new VisaDbAccess(context);
         }
 
-       public int RegisterItinerarioAsync(ItinerarioCommand cmd, string claimTipoInstitucion)
+       public int RegisterItinerarioAsync(ItinerarioCommand cmd)
         {
             var iters = _userDbAccess.GetAllItinerarios();
             cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID); //await _userManager.FindByIdAsync(cmd.UsuarioID);
 
             var itinerario = _runnerItinerario.RunAction(cmd);
-
-            _workflowManagerLocal.CrearViaje(itinerario, claimTipoInstitucion);
-
             return itinerario.ItinerarioID;
+        }
+
+        public void CreateItinerarioWorkflow(int itinerarioId, string claimTipoInstitucion)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            _workflowManagerLocal.CrearViaje(itinerario, claimTipoInstitucion);
         }
 
         public Itinerario UpdateItinerario(Itinerario entity, Itinerario toUpd)
@@ -199,7 +202,7 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
 
-        public async void SetPassportToUser(string usuarioID)
+        public void SetPassportToUser(string usuarioID)
         {
             var usuario = _userDbAccess.GetUsuario(usuarioID);
             
@@ -227,7 +230,7 @@ namespace ServiceLayer.WorkFlowServices
             return data;
         }
 
-        public async void SetVisaToUser(string usuarioId, int visaID, string updatorID)
+        public void SetVisaToUser(string usuarioId, int visaID, string updatorID)
         {
             var visa = _visaDbAccess.GetVisa(visaID);
             var userToUpd = _userDbAccess.GetUsuario(usuarioId);
@@ -280,6 +283,12 @@ namespace ServiceLayer.WorkFlowServices
                 
 
             return data;
+        }
+
+        public void ContinuarItinerario(int itinerarioId)
+        {
+            var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
+            _workflowManagerLocal.ManageItinerarioPendiente(itinerario);
         }
     }
 }

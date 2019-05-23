@@ -42,7 +42,17 @@ namespace DataLayer.EfCode
                 .IsRequired();
             //.IsRequired(false)
             //.OnDelete(DeleteBehavior.SetNull);
-            
+
+            builder.Entity<Historial>()
+                    .HasOne(hist => hist.Usuario)
+                    .WithMany(user => user.HistorialUpdater)
+                    .HasForeignKey(hist => hist.UsuarioId);
+
+            builder.Entity<Historial>()
+                    .HasOne(hist => hist.UsuarioTarget)
+                    .WithMany(user => user.HistorialTarget)
+                    .HasForeignKey(hist => hist.UsuarioTargetId);
+
             //TODO: Config the new entities if is needed.
         }
 

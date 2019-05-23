@@ -49,13 +49,14 @@ namespace TripManager2._0.Controllers
             var t = await _adminService.FillNotificationsAsync();
             vm.UserPendings = t.UserPendings;
             vm.ViajesUpdated = t.ViajesUpdated;
-
+            int notifications = 0;
 
             if (vm.ViajesUpdated.Any() && User.HasClaim("Permission", "Common"))
             {
                 if (User.Claims.Where(c => c.Type == "Visa").Any())
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteVisas).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -66,6 +67,7 @@ namespace TripManager2._0.Controllers
                 if (User.Claims.Where(c => c.Type == "Passport").Any())
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendientePasaporte).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -73,9 +75,10 @@ namespace TripManager2._0.Controllers
                     }
                 }
 
-                if (User.Claims.Where(c => c.Type == "JefeArea").Any())
+                if (User.HasClaim("Institucion", "JefeArea"))
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -83,9 +86,10 @@ namespace TripManager2._0.Controllers
                     }
                 }
 
-                if (User.Claims.Where(c => c.Type == "Decano").Any())
+                if (User.HasClaim("Institucion", "Decano"))
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -93,9 +97,10 @@ namespace TripManager2._0.Controllers
                     }
                 }
 
-                if (User.Claims.Where(c => c.Type == "Rector").Any())
+                if (User.HasClaim("Institucion", "Rector"))
                 {
                     var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector).ToList();
+                    notifications += data.Count();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -104,6 +109,7 @@ namespace TripManager2._0.Controllers
                 }
 
                 var misViajes = vm.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+                notifications += misViajes.Count();
                 if (misViajes.Count() != 0)
                 {
                     for (int i = 0; i < misViajes.Count(); i++)
@@ -113,6 +119,8 @@ namespace TripManager2._0.Controllers
                     }
                 }
             }
+            vm.Notifications = notifications;
+
             return View(vm);
         }
 
@@ -135,7 +143,7 @@ namespace TripManager2._0.Controllers
                 UsuarioID = _userManager.GetUserId(User)
             };
 
-            services.RegisterItinerarioAsync(iterCmd, User.Claims.Where(x=> x.Type == "Institucion").Single().Value);
+            services.RegisterItinerarioAsync(iterCmd);
             var user = await _userManager.GetUserAsync(User);
             var iterID = user.Itinerarios.Last().ItinerarioID;
 
@@ -150,6 +158,7 @@ namespace TripManager2._0.Controllers
             }
 
             services.CalculateDates(services.GetItinerario(iterID));
+            services.CreateItinerarioWorkflow(iterID, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
 
             return RedirectToAction("Welcome");
         }
@@ -157,7 +166,6 @@ namespace TripManager2._0.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewTrips()
         {
-            //TODO: [KARL LEWIS] When you create TripDetailsView add funtionality to the DetailsButton in the View correspondent to this method
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
             var data = services.GetItinerarioNotFinished(user)
@@ -166,11 +174,14 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewTrips(int canceled)
+        public async Task<IActionResult> ViewTrips(int vId, int action)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            services.CancelItinerario(canceled, user.Id, "El usuario cancelo su viaje");
+            if (action == 0)
+                services.CancelItinerario(vId, user.Id, "El usuario cancelo su viaje");
+            else
+                services.ContinuarItinerario(vId);
             return RedirectToAction("ViewTrips");
         }
 
