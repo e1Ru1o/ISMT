@@ -218,7 +218,7 @@ namespace ServiceLayer.WorkFlowServices
 
         public IEnumerable<Usuario> GetUsuariosPendientePasaporte(Usuario usuario)
         {
-            var itinerarios = GetItinerariosEstado(Estado.PendienteVisas, usuario);
+            var itinerarios = GetItinerariosEstado(Estado.PendientePasaporte, usuario);
             HashSet<Usuario> data = new HashSet<Usuario>();
 
             foreach (var itinerario in itinerarios)
