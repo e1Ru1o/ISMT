@@ -14,5 +14,6 @@ namespace BizData.Entities
 
         public virtual Usuario Usuario { get; set; }
         public virtual Itinerario Itinerario { get; set; }
+        public virtual Usuario UsuarioTarget { get; set; }
     }
 }

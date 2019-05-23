@@ -40,20 +40,13 @@ namespace TripManager2._0.Controllers
             _userManager = userManager;
         }
 
-
-        [HttpGet]
-        public IActionResult EditCiudad()
-        {
-            var getter = new GetterAll(_getterUtils, _context);
-            return View(getter.GetAll("Ciudad"));
-        }
-
         [HttpGet]
         public IActionResult EditPais()
         {
             var getter = new GetterAll(_getterUtils, _context);
             return View(getter.GetAll("Pais"));
         }
+
         [HttpPost]
         public IActionResult EditPais(int id)
         {
