@@ -46,3 +46,9 @@ function getRowId(caller, id) {
     document.getElementById(id).value = caller.parentElement.parentElement.id;
 }
 
+function dismark_selection() {
+    var op = document.getElementsByTagName('option');
+    for (var i = 0; i < op.length; ++i)
+        op[i].selected = false;
+}
+

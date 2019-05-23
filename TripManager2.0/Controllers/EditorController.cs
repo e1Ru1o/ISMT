@@ -73,58 +73,52 @@ namespace TripManager2._0.Controllers
             return Redirect("AuthorizeTrip");
         }
 
-        [Authorize("Passport")]
         [HttpGet]
+        [Authorize("Passport")]
         public async Task<IActionResult> AuthorizePassport()
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetItinerariosEstado(Estado.PendientePasaporte, user);
-
+            var data = services.GetUsuariosPendientePasaporte(user);
             return View(data);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizePassport(int itinerarioId, int action)
+        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
 
             if (action == 0)
-                services.SetPassportToUser(itinerarioId, user.Id, "");
+            {
+                services.SetPassportToUser(usuarioId);
+                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Aprobar, "");
+            }
             else if (action == 1)
-                services.ManageActionRechazarPasaporte(itinerarioId, user.Id, "");
+                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Rechazar, "");
             else
-                services.CancelItinerario(itinerarioId, user.Id, "");
+                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Cancelar, "");
 
             return Redirect("AuthorizePassport");
         }
 
         [HttpGet]
         [Authorize("Visa")]
-        public async Task<IActionResult> AuthorizeVisa()
+        public async Task<IActionResult> GiveVisa()
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetItinerariosEstado(Estado.PendienteVisas, user);
+            var data = services.GetUsuariosPendientePasaporte(user);
 
             return View(data);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizeVisa(int itinerarioId, int visaId, int action)
+        public async Task<IActionResult> GiveVisa(string uID, int vID, int action)
         {
-            var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
-            var user = await _userManager.GetUserAsync(User);
-
-            if (action == 0)
-                services.SetVisaToUser(itinerarioId, visaId, user.Id);
-            else if (action == 1)
-                services.ManageActionRechazarVisa(itinerarioId, visaId, user.Id);
-            else
-                services.CancelItinerario(itinerarioId, user.Id, "");
             
-            return Redirect("AuthorizeVisa");
+            
+            return RedirectToAction("GiveVisa");
         }
 
         [HttpGet]
@@ -152,5 +146,7 @@ namespace TripManager2._0.Controllers
 
             return RedirectToAction("Welcome", "User");
         }
+
+
     }
 }
