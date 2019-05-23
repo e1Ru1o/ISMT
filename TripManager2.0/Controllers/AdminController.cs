@@ -49,6 +49,7 @@ namespace TripManager2._0.Controllers
             var getter = new GetterAll(_getterUtils, _context);
             return View(getter.GetAll("Pais"));
         }
+
         [HttpPost]
         public IActionResult EditPais(int id)
         {
