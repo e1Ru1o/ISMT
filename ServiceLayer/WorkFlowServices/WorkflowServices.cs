@@ -199,7 +199,7 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
 
-        public async void SetPassportToUser(string usuarioID)
+        public void SetPassportToUser(string usuarioID)
         {
             var usuario = _userDbAccess.GetUsuario(usuarioID);
             
@@ -227,7 +227,7 @@ namespace ServiceLayer.WorkFlowServices
             return data;
         }
 
-        public async void SetVisaToUser(string usuarioId, int visaID, string updatorID)
+        public void SetVisaToUser(string usuarioId, int visaID, string updatorID)
         {
             var visa = _visaDbAccess.GetVisa(visaID);
             var userToUpd = _userDbAccess.GetUsuario(usuarioId);
