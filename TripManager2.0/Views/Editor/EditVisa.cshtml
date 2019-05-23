@@ -1,13 +1,13 @@
 ﻿@using BizData.Entities
 @using BizLogic.Shared
-@model IEnumerable<Pais>
+@model IEnumerable<Visa>
 
 @{
     Layout = "UserLayout";
-    ViewData["Title"] = "Pais";
+    ViewData["Title"] = "Visa";
 }
 <div class="main">
-    <h1>Paises</h1>
+    <h1>Visas</h1>
     <form method="post">
         <table>
             <tr>
@@ -15,23 +15,33 @@
                     Nombre
                 </th>
                 <th>
-                    Region
+                   Detalles
                 </th>
-                <th></th>
+                <th>
+                    Editar
+                </th>
             </tr>
             @foreach (var item in Model)
             {
+                
                 <tr>
-                    @Html.Partial("Pais", item)
                     <td>
-                       <a href="/Admin/UpdatePais?key=@item.PaisID" class="button"> Update</a>
+                        @item.Name
+                    </td>
+                    <td>
+                        
+                        <a href="/Editor/Visa?Id=@item.VisaID" class="button"><span>Detalles</span></a>
+                    </td>
+                    <td>
+
+                        <a href="/" class="button"><span>Editar</span></a>
                     </td>
                 </tr>
 
             }
             <tr>
                 <td>
-                    @Html.ActionLink("Agregar", "AddPais", "Admin", new NameOnlyViewModel())
+                 <a href="/Editor/CreateVisa" class="button"><span>Agregar</span></a>
                 </td>
                 <td></td>
                 <td></td>
@@ -39,7 +49,3 @@
         </table>
     </form>
 </div>
-<script>
-    document.getElementsByTagName("a").addClass("button")
-
-</script>

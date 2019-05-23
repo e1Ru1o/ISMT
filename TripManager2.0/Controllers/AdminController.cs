@@ -42,21 +42,9 @@ namespace TripManager2._0.Controllers
 
 
 
-
-        [HttpGet]
         public IActionResult EditPais()
         {
             var getter = new GetterAll(_getterUtils, _context);
-            return View(getter.GetAll("Pais"));
-        }
-
-        [HttpPost]
-        public IActionResult EditPais(int id)
-        {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
-            var getter = new GetterAll(_getterUtils, _context);
-            var pais = ((getter.GetAll("Pais")) as IEnumerable<Pais>).Where(x => x.PaisID == id).Single();
-            service.RemovePais(pais);
             return View(getter.GetAll("Pais"));
         }
 
@@ -82,55 +70,38 @@ namespace TripManager2._0.Controllers
             cmd.Regiones = (new GetterAll(_getterUtils, _context).GetAll("Region") as IEnumerable<Region>).Select(x => x.Nombre);
             return View(cmd);
         }
+
         [HttpGet]
-        public IActionResult EditInstitucion()
+        public IActionResult UpdatePais(int key)
         {
             var getter = new GetterAll(_getterUtils, _context);
-            return View(getter.GetAll("Institucion"));
+            var pais = (getter.GetAll("Pais") as IEnumerable<Pais>).Where(x => x.PaisID == key).Single();
+            return View(new PaisCommand{Id=key, Name=pais.Nombre,RegionName=pais.Region.Nombre,Regiones= (getter.GetAll("Region") as IEnumerable<Region>).Select(x => x.Nombre) });
         }
         [HttpPost]
-        public IActionResult EditInstitucion(int id)
+        public IActionResult UpdatePais(PaisCommand cmd)
         {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
             var getter = new GetterAll(_getterUtils, _context);
-            var ins = ((getter.GetAll("Institucion")) as IEnumerable<Institucion>).Where(x => x.InstitucionID == id).Single();
-            service.RemoveInstitucion(ins);
-            return View(getter.GetAll("Institucion"));
-        }
-
-        [HttpPost]
-        public IActionResult AddInstitucion(NameOnlyViewModel cmd)
-        {
-
             if (ModelState.IsValid)
             {
+               
+                var pais = (getter.GetAll("Pais") as IEnumerable<Pais>).Where(x => x.PaisID == cmd.Id).Single();
                 AdminService service = new AdminService(_context, _userManager, _getterUtils);
-                service.RegisterInstitucion(cmd, out var errors);
-                return RedirectToAction("EditInstitucion");
+                service.UpdatePais(cmd.ToPais(),pais);
+                return RedirectToAction("EditPais");
             }
 
+            cmd.Regiones = (getter.GetAll("Region") as IEnumerable<Region>).Select(x => x.Nombre);
             return View(cmd);
         }
-        [HttpGet]
-        public IActionResult AddInstitucion()
-        {
-            return View(new NameOnlyViewModel());
-        }
-        [HttpGet]
+
+
         public IActionResult EditRegion()
         {
             var getter = new GetterAll(_getterUtils, _context);
             return View(getter.GetAll("Region"));
         }
-        [HttpPost]
-        public IActionResult EditRegion(int id)
-        {
-            AdminService service = new AdminService(_context, _userManager, _getterUtils);
-            var getter = new GetterAll(_getterUtils, _context);
-            var ins = ((getter.GetAll("Region")) as IEnumerable<Region>).Where(x => x.RegionID == id).Single();
-            service.RemoveRegion(ins);
-            return View(getter.GetAll("Region"));
-        }
+      
         [HttpPost]
         public IActionResult AddRegion(NameOnlyViewModel cmd)
         {
@@ -149,13 +120,34 @@ namespace TripManager2._0.Controllers
         {
             return View(new NameOnlyViewModel());
         }
+        [HttpGet]
+        public IActionResult UpdateRegion()
+        {
+
+            return View(new NameOnlyViewModel());
+        }
+        [HttpPost]
+        public IActionResult UpdateRegion(NameOnlyViewModel cmd)
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            if (ModelState.IsValid)
+            {
+
+                var region = (getter.GetAll("Region") as IEnumerable<Region>).Where(x => x.Nombre == cmd.Nombre).Single();
+                AdminService service = new AdminService(_context, _userManager, _getterUtils);
+
+                service.UpdateRegion(new Region { Nombre = cmd.Nombre }, region);
+            }
+
+           
+            return View(cmd);
+        }
 
         public IActionResult EditUsuario()
         {
             GetterAll getter = new GetterAll(_getterUtils, _context, _signInManager, _userManager);
             return View(getter.GetAll("Usuario"));
         }
-
 
         [HttpPost]
         public async Task<IActionResult> UpdateUsuario(RegisterUsuarioCommand cmd)

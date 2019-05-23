@@ -13,6 +13,7 @@ namespace BizLogic.Administration
         {
             return new Pais
             {
+                PaisID = Id,
                 Nombre = Name,
                 Region = Region == null ? null : Region
             };

@@ -1,0 +1,48 @@
+﻿@using BizData.Entities
+@using BizLogic.Shared
+@model Visa
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = $"Visa-{Model.Name}";
+}
+<div class="main">
+    <h1>@Model.Name</h1>
+
+    <h2>Regiones</h2>
+    <ul class="display">
+        @foreach (var item in Model.Regiones)
+        {
+
+            <li>
+                @item.Region.Nombre
+            </li>
+
+        }
+    </ul>
+    <h2>Paises</h2>
+    <ul class="display">
+        @foreach (var item in Model.Paises)
+        {
+
+            <li>
+                @item.Pais.Nombre
+            </li>
+
+        }
+    </ul>
+</div>
+<script>
+    var ul = document.getElementsByClassName('display');
+    console.log(ul);
+    for (var i = 0; i < ul.length; i++) {
+        if (ul[i].getElementsByTagName("li").length == 0) {
+
+            var s = document.getElementsByTagName('h2')[i];
+            s.style.display = "None";
+            console.log(s.innerHTML);
+
+        }
+    }
+   
+</script>
