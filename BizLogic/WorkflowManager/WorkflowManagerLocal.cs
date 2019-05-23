@@ -345,7 +345,7 @@ namespace BizLogic.WorkflowManager
 
             if (claimTipoUsuario == "Decano")
             {
-                itinerario.Estado = Estado.PendienteAprobacionDecano;
+                itinerario.Estado = Estado.PendienteAprobacionRector;
                 _context.Commit();
                 return;
             }

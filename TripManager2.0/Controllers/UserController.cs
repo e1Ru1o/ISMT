@@ -135,7 +135,7 @@ namespace TripManager2._0.Controllers
                 UsuarioID = _userManager.GetUserId(User)
             };
 
-            services.RegisterItinerarioAsync(iterCmd, User.Claims.Where(x=> x.Type == "Institucion").Single().Value);
+            services.RegisterItinerarioAsync(iterCmd);
             var user = await _userManager.GetUserAsync(User);
             var iterID = user.Itinerarios.Last().ItinerarioID;
 
@@ -150,6 +150,7 @@ namespace TripManager2._0.Controllers
             }
 
             services.CalculateDates(services.GetItinerario(iterID));
+            services.CreateItinerarioWorkflow(iterID, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
 
             return RedirectToAction("Welcome");
         }
