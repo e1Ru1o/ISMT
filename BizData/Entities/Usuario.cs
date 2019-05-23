@@ -13,5 +13,7 @@ namespace BizData.Entities
 
         public virtual ICollection<Itinerario> Itinerarios { get; set; }
         public virtual ICollection<Usuario_Visa> Visas { get; set; }
+        public virtual ICollection<Historial> HistorialTarget { get; set; }
+        public virtual ICollection<Historial> HistorialUpdater { get; set; }
     }
 }

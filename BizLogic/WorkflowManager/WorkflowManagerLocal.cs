@@ -25,6 +25,7 @@ namespace BizLogic.WorkflowManager
             var historial_entity = new Historial
             {
                 Itinerario = itinerario,
+                UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
@@ -54,6 +55,7 @@ namespace BizLogic.WorkflowManager
             var historial_entity = new Historial
             {
                 Itinerario = itinerario,
+                UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
@@ -84,6 +86,7 @@ namespace BizLogic.WorkflowManager
             {
                 Estado = Estado.AprobadoRector,
                 Itinerario = itinerario,
+                UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
@@ -113,7 +116,8 @@ namespace BizLogic.WorkflowManager
         {
             var historial_entity = new Historial
             {
-                Fecha = DateTime.Now
+                Fecha = DateTime.Now,
+                UsuarioTarget = usuarioItinerario
             };
 
             if (action == Action.Ignorar)
@@ -187,7 +191,19 @@ namespace BizLogic.WorkflowManager
                 var currentPais = CurrentPaisItinerario(itinerario, visas_usuario);
 
                 if (currentPais is null)
-                    ManageActionVisas(usuario, Action.Ignorar, null, null);
+                {
+                    itinerario.Estado = Estado.PendienteRealizacion;
+
+                    var historial_entity = new Historial()
+                    {
+                        Itinerario = itinerario,
+                        Estado = Estado.AprobadasVisas,
+                        UsuarioTarget = usuario,
+                        Fecha = DateTime.Now
+                    };
+                    _historial.Add(historial_entity);
+                    _context.Commit();
+                }
                 else
                 {
                     foreach (var visa in GetVisasPais(currentPais))
@@ -247,6 +263,7 @@ namespace BizLogic.WorkflowManager
         {
             var historial_entity = new Historial()
             {
+                UsuarioTarget = usuarioTarget,
                 Usuario = usuario,
                 Fecha = DateTime.Now
             };
