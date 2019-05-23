@@ -11,8 +11,6 @@
 </head>
 <body>
     <CENTER>
-        <h1>No tienes notificaciones.</h1>
-        <h1>La verdad es q ni lo se ;-)</h1>
         @if (User.HasClaim("Permission", "Common"))
         {
             <p>
@@ -98,9 +96,18 @@
             {
                 <p>No hay usuarios pendientes.</p>
             }
-            foreach (var item in Model.UserPendings)
+            else
             {
-                <p>@item</p>
+                int cant = Model.UserPendings.Count();
+
+                if (cant == 1)
+                {
+                    <p>Hay @cant usuario pendiente.</p>
+                }
+                else
+                {
+                    <p>Hay @cant usuarios pendientes.</p>
+                }
             }
 
         }
