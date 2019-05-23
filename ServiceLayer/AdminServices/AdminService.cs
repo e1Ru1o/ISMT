@@ -149,23 +149,29 @@ namespace ServiceLayer.AdminServices
 
         public long RegisterVisa(VisaCommand cmd, out IImmutableList<ValidationResult> errors)
         {
-            cmd.Regiones = _regionDbAccess.GetAll().Zip(cmd.regionesName, (Region r, string s) =>
+            if (cmd.regionesName != null)
             {
-                return r.Nombre == s ? r : null;
-            })
-            .Where(r => r != null)
-            .ToList();
+                cmd.Regiones = _regionDbAccess.GetAll().Zip(cmd.regionesName, (Region r, string s) =>
+                {
+                    return r.Nombre == s ? r : null;
+                })
+                .Where(r => r != null)
+                .ToList();
 
-            cmd.RegionesVisas = BuildListOfRegion_Visa(cmd.Regiones, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+                cmd.RegionesVisas = BuildListOfRegion_Visa(cmd.Regiones, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+            }
 
-            cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
+            if (cmd.paisesNames != null)
             {
-                return p.Nombre == s ? p : null;
-            })
-            .Where(p => p != null)
-            .ToList();
+                cmd.Paises = _paisDbAccess.GetAll().Zip(cmd.paisesNames, (Pais p, string s) =>
+                {
+                    return p.Nombre == s ? p : null;
+                })
+                .Where(p => p != null)
+                .ToList();
 
-            cmd.PaisesVisas = BuildListOfPais_Visa(cmd.Paises, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+                cmd.PaisesVisas = BuildListOfPais_Visa(cmd.Paises, new List<Visa>() { new Visa() { Name = cmd.Nombre } });
+            }
 
             var visa =  _runnerVisa.RunAction(cmd);
 
