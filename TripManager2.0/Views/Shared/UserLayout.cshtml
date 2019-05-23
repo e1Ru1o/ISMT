@@ -49,15 +49,18 @@
         </div>
 
         <a asp-action="Edit" asp-controller="Account"><i class="fa fa-angle-right"></i> Editar perfil</a>
-        <button class="dropdown-btn">
-            <i class="fa fa-angle-double-right"></i>
-            Viajes
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-container">
-            <a asp-action="Create" asp-controller="User"><i class="fa fa-angle-right"></i> Nuevo viaje</a>
-            <a asp-action="ViewTrips" asp-controller="User"><i class="fa fa-angle-right"></i> Viajes actuales</a>
-        </div>
+        @if (User.Claims.Where(x => x.Type == "Institucion").Count() != 0)
+        {
+            <button class="dropdown-btn">
+                <i class="fa fa-angle-double-right"></i>
+                Viajes
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-container">
+                <a asp-action="Create" asp-controller="User"><i class="fa fa-angle-right"></i> Nuevo viaje</a>
+                <a asp-action="ViewTrips" asp-controller="User"><i class="fa fa-angle-right"></i> Viajes actuales</a>
+            </div>            
+        }
 
         @if (!User.HasClaim("Institucion", "Trabajador") && User.Claims.Where(x => x.Type == "Institucion").Count() != 0)
         {
