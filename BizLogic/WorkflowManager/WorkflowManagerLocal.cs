@@ -187,9 +187,7 @@ namespace BizLogic.WorkflowManager
                 var currentPais = CurrentPaisItinerario(itinerario, visas_usuario);
 
                 if (currentPais is null)
-                {
-                   
-                }
+                    ManageActionVisas(usuario, Action.Ignorar, null, null);
                 else
                 {
                     foreach (var visa in GetVisasPais(currentPais))
