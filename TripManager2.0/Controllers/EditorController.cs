@@ -102,7 +102,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize("Visa")]
-        public async Task<IActionResult> AuthorizeVisa()
+        public async Task<IActionResult> GiveVisa()
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
@@ -112,7 +112,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizeVisa(int itinerarioId, int visaId, int action)
+        public async Task<IActionResult> GiveVisa(int itinerarioId, int visaId, int action)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
@@ -143,5 +143,7 @@ namespace TripManager2._0.Controllers
             //TODO: [TENORIO] save the visa. Remember that one of the two list may be null
             return RedirectToAction("Welcome", "User");
         }
+
+
     }
 }

@@ -41,9 +41,7 @@
 </div>
 
 <script>
-    var op = document.getElementsByTagName('option');
-    for (var i = 0; i < op.length; ++i)
-        op[i].selected = false;
+    dismark_selection();
 
     function check_selected() {
         var sel = document.getElementsByTagName('select');
