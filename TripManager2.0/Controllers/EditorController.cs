@@ -72,5 +72,6 @@ namespace TripManager2._0.Controllers
 
             return Redirect("AuthorizeTrip");
         }
+
     }
 }

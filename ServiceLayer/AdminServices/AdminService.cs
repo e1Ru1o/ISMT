@@ -219,7 +219,7 @@ namespace ServiceLayer.AdminServices
             _context.Commit();
         }
 
-        public async Task<(List<string> UserPendings, bool Paises, bool Regiones)> FillNotificationsAsync()
+        public async Task<(List<string> UserPendings, List<Itinerario> ViajesUpdated)> FillNotificationsAsync()
         {
             //check for pending users
             List<string> UserPendings = new List<string>();
@@ -231,13 +231,10 @@ namespace ServiceLayer.AdminServices
 
             GetterAll getter = new GetterAll(_getterUtils, _context);
 
-            //check for empty provincias
-            bool Paises = getter.GetAll("Pais").Any();
+            List<Itinerario> ViajesUpdated = getter.GetAll("Itinerario").Where(i => (i as Itinerario).Update != 0).Select(i => i as Itinerario).ToList();
 
-            //check for empty UOs
-            bool Regiones = getter.GetAll("Region").Any();
-
-            return (UserPendings, Paises, Regiones);
+            return (UserPendings, ViajesUpdated);
         }
+
     }
 }
