@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using TripManager2._0.ViewModels;
-using System.Linq;
 using ServiceLayer.AccountServices;
 using BizLogic.Authentication;
 using System.Threading.Tasks;
@@ -41,12 +40,16 @@ namespace TripManager2._0.Controllers
             _userManager = userManager;
         }
 
+
+
+
         [HttpGet]
         public IActionResult EditPais()
         {
             var getter = new GetterAll(_getterUtils, _context);
             return View(getter.GetAll("Pais"));
         }
+
         [HttpPost]
         public IActionResult EditPais(int id)
         {
@@ -194,10 +197,11 @@ namespace TripManager2._0.Controllers
                     ins = (await _userManager.GetClaimsAsync(user)).Where(x => x.Type == "Institucion").Select(x => x.Value).Single();
 
                     await _userManager.RemoveClaimAsync(user, new Claim("Institucion", ins));
-                }catch{ }
+                }
+                catch { }
                 finally
                 {
-                    if (cmd.Institucion !="None") 
+                    if (cmd.Institucion != "None")
                         await _userManager.AddClaimAsync(user, new Claim("Institucion", cmd.Institucion));
                 }
                 var us = cmd.ToUsuario();
@@ -214,7 +218,7 @@ namespace TripManager2._0.Controllers
             var item = await _userManager.FindByEmailAsync(email);
             var claims = (await _userManager.GetClaimsAsync(item));
             var level = claims.Where(x => x.Type == "Permission").Select(x => x.Value).Single();
-            string passport,visa,institucion;
+            string passport, visa, institucion;
             try
             {
                 passport = claims.Where(x => x.Type == "Passport").Select(x => x.Value).Single();
@@ -229,7 +233,7 @@ namespace TripManager2._0.Controllers
             }
             catch
             {
-               visa = "False";
+                visa = "False";
             }
             try
             {
@@ -250,7 +254,7 @@ namespace TripManager2._0.Controllers
                 Password = "P9n$",
                 Passaport = passport,
                 Institucion = institucion,
-                Visa=visa,
+                Visa = visa,
                 Level = level,
             };
             return View(cmd);
@@ -291,6 +295,14 @@ namespace TripManager2._0.Controllers
                     pending.Add(item as Usuario);
             }
             return RedirectToAction("PendingUsers", "Admin");
+        }
+        public IActionResult Viaje(int id)
+        {
+            
+            GetterAll getter = new GetterAll(_getterUtils, _context);
+            var it = (getter.GetAll("Itinerario") as IEnumerable<Itinerario>).Where(x => x.ItinerarioID == id).Single();
+            var viajes = (getter.GetAll("Viaje") as IEnumerable<Viaje>).Where(x => x.Itinerario.ItinerarioID == id);
+            return View(viajes);
         }
 
     }

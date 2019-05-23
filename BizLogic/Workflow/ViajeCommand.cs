@@ -34,11 +34,11 @@ namespace BizLogic.Workflow
         {
             return new Viaje()
             {
+                Itinerario = Itinerario,
                 MotivoViaje = Motivo,
                 Pais = Pais,
                 FechaInicio = FechaInicio,
                 FechaFin = FechaFin,
-                Itinerario = Itinerario,
                 Ciudad = CiudadName
                // Institucion = Institucion
             };

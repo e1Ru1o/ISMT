@@ -199,22 +199,39 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.CancelarItinerario(trip, usuario, comentario);
         }
 
-        public async void SetPassportToUser(int iterID, string userToUpdID, string updatorID, string comment)
+        public async void SetPassportToUser(string usuarioID)
         {
-            var iter = _itinerarioDbAccess.GetItinerario(iterID);
-            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
-            var updator = await _userManager.FindByIdAsync(updatorID);
-
-            userToUpd.HasPassport = true;
-            await _userManager.UpdateAsync(userToUpd);
+            var usuario = _userDbAccess.GetUsuario(usuarioID);
+            
+            usuario.HasPassport = true;
+            //await _userManager.UpdateAsync(usuario);
             _context.Commit();
         }
 
-        public async void SetVisaToUser(int visaID, string userToUpdID, string updatorID)
+        public void ManageActionPasaporte(string usuarioId, string updatorId, BizLogic.WorkflowManager.Action action, string comentario)
+        {
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            var updator = _userDbAccess.GetUsuario(updatorId);
+
+            _workflowManagerLocal.ManageActionPasaporte(usuario, action, updator, comentario);
+        }
+
+        public IEnumerable<Usuario> GetUsuariosPendientePasaporte(Usuario usuario)
+        {
+            var itinerarios = GetItinerariosEstado(Estado.PendientePasaporte, usuario);
+            HashSet<Usuario> data = new HashSet<Usuario>();
+
+            foreach (var itinerario in itinerarios)
+                data.Add(itinerario.Usuario);
+
+            return data;
+        }
+
+        public async void SetVisaToUser(string usuarioId, int visaID, string updatorID)
         {
             var visa = _visaDbAccess.GetVisa(visaID);
-            var userToUpd = await _userManager.FindByIdAsync(userToUpdID);
-            var updator = await _userManager.FindByIdAsync(updatorID);
+            var userToUpd = _userDbAccess.GetUsuario(usuarioId);
+            var updator = _userDbAccess.GetUsuario(updatorID);
 
             var user_visa = new Usuario_Visa()
             {
@@ -230,9 +247,39 @@ namespace ServiceLayer.WorkFlowServices
             userToUpd.Visas.Add(user_visa);
             visa.Usuarios.Add(user_visa);
 
-            await _userManager.UpdateAsync(userToUpd);
+            //await _userManager.UpdateAsync(userToUpd);
             visa = _visaDbAccess.Update(visa, _visaDbAccess.GetVisa(visaID));
+            _context.Commit();
         }
 
+        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action)
+        {
+            var visa = _visaDbAccess.GetVisa(visaId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            var updator = _userDbAccess.GetUsuario(updaterId);
+
+            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name);
+        }
+
+        public IEnumerable<(Usuario, IEnumerable<Visa>)> GetVisasUsuarioVisasPendiente(Usuario usuario)
+        {
+            var itinerarios = GetItinerariosEstado(Estado.PendienteVisas, usuario);
+            HashSet<Usuario> usuarios = new HashSet<Usuario>();
+
+            foreach (var itinerario in itinerarios)
+                usuarios.Add(itinerario.Usuario);
+
+            var data = new HashSet<(Usuario, IEnumerable<Visa>)>();
+
+            foreach (var user in usuarios)
+            {
+                var visas = _workflowManagerLocal.ManageVisas(user);
+                if (visas.Count() != 0)
+                    data.Add((user, visas));
+            }
+                
+
+            return data;
+        }
     }
 }

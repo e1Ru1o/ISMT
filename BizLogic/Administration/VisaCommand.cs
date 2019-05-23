@@ -20,13 +20,16 @@ namespace BizLogic.Administration
             Regiones = regiones;
         }
 
+        public VisaCommand()
+        { }
+
         public Visa ToVisa()
         {
             return new Visa()
             {
                 Name = Nombre,
-                Paises = new List<Pais_Visa>(PaisesVisas),
-                Regiones = new List<Region_Visa>(RegionesVisas)
+                Paises = PaisesVisas != null ? new List<Pais_Visa>(PaisesVisas) : new List<Pais_Visa>(),
+                Regiones = RegionesVisas != null ? new List<Region_Visa>(RegionesVisas) : new List<Region_Visa>()
             };
         }
 

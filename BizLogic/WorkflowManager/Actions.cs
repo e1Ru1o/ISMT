@@ -8,6 +8,7 @@ namespace BizLogic.WorkflowManager
     {
         Ignorar,
         Aprobar,
-        Rechazar
+        Rechazar,
+        Cancelar
     }
 }

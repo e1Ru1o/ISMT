@@ -1,42 +1,45 @@
-﻿@model IEnumerable<UserTripViewModel>
+﻿@using BizData.Entities
+@model IEnumerable<Usuario>
 
 @{
     Layout = "UserLayout";
-    ViewData["Title"] = "Viajes";
+    ViewData["Title"] = "Pasaportes";
 }
 
 <div class="main">
+    <h1>Pasaportes Pendientes</h1>
     <form method="post">
-        <h1>Viajes actuales</h1>
-        <input hidden="hidden" id="trip" name="tripId">
         <input hidden="hidden" id="op" name="action">
+        <input hidden="hidden" id="uId" name="usuarioId">
         <table>
             <tr>
                 <th>
-                    Usuario
+                    Nombre
                 </th>
                 <th>
-                    Fecha de viaje
+                    Apellido
                 </th>
                 <th>
-                    Estado
+                    Correo
                 </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th>
+                </th>
+                <th>
+                </th>
+                <th>
+                </th>
             </tr>
             @foreach (var item in Model)
             {
-                <tr id="@item.ID">
+                <tr id="@item.Id">
                     <td>
-                        @item.Owner
+                        @item.FirstName
                     </td>
                     <td>
-                        @item.Identifier
+                        @item.FirstLastName
                     </td>
                     <td>
-                        @item.Status
+                        @item.Email
                     </td>
                     <td>
                         <button class="button" type="submit" onclick="setValues(this, '0');"><span>Aprobar</span></button>
@@ -47,19 +50,15 @@
                     <td>
                         <button class="button" type="submit" onclick="setValues(this, '2');"><span>Cancelar</span></button>
                     </td>
-                    <td>
-                        <a href="/Admin/Viaje?id=@item.ID" class="button"><span>Detalles</span></a>
-                    </td>
                 </tr>
             }
         </table>
+
     </form>
 </div>
-
 <script>
     function setValues(caller, option) {
-        getRowId(caller, 'trip');
+        getRowId(caller, 'uId');
         document.getElementById('op').value = option;
     }
 </script>
-
