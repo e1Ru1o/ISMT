@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataLayer.Migrations
 {
-    public partial class FinalSprint260 : Migration
+    public partial class FinalSprint270 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -206,6 +206,7 @@ namespace DataLayer.Migrations
                     FechaInicio = table.Column<DateTime>(nullable: true),
                     FechaFin = table.Column<DateTime>(nullable: true),
                     Estado = table.Column<int>(nullable: false),
+                    Update = table.Column<int>(nullable: false),
                     UsuarioId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

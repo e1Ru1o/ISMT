@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20190522224447_FinalSprint-2.3.1")]
-    partial class FinalSprint231
+    [Migration("20190523221504_FinalSprint2.7.0")]
+    partial class FinalSprint270
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,11 +37,15 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("UsuarioId");
 
+                    b.Property<string>("UsuarioTargetId");
+
                     b.HasKey("HistorialID");
 
                     b.HasIndex("ItinerarioID");
 
                     b.HasIndex("UsuarioId");
+
+                    b.HasIndex("UsuarioTargetId");
 
                     b.ToTable("Historial");
                 });
@@ -391,8 +395,12 @@ namespace DataLayer.Migrations
                         .HasForeignKey("ItinerarioID");
 
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("HistorialUpdater")
                         .HasForeignKey("UsuarioId");
+
+                    b.HasOne("BizData.Entities.Usuario", "UsuarioTarget")
+                        .WithMany("HistorialTarget")
+                        .HasForeignKey("UsuarioTargetId");
                 });
 
             modelBuilder.Entity("BizData.Entities.Itinerario", b =>
