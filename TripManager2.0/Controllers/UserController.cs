@@ -157,7 +157,6 @@ namespace TripManager2._0.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewTrips()
         {
-            //TODO: [KARL LEWIS] When you create TripDetailsView add funtionality to the DetailsButton in the View correspondent to this method
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
             var data = services.GetItinerarioNotFinished(user)
@@ -166,11 +165,14 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewTrips(int canceled)
+        public async Task<IActionResult> ViewTrips(int vId, int action)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            services.CancelItinerario(canceled, user.Id, "El usuario cancelo su viaje");
+            if (action == 0)
+                services.CancelItinerario(vId, user.Id, "El usuario cancelo su viaje");
+            else
+                services.ContinuarItinerario(vId);
             return RedirectToAction("ViewTrips");
         }
 
