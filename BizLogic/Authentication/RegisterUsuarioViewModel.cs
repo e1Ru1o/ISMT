@@ -20,7 +20,7 @@ namespace BizLogic.Authentication
         [Required, StringLength(100), DisplayName("Segundo Apellido")]
         public string SecondLastName { get; set; }
 
-        [Required, StringLength(100)]
+        [Required, StringLength(100), EmailAddress]
         public string Email { get; set; }
 
         [Required, StringLength(100)]
@@ -31,5 +31,15 @@ namespace BizLogic.Authentication
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string EditEmail { get; set; }
+
+        public string Level { get; set; }
+
+        public string Passaport { get; set; }
+
+        public string Visa { get; set; }
+
+        public string Institucion { get; set; }
     }
 }

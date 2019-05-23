@@ -22,4 +22,8 @@ namespace TripManager2._0
                 .UseStartup<Startup>()
                 .Build();
     }
+
+    //TODO: Make the update Visa, calling BuildListOfPais_Visa from the controller.
+    //TODO: Check if when a Visa is created, a country related to it, have into its collection a Pais_Visa that contains this Visa.
+
 }

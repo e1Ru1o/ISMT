@@ -1,21 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BizData.Entities
 {
-    public class Usuario
+    public class Usuario : IdentityUser
     {
-        public long UsuarioID { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string FirstLastName { get; set; }
         public string SecondLastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public bool HasPassport { get; set; }
 
-        public virtual ICollection<Pasaporte> Pasaportes { get; set; }
-        public virtual ICollection<Viaje> Viajes { get; set; }
-        public virtual ICollection<Usuario_Permiso> Permisos { get; set; }
+        public virtual ICollection<Itinerario> Itinerarios { get; set; }
+        public virtual ICollection<Usuario_Visa> Visas { get; set; }
     }
 }

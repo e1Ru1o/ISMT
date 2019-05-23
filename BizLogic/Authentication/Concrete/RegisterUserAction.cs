@@ -1,9 +1,11 @@
 ﻿using BizData.Entities;
 using BizDbAccess.Authentication;
 using BizLogic.GenericInterfaces;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BizLogic.Authentication.Concrete
 {
@@ -16,15 +18,16 @@ namespace BizLogic.Authentication.Concrete
             _dbAccess = dbAccess;
         }
 
+
+        public async Task<IdentityResult> action(Usuario user, string Password)
+        {
+            var result = await _dbAccess.RegisterUsuarioAsync(user, Password);
+            return HasErrors ? null : result;
+        }
+
         public Usuario Action(RegisterUsuarioCommand dto)
         {
-            var user = dto.ToUsuario();
-
-            if (!HasErrors)
-                _dbAccess.Add(user);
-
-            return HasErrors ? null : user;
-
+            throw new NotImplementedException();
         }
     }
 }

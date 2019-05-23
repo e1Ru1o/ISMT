@@ -1,0 +1,19 @@
+﻿@using BizData.Entities
+@model IEnumerable<Institucion>
+
+<table border="0">
+    <tr>
+       
+        <th>
+            Nombre
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            @Html.Partial("Institucion", item)
+        </tr>
+
+    }
+
+</table>
