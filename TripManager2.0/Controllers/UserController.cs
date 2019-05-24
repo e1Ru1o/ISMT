@@ -187,7 +187,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize("Institucion")]
-        public async Task<IActionResult> Invite()
+        public async Task<IActionResult> Invitation()
         {
             return View(new InvitationViewModel());
         }
