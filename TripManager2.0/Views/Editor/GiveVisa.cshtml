@@ -14,46 +14,50 @@
             <input name="uID" name="uID" hidden="hidden" />
             <input name="vID" hidden="hidden" />
             <input name="action" hidden="hidden" />
-            <table>
-                <tr>
-                    <th>
-                        Usuario
-                    </th>
-                    <th>
-                        Visas Utiles
-                    </th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                @foreach (var (usr, visas) in Model)
-            {
+
+            <div>
+                <table>
                     <tr>
-                        <td id="@usr.Id">
-                            @usr.FirstName @usr.SecondName
-                        </td>
-                        <td>
-                            <select asp-for="@visas">
-                                @foreach (var item in visas)
-                                {
-                                    <option value="@item.VisaID">@item.Name</option>
-                                }
-                            </select>
-                        </td>
-                        <td>
-                            <button class="button" type="submit" onclick="setValues(this, '0')">Otorgar</button>
-                        </td>
-                        <td>
-                            <button class="button" type="button" onclick="show(this)">Rechazar</button>
-                        </td>
+                        <th>
+                            Usuario
+                        </th>
+                        <th>
+                            Visas Utiles
+                        </th>
+                        <th></th>
+                        <th></th>
                     </tr>
-                }
-            </table>
+                    @foreach (var (usr, visas) in Model)
+            {
+                        <tr>
+                            <td id="@usr.Id">
+                                @usr.FirstName @usr.SecondName
+                            </td>
+                            <td>
+                                <select asp-for="@visas">
+                                    @foreach (var item in visas)
+                                    {
+                                        <option value="@item.VisaID">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <button class="button" type="submit" onclick="setValues(this, '0')">Otorgar</button>
+                            </td>
+                            <td>
+                                <button class="button" type="button" onclick="show(this)">Rechazar</button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </form>
     </div>
 </body>
 
 @section Scripts{ 
     <script>
+        check_tables(['Ningún usuario requiere visa']);
         clean_selects();
 
         function setValues(caller, action) {

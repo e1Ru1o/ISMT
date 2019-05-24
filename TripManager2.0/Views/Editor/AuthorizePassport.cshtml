@@ -13,48 +13,50 @@
             @Html.Partial("Razon")
             <input hidden="hidden" id="op" name="action">
             <input hidden="hidden" id="uId" name="usuarioId">
-            <table>
-                <tr>
-                    <th>
-                        Nombre
-                    </th>
-                    <th>
-                        Apellido
-                    </th>
-                    <th>
-                        Correo
-                    </th>
-                    <th>
-                    </th>
-                    <th>
-                    </th>
-                    <th>
-                    </th>
-                </tr>
-                @foreach (var item in Model)
-                {
-                    <tr id="@item.Id">
-                        <td>
-                            @item.FirstName
-                        </td>
-                        <td>
-                            @item.FirstLastName
-                        </td>
-                        <td>
-                            @item.Email
-                        </td>
-                        <td>
-                            <button class="button" type="submit" onclick="setValues(this, '0');"><span>Aprobar</span></button>
-                        </td>
-                        <td>
-                            <button class="button" type="button" onclick="show(this, '1');"><span>Rechazar</span></button>
-                        </td>
-                        <td>
-                            <button class="button" type="button" onclick="show(this, '2');"><span>Cancelar</span></button>
-                        </td>
+            <div>
+                <table>
+                    <tr>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Apellido
+                        </th>
+                        <th>
+                            Correo
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
                     </tr>
-                }
-            </table>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="@item.Id">
+                            <td>
+                                @item.FirstName
+                            </td>
+                            <td>
+                                @item.FirstLastName
+                            </td>
+                            <td>
+                                @item.Email
+                            </td>
+                            <td>
+                                <button class="button" type="submit" onclick="setValues(this, '0');"><span>Aprobar</span></button>
+                            </td>
+                            <td>
+                                <button class="button" type="button" onclick="show(this, '1');"><span>Rechazar</span></button>
+                            </td>
+                            <td>
+                                <button class="button" type="button" onclick="show(this, '2');"><span>Cancelar</span></button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
 
         </form>
     </div>
@@ -62,6 +64,8 @@
 
 @section Scripts{
     <script>
+        check_tables(['Ningún usuario solicitando pasaporte']);
+
         function setValues(caller, option) {
             getRowId(caller, 'uId');
             document.getElementById('op').value = option;

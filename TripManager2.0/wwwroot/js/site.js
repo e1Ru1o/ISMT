@@ -77,3 +77,25 @@ function closeDialog() {
     document.getElementById('mot').value = document.getElementById('msg').value;
     dialog.close();
 }
+
+function check_tables(data) {
+    console.log(data)
+    var tb = document.getElementsByTagName('table');
+    console.log(tb);
+    console.log(tb.length);
+    console.log(tb[0].parentElement);
+    console.log(tb[1].parentElement);
+    for (var i = tb.length - 1; i >= 0; i--) {
+        var rows = tb[i].getElementsByTagName('tr').length;
+        if (rows === 1) {
+            var container = tb[i].parentElement.parentElement;
+            var msg = document.createElement('CENTER'); {
+                var h = document.createElement('h1'); {
+                    h.innerHTML = data[i];
+                }
+                msg.appendChild(h);
+            }
+            container.replaceChild(msg, tb[i].parentElement);
+        }
+    }
+}
