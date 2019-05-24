@@ -20,7 +20,7 @@ namespace BizLogic.Workflow.Concrete
         {
             try
             {
-                var result = _dbAccess.GetViajeInvitado(dto.Nombre, dto.Procedencia);
+                var result = _dbAccess.GetViajeInvitado(dto.Nombre, dto.Procedencia, dto.FechaLLegada);
 
                 if (result != null)
                     throw new InvalidOperationException();

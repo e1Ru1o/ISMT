@@ -206,7 +206,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize("Institucion")]
-        public async Task<IActionResult> Invitation()
+        public IActionResult Invitation()
         {
             return View(new InvitationViewModel());
         }
@@ -217,8 +217,10 @@ namespace TripManager2._0.Controllers
             WorkflowServices services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
 
-            int id = services.RegisterViajeInvitado(user, vm.Name, vm.Procedencia, vm.Motivo, vm.End);
-            services.CreateViajeInvitadoWorkflow(id, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
+            int id = services.RegisterViajeInvitado(user.Id, vm.Name, vm.Procedencia, vm.Motivo, vm.End);
+
+            if (id != -1)
+                services.CreateViajeInvitadoWorkflow(id, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
 
             return RedirectToAction("Welcome");
         }
