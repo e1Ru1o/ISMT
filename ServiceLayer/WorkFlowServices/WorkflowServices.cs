@@ -35,8 +35,10 @@ namespace ServiceLayer.WorkFlowServices
         private readonly UserDbAccess _userDbAccess;
         private readonly VisaDbAccess _visaDbAccess;
         private readonly ViajeInvitadoDbAccess _viajeInvitadoDbAccess;
+        private readonly HistorialDbAccess _historialDbAccess;
 
         private readonly WorkflowManagerLocal _workflowManagerLocal;
+        private readonly WorkflowManagerGuest _workflowManagerGuest;
 
         public WorkflowServices(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils, SignInManager<Usuario> signInManager)
         {
@@ -56,12 +58,20 @@ namespace ServiceLayer.WorkFlowServices
             _paisDbAccess = new PaisDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
-            _workflowManagerLocal = new WorkflowManagerLocal(context);
             _visaDbAccess = new VisaDbAccess(context);
             _viajeInvitadoDbAccess = new ViajeInvitadoDbAccess(context);
+            _historialDbAccess = new HistorialDbAccess(context);
+
+            _workflowManagerLocal = new WorkflowManagerLocal(context);
+            _workflowManagerGuest = new WorkflowManagerGuest(context);
         }
 
-       public int RegisterItinerarioAsync(ItinerarioCommand cmd)
+        public IEnumerable<Historial> GetHistorial()
+        {
+            return _historialDbAccess.GetAll();
+        }
+
+        public int RegisterItinerarioAsync(ItinerarioCommand cmd)
         {
             var iters = _userDbAccess.GetAllItinerarios();
             cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID); //await _userManager.FindByIdAsync(cmd.UsuarioID);
@@ -260,13 +270,13 @@ namespace ServiceLayer.WorkFlowServices
             _context.Commit();
         }
 
-        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action)
+        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action, string comentario)
         {
             var visa = _visaDbAccess.GetVisa(visaId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             var updator = _userDbAccess.GetUsuario(updaterId);
 
-            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name);
+            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name, comentario);
         }
 
         public IEnumerable<(Usuario, IEnumerable<Visa>)> GetVisasUsuarioVisasPendiente(Usuario usuario)
@@ -313,15 +323,98 @@ namespace ServiceLayer.WorkFlowServices
             {
                 return -1;
             }
-
+            
             return viaje.ViajeInvitadoID;
         }
-
+        
         public ViajeInvitado UpdateViajeInvitado(ViajeInvitado entity, ViajeInvitado toUpd)
         {
             var viaje = _viajeInvitadoDbAccess.Update(entity, toUpd);
             _context.Commit();
             return viaje;
+        }
+
+        public void CreateViajeInvitadoWorkflow(int viajeInvidtadoId, string claimTipoInstitucion)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvidtadoId);
+            _workflowManagerGuest.CrearViaje(viajeInvitado, claimTipoInstitucion);
+        }
+
+        public void ManageActionAprobarViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionJefeArea)
+            {
+                _workflowManagerGuest.ManageActionJefeArea(viajeInvitado, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionDecano)
+            {
+                _workflowManagerGuest.ManageActionDecano(viajeInvitado, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionRector)
+            {
+                _workflowManagerGuest.ManageActionRector(viajeInvitado, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+        }
+
+        public void ManageActionRechazarViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionJefeArea)
+            {
+                _workflowManagerGuest.ManageActionJefeArea(viajeInvitado, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionDecano)
+            {
+                _workflowManagerGuest.ManageActionDecano(viajeInvitado, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionRector)
+            {
+                _workflowManagerGuest.ManageActionRector(viajeInvitado, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
+        }
+
+        public IEnumerable<ViajeInvitado> GetViajesInvitadosNotFinished(Usuario usuario)
+        {
+            return _userDbAccess.GetViajesInvitadosNotFinished(usuario);
+        }
+
+        public IEnumerable<ViajeInvitado> GetViajesInvitadosEstado(Estado estado, Usuario user)
+        {
+            return _viajeInvitadoDbAccess.GetViajesInvitadoEstado(estado, user);
+        }
+
+        public void CancelViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
+        {
+            var trip = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId) ;
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerGuest.CancelarViajeInvitado(trip, usuario, comentario);
+        }
+
+        public void ContinuarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.ManageViajeInvitadoPendiente(viajeInvitado);
+        }
+
+        public void RealizarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.RealizarViajeInvitado(viajeInvitado);
         }
     }
 }

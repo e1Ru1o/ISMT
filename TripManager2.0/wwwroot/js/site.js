@@ -71,3 +71,9 @@ function oneOfAllAtLeast() {
     if (count === 0)
         sel[0].required = true;
 }
+
+function closeDialog() {
+    var dialog = document.getElementById("rzn");
+    document.getElementById('mot').value = document.getElementById('msg').value;
+    dialog.close();
+}
