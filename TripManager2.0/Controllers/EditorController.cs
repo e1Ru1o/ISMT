@@ -195,7 +195,36 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public IActionResult UpdateVisa(EditVisaViewModel vm)
         {
-            //TODO: [TENORIO] add update logic here. remember to obtain a logued user
+            var getter = new GetterAll(_getterUtils, _context);
+            Visa toUpd = new Visa();
+            Visa entity = new Visa();
+            // Setearle a entity el nombre nuevo, y resetear paises y regiones a toUpd
+
+            var regiones = (IEnumerable<Region>)getter.GetAll("Region");
+            List<Region_Visa> regiones_visa = new List<Region_Visa>();
+
+            foreach (var name in vm.SelectedRegion)
+                foreach (var region in regiones)
+                {
+                    if (region.Nombre == name)
+                    {
+                        regiones_visa.Add(new Region_Visa() { Region = region, Visa = toUpd });
+                        break;
+                    }
+                }
+
+            var paises = (IEnumerable<Pais>)getter.GetAll("Pais");
+            List<Pais_Visa> paises_visa = new List<Pais_Visa>();
+
+            foreach (var name in vm.SelectedPais)
+                foreach (var pais in paises)
+                {
+                    if (pais.Nombre == name)
+                    {
+                        paises_visa.Add(new Pais_Visa() { Pais = pais, Visa = toUpd });
+                    }
+                }
+
             return RedirectToAction("Welcome");
         }
     }
