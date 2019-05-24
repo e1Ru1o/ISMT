@@ -49,6 +49,40 @@ namespace DataLayer.EfCode
                 await _userManager.AddClaimAsync(raul, new Claim("Passport", "true"));
                 await _userManager.AddClaimAsync(raul, new Claim("Visa", "true"));
 
+                var pancho = new Usuario()
+                {
+                    FirstName = "pancho",
+                    SecondName = "man",
+                    FirstLastName = "matias",
+                    SecondLastName = "Vera",
+                    Email = "pa@gmail.com",
+                    UserName = "pa@gmail.com"
+                };
+
+                await _userManager.CreateAsync(pancho, "T3n!");
+                await _userManager.AddClaimAsync(pancho, new Claim("Permission", "Admin"));
+                await _userManager.AddClaimAsync(pancho, new Claim("Pending", "false"));
+                await _userManager.AddClaimAsync(pancho, new Claim("Institucion", "Rector"));
+                await _userManager.AddClaimAsync(pancho, new Claim("Passport", "true"));
+                await _userManager.AddClaimAsync(pancho, new Claim("Visa", "true"));
+
+                var marta = new Usuario()
+                {
+                    FirstName = "marta",
+                    SecondName = "rita",
+                    FirstLastName = "pol",
+                    SecondLastName = "Gise",
+                    Email = "ma@gmail.com",
+                    UserName = "ma@gmail.com"
+                };
+
+                await _userManager.CreateAsync(marta, "T3n!");
+                await _userManager.AddClaimAsync(marta, new Claim("Permission", "Admin"));
+                await _userManager.AddClaimAsync(marta, new Claim("Pending", "false"));
+                await _userManager.AddClaimAsync(marta, new Claim("Institucion", "Rector"));
+                await _userManager.AddClaimAsync(marta, new Claim("Passport", "true"));
+                await _userManager.AddClaimAsync(marta, new Claim("Visa", "true"));
+
                 // Regiones
                 var region = new Region { Nombre = "Ninguna"};
                 _ctx.Regiones.Add(region);
