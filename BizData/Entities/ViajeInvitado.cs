@@ -14,6 +14,6 @@ namespace BizData.Entities
         public Estado Estado { get; set; }
         
         public virtual Usuario Usuario { get; set; }
-        public ICollection<Historial> Historial { get; set; }
+        public virtual ICollection<Historial> Historial { get; set; }
     }
 }
