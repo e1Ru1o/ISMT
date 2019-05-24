@@ -205,9 +205,18 @@ namespace BizLogic.WorkflowManager
                     {
                         itinerario.Update = 1;
                         itinerario.Estado = Estado.PendienteVisas;
-                    }
 
-                _context.Commit();
+                        historial_entity = new Historial
+                        {
+                            Estado = Estado.PendienteVisas,
+                            Itinerario = itinerario,
+                            UsuarioTarget = usuarioItinerario,
+                            Usuario = usuario,
+                            Fecha = DateTime.Now,
+                        };
+                        _historial.Add(historial_entity);
+                        _context.Commit();
+                    }
                 ManageVisas(usuarioItinerario);
 
                 return;
@@ -225,9 +234,19 @@ namespace BizLogic.WorkflowManager
                     {
                         itinerario.Update = 1;
                         itinerario.Estado = Estado.Pendiente;
+
+                        historial_entity = new Historial
+                        {
+                            Estado = itinerario.Estado,
+                            Itinerario = itinerario,
+                            UsuarioTarget = usuarioItinerario,
+                            Usuario = usuario,
+                            Fecha = DateTime.Now,
+                        };
+                        _historial.Add(historial_entity);
+                        _context.Commit();
                     }
 
-                _context.Commit();
                 return;
             }
 
@@ -238,9 +257,18 @@ namespace BizLogic.WorkflowManager
                     {
                         itinerario.Update = 1;
                         itinerario.Estado = Estado.Cancelado;
-                    }
 
-                _context.Commit();
+                        historial_entity = new Historial
+                        {
+                            Estado = itinerario.Estado,
+                            Itinerario = itinerario,
+                            UsuarioTarget = usuarioItinerario,
+                            Usuario = usuario,
+                            Fecha = DateTime.Now,
+                        };
+                        _historial.Add(historial_entity);
+                        _context.Commit();
+                    }
             }
         }
 
@@ -344,17 +372,37 @@ namespace BizLogic.WorkflowManager
             {
                 historial_entity.Estado = Estado.AprobadasVisas;
                 historial_entity.Comentario = $"Aprobada visa {visa}";
-            }
-            else if (action == Action.Rechazar)
-            {
-                historial_entity.Estado = Estado.PendienteVisas;
-                historial_entity.Comentario = $"Rechazada visa {visa}";
-            }
-            else
-                return;
 
-            _historial.Add(historial_entity);
-            _context.Commit();
+                _historial.Add(historial_entity);
+                _context.Commit();
+
+                return;
+            }
+
+            if (action == Action.Rechazar)
+            {
+                historial_entity.Estado = Estado.Pendiente;
+                _historial.Add(historial_entity);
+                _context.Commit();
+
+                foreach (var itinerario in usuarioTarget.Itinerarios)
+                    if (itinerario.Estado == Estado.PendienteVisas)
+                    {
+                        itinerario.Update = 1;
+                        itinerario.Estado = Estado.Pendiente;
+
+                        historial_entity = new Historial()
+                        {
+                            Estado = itinerario.Estado,
+                            Itinerario = itinerario,
+                            UsuarioTarget = usuarioTarget,
+                            Usuario = usuario,
+                            Fecha = DateTime.Now
+                        };
+                        _historial.Add(historial_entity);
+                        _context.Commit();
+                    }
+            }
         }
 
         public void CrearViaje(Itinerario itinerario, string claimTipoUsuario)
