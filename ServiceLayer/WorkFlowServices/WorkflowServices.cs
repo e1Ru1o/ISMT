@@ -397,5 +397,24 @@ namespace ServiceLayer.WorkFlowServices
         {
             return _viajeInvitadoDbAccess.GetViajesInvitadoEstado(estado, user);
         }
+
+        public void CancelViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
+        {
+            var trip = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId) ;
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerGuest.CancelarViajeInvitado(trip, usuario, comentario);
+        }
+
+        public void ContinuarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.ManageViajeInvitadoPendiente(viajeInvitado);
+        }
+
+        public void RealizarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.RealizarViajeInvitado(viajeInvitado);
+        }
     }
 }

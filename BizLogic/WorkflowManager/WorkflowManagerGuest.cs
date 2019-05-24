@@ -3,6 +3,7 @@ using BizDbAccess.GenericInterfaces;
 using BizDbAccess.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BizLogic.WorkflowManager
@@ -171,7 +172,7 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public void ManageActionRealizacion(ViajeInvitado viajeInvitado)
+        public void RealizarViajeInvitado(ViajeInvitado viajeInvitado)
         {
             viajeInvitado.Estado = Estado.Realizado;
 
@@ -186,7 +187,7 @@ namespace BizLogic.WorkflowManager
             _context.Commit();
         }
 
-        public void CancelarItinerario(ViajeInvitado viajeInvitado, Usuario usuario, string comentario)
+        public void CancelarViajeInvitado(ViajeInvitado viajeInvitado, Usuario usuario, string comentario)
         {
             viajeInvitado.Estado = Estado.Cancelado;
 
@@ -198,6 +199,23 @@ namespace BizLogic.WorkflowManager
                 Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
+            };
+            _historial.Add(historial_entity);
+            _context.Commit();
+        }
+
+        public void ManageViajeInvitadoPendiente(ViajeInvitado viajeInvitado)
+        {
+            var estado = viajeInvitado.Historial.OrderBy(hist => hist.Fecha);
+            viajeInvitado.Estado = estado.ElementAt(estado.Count() - 2).Estado;
+            _context.Commit();
+
+            var historial_entity = new Historial()
+            {
+                Estado = viajeInvitado.Estado,
+                ViajeInvitado = viajeInvitado,
+                UsuarioTarget = viajeInvitado.Usuario,
+                Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
             _context.Commit();
