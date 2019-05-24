@@ -359,7 +359,7 @@ namespace BizLogic.WorkflowManager
             return visas;
         }
 
-        public void ManageActionVisas(Usuario usuarioTarget, Action action, Usuario usuario, string visa)
+        public void ManageActionVisas(Usuario usuarioTarget, Action action, Usuario usuario, string visa, string comentario)
         {
             var historial_entity = new Historial()
             {
@@ -382,6 +382,7 @@ namespace BizLogic.WorkflowManager
             if (action == Action.Rechazar)
             {
                 historial_entity.Estado = Estado.Pendiente;
+                historial_entity.Comentario = comentario;
                 _historial.Add(historial_entity);
                 _context.Commit();
 
@@ -397,7 +398,8 @@ namespace BizLogic.WorkflowManager
                             Itinerario = itinerario,
                             UsuarioTarget = usuarioTarget,
                             Usuario = usuario,
-                            Fecha = DateTime.Now
+                            Fecha = DateTime.Now,
+                            Comentario = comentario 
                         };
                         _historial.Add(historial_entity);
                         _context.Commit();

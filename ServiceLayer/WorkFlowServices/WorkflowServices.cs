@@ -270,13 +270,13 @@ namespace ServiceLayer.WorkFlowServices
             _context.Commit();
         }
 
-        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action)
+        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action, string comentario)
         {
             var visa = _visaDbAccess.GetVisa(visaId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             var updator = _userDbAccess.GetUsuario(updaterId);
 
-            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name);
+            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name, comentario);
         }
 
         public IEnumerable<(Usuario, IEnumerable<Visa>)> GetVisasUsuarioVisasPendiente(Usuario usuario)
