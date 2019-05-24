@@ -387,5 +387,15 @@ namespace ServiceLayer.WorkFlowServices
                 return;
             }
         }
+
+        public IEnumerable<ViajeInvitado> GetViajesInvitadosNotFinished(Usuario usuario)
+        {
+            return _userDbAccess.GetViajesInvitadosNotFinished(usuario);
+        }
+
+        public IEnumerable<ViajeInvitado> GetViajesInvitadosEstado(Estado estado, Usuario user)
+        {
+            return _viajeInvitadoDbAccess.GetViajesInvitadoEstado(estado, user);
+        }
     }
 }
