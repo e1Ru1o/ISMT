@@ -190,7 +190,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize("Institucion")]
-        public IActionResult Invite()
+        public async Task<IActionResult> Invitation()
         {
             return View(new InvitationViewModel());
         }

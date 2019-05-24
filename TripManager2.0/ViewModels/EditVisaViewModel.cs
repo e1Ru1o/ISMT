@@ -8,6 +8,7 @@ namespace TripManager2._0.ViewModels
 {
     public class EditVisaViewModel : VisaViewModel
     {
+        public int id { get; set; }
         public IEnumerable<string> SelectedPais { get; set; }
         public IEnumerable<string> SelectedRegion { get; set; }
     }
