@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
 </head>
-<body>
+<body onload="setInterval('fly()',100)">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -47,7 +47,7 @@
         <div class="header-sidenav">
             <p><i class="fa fa-user-o"></i> Acciones :</p>
         </div>
-
+       
         <a asp-action="Edit" asp-controller="Account"><i class="fa fa-angle-right"></i> Editar perfil</a>
         @if (User.Claims.Where(x => x.Type == "Institucion").Count() != 0)
         {
@@ -97,6 +97,8 @@
                 <a asp-controller="Admin" asp-action="EditRegion"><i class="fa fa-angle-right"></i> Región</a>
                 <a asp-controller="Admin" asp-action="EditUsuario"><i class="fa fa-angle-right"></i> Usuarios</a>
                 <a asp-controller="Admin" asp-action="PendingUsers"><i class="fa fa-angle-right"></i> Usuarios Pendientes</a>
+                <a asp-controller="Admin" asp-action="Historial"><i class="fa fa-angle-right"></i> Historial</a>
+
             </div>
         }
 
@@ -106,10 +108,13 @@
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @RenderBody()
+            
         </main>
+        
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted" onload="setInterval('fly()',100)">
+        
         <div class="container">
             &copy; 2019 - TripManager
         </div>
@@ -136,6 +141,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
+   
 </body>
 
 </html>
