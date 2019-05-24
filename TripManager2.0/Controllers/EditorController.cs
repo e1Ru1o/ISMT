@@ -85,7 +85,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action,, int uType, string motivo)
+        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action, int uType, string motivo)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);

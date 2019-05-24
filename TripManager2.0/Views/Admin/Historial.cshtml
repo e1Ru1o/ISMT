@@ -5,6 +5,7 @@
     Layout = "UserLayout";
 }
 <div class="main">
+    <h1>Historial</h1>
     <table>
         <tr>
             <th>
@@ -112,7 +113,15 @@
                     }
                 </td>
                 <td>
-                    Viaje Invitado
+                    @if (item.ViajeInvitado != null)
+                    {
+                        @item.ViajeInvitado.Estado
+                    }
+                    else
+                    {
+
+                        <label>vacio</label>
+                    }
                 </td>
             </tr>
         }
