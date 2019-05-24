@@ -326,6 +326,13 @@ namespace ServiceLayer.WorkFlowServices
             
             return viaje.ViajeInvitadoID;
         }
+        
+        public ViajeInvitado UpdateViajeInvitado(ViajeInvitado entity, ViajeInvitado toUpd)
+        {
+            var viaje = _viajeInvitadoDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return viaje;
+        }
 
         public void CreateViajeInvitadoWorkflow(int viajeInvidtadoId, string claimTipoInstitucion)
         {
@@ -333,11 +340,52 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerGuest.CrearViaje(viajeInvitado, claimTipoInstitucion);
         }
 
-        public ViajeInvitado UpdateViajeInvitado(ViajeInvitado entity, ViajeInvitado toUpd)
+        public void ManageActionAprobarViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
         {
-            var viaje = _viajeInvitadoDbAccess.Update(entity, toUpd);
-            _context.Commit();
-            return viaje;
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionJefeArea)
+            {
+                _workflowManagerGuest.ManageActionJefeArea(viajeInvitado, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionDecano)
+            {
+                _workflowManagerGuest.ManageActionDecano(viajeInvitado, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionRector)
+            {
+                _workflowManagerGuest.ManageActionRector(viajeInvitado, BizLogic.WorkflowManager.Action.Aprobar, usuario, comentario);
+                return;
+            }
+        }
+
+        public void ManageActionRechazarViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionJefeArea)
+            {
+                _workflowManagerGuest.ManageActionJefeArea(viajeInvitado, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionDecano)
+            {
+                _workflowManagerGuest.ManageActionDecano(viajeInvitado, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
+
+            if (viajeInvitado.Estado == Estado.PendienteAprobacionRector)
+            {
+                _workflowManagerGuest.ManageActionRector(viajeInvitado, BizLogic.WorkflowManager.Action.Rechazar, usuario, comentario);
+                return;
+            }
         }
     }
 }
