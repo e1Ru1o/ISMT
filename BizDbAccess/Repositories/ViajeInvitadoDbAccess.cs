@@ -53,5 +53,13 @@ namespace BizDbAccess.Repositories
         {
             return _context.ViajesInvitados.Where(vi => vi.Nombre == nombre && vi.Procedencia == procedencia).SingleOrDefault();
         }
+
+        public IEnumerable<ViajeInvitado> GetViajesInvitadoEstado(Estado estado, Usuario usuario)
+        {
+            var viajesInvitados = from it in _context.ViajesInvitados
+                                   where it.Estado == estado && it.Usuario.Id != usuario.Id
+                                   select it;
+            return viajesInvitados;
+        }
     }
 }
