@@ -251,7 +251,7 @@ namespace TripManager2._0.Controllers
             }
 
             service.UpdateVisa(entity, toUpd);
-            return RedirectToAction("Welcome");
+            return RedirectToAction("Welcome", "User");
         }
     }
 }
