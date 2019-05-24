@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using TripManager2._0.ViewModels;
-using System.Linq;
 using ServiceLayer.AccountServices;
 using BizLogic.Authentication;
 using System.Threading.Tasks;
@@ -185,17 +184,59 @@ namespace TripManager2._0.Controllers
                 .Select(x => (x as Visa))
                 .Where(x => x.VisaID == id)
                 .Single();
-            if(visa.Paises != null)
-                data.SelectedPais = visa.Paises.Select(x => x.Pais.Nombre);
-            if (visa.Regiones != null)
-                data.SelectedPais = visa.Regiones.Select(x => x.Region.Nombre);
+            data.Nombre = visa.Name;
+            data.SelectedPais = visa.Paises != null ? visa.Paises.Select(x => x.Pais.Nombre) : new List<string>();
+            data.SelectedPais = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
+                
             return View(data);
         }
 
         [HttpPost]
         public IActionResult UpdateVisa(EditVisaViewModel vm)
         {
-            //TODO: [TENORIO] add update logic here. remember to obtain a logued user
+            AdminService service = new AdminService(_context, _userManager, _getterUtils);
+            var getter = new GetterAll(_getterUtils, _context);
+            var visas = (IEnumerable<Visa>)getter.GetAll("Visa");
+            Visa toUpd = visas.Where(v => v.VisaID == vm.id).Single();
+            Visa entity = new Visa()
+            {
+                Name = vm.Nombre
+            };
+
+            if (vm.SelectedRegion != null || vm.SelectedRegion.Count() > 0)
+            {
+                var regiones = (IEnumerable<Region>)getter.GetAll("Region");
+                List<Region_Visa> regiones_visa = new List<Region_Visa>();
+
+                foreach (var name in vm.SelectedRegion)
+                    foreach (var region in regiones)
+                    {
+                        if (region.Nombre == name)
+                        {
+                            regiones_visa.Add(new Region_Visa() { Region = region, Visa = toUpd });
+                            break;
+                        }
+                    }
+                toUpd.Regiones = regiones_visa;
+            }
+
+            if (vm.SelectedPais != null || vm.SelectedPais.Count() > 0)
+            {
+                var paises = (IEnumerable<Pais>)getter.GetAll("Pais");
+                List<Pais_Visa> paises_visa = new List<Pais_Visa>();
+
+                foreach (var name in vm.SelectedPais)
+                    foreach (var pais in paises)
+                    {
+                        if (pais.Nombre == name)
+                        {
+                            paises_visa.Add(new Pais_Visa() { Pais = pais, Visa = toUpd });
+                        }
+                    }
+                toUpd.Paises = paises_visa;
+            }
+
+            service.UpdateVisa(entity, toUpd);
             return RedirectToAction("Welcome");
         }
     }

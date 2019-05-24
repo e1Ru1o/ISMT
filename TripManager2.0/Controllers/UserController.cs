@@ -168,26 +168,33 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetItinerarioNotFinished(user)
+            var vm = new PendingTripViewModel();
+            vm.Users = services.GetItinerarioNotFinished(user)
                 .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID));
-            return View(data);
+            vm.Visitants = services.GetViajeInvitadoNotFinished(user)
+                .Select(x => new InvitationViewModel(x));
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewTrips(int vId, int action)
+        public async Task<IActionResult> ViewTrips(int vId, int action, int uType)
         {
+            //TODO: [JUANDA] use `uType` to preccess UserTips(0) or InvitationTrips(1)
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
             if (action == 0)
                 services.CancelItinerario(vId, user.Id, "El usuario cancelo su viaje");
-            else
+            else if (action == 1)
                 services.ContinuarItinerario(vId);
+            else
+                services.RealizarItinerario(vId);
+
             return RedirectToAction("ViewTrips");
         }
 
         [HttpGet]
         [Authorize("Institucion")]
-        public async Task<IActionResult> Invite()
+        public async Task<IActionResult> Invitation()
         {
             return View(new InvitationViewModel());
         }
@@ -199,7 +206,8 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             int id = services.RegisterViajeInvitado(user, vm.Name, vm.Procedencia, vm.Motivo, vm.End);
-            
+            services.CreateViajeInvitadoWorkflow(id, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
+
             return RedirectToAction("Welcome");
         }
     }

@@ -11,8 +11,9 @@ namespace BizData.Entities
         public string Procedencia { get; set; }
         public string Nombre { get; set; }
         public string Motivo { get; set; }
-
+        public Estado Estado { get; set; }
+        
         public virtual Usuario Usuario { get; set; }
-
+        public ICollection<Historial> Historial { get; set; }
     }
 }
