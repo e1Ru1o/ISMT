@@ -1,48 +1,60 @@
 ﻿@using BizData.Entities
-@model IEnumerable<Viaje>
-
+@model IEnumerable<ViajeInvitado>
 @{
     Layout = "UserLayout";
 }
-
 <div class="main">
     <h1>Detalles de Itinerario</h1>
     <form>
         <table>
             <tr>
                 <th>
-                    Pais
+                    Nombre
                 </th>
                 <th>
-                    Ciudad
+                    Procedencia
                 </th>
                 <th>
-                    Fecha de Inicio
+                    Motivo
                 </th>
                 <th>
-                    Fecha de Fin
+                    Usuario
                 </th>
                 <th>
-                   Motivo
+                    Estado
+                </th>
+                <th>
+                    FechaLLegada
                 </th>
             </tr>
             @foreach (var item in Model)
             {
                 <tr>
                     <td>
-                        @item.Pais.Nombre
+                        @item.Nombre
                     </td>
                     <td>
-                        @item.Ciudad
+                        @item.Procedencia
                     </td>
                     <td>
-                        @item.FechaInicio
+                        @if (item.Motivo != null)
+                        {
+                            @item.Motivo
+                        }
+                        else
+                        {
+                            <label>Vacio</label>
+
+                        }
                     </td>
                     <td>
-                        @item.FechaFin
+                        @item.Usuario
                     </td>
                     <td>
-                        @item.MotivoViaje
+                        @item.Estado
+                    </td>
+                    <td>
+                        @item.FechaLLegada
                     </td>
                 </tr>
             }
