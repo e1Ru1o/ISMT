@@ -51,7 +51,7 @@ namespace ServiceLayer.WorkFlowServices
             _runnerViaje = new RunnerWriteDb<ViajeCommand, Viaje>(
                 new RegisterViajeAction(new ViajeDbAccess(_context)), _context);
             _runnerViajeInvitado = new RunnerWriteDb<ViajeInvitado, ViajeInvitado>(
-                new RegisterViajeInvitadoAction(_viajeInvitadoDbAccess), _context);
+                new RegisterViajeInvitadoAction(new ViajeInvitadoDbAccess(_context)), _context);
 
             _itinerarioDbAccess = new ItinerarioDbAccess(_context);
             _viajeDbAccess = new ViajeDbAccess(_context);
@@ -270,13 +270,13 @@ namespace ServiceLayer.WorkFlowServices
             _context.Commit();
         }
 
-        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action)
+        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action, string comentario)
         {
             var visa = _visaDbAccess.GetVisa(visaId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             var updator = _userDbAccess.GetUsuario(updaterId);
 
-            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name);
+            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name, comentario);
         }
 
         public IEnumerable<(Usuario, IEnumerable<Visa>)> GetVisasUsuarioVisasPendiente(Usuario usuario)
@@ -306,8 +306,9 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.ManageItinerarioPendiente(itinerario);
         }
 
-        public int RegisterViajeInvitado(Usuario user, string name, string procedencia, string motivo, DateTime fecha)
+        public int RegisterViajeInvitado(string userId, string name, string procedencia, string motivo, DateTime fecha)
         {
+            var user = _userDbAccess.GetUsuario(userId);
             var vi = new ViajeInvitado()
             {
                 FechaLLegada = new DateTime?(fecha),
@@ -396,6 +397,30 @@ namespace ServiceLayer.WorkFlowServices
         public IEnumerable<ViajeInvitado> GetViajesInvitadosEstado(Estado estado, Usuario user)
         {
             return _viajeInvitadoDbAccess.GetViajesInvitadoEstado(estado, user);
+        }
+
+        public void CancelViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
+        {
+            var trip = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId) ;
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerGuest.CancelarViajeInvitado(trip, usuario, comentario);
+        }
+
+        public void ContinuarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.ManageViajeInvitadoPendiente(viajeInvitado);
+        }
+
+        public void RealizarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.RealizarViajeInvitado(viajeInvitado);
+        }
+
+        public ViajeInvitado GetViajeInvitado(int viajeInvitadoId)
+        {
+            return _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
         }
     }
 }

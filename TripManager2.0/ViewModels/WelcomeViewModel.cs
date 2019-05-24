@@ -13,5 +13,7 @@ namespace TripManager2._0.ViewModels
         public List<Itinerario> ViajesUpdated { get; set; }
 
         public int Notifications { get; set; }
+
+        public List<string> NotificationsList { get; set; }
     }
 }

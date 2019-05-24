@@ -47,10 +47,10 @@
                             <button class="button" type="submit" onclick="setValues(this, '0');"><span>Aprobar</span></button>
                         </td>
                         <td>
-                            <button class="button" type="button" onclick="show(this);"><span>Rechazar</span></button>
+                            <button class="button" type="button" onclick="show(this, '1');"><span>Rechazar</span></button>
                         </td>
                         <td>
-                            <button class="button" type="submit" onclick="setValues(this, '2');"><span>Cancelar</span></button>
+                            <button class="button" type="button" onclick="show(this, '2');"><span>Cancelar</span></button>
                         </td>
                     </tr>
                 }
@@ -66,9 +66,9 @@
             getRowId(caller, 'uId');
             document.getElementById('op').value = option;
         }
-        function show(caller) {
+        function show(caller, option) {
             var dialog = document.getElementById("rzn");
-            setValues(caller, '1');
+            setValues(caller, option);
             dialog.showModal();
         }
     </script>

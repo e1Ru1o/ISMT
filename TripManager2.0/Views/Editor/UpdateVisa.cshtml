@@ -21,7 +21,7 @@
                             <select asp-for="SelectedPais" class="form-control" multiple>
                                 @foreach (var item in Model.paisesNames)
                                 {
-                                    <option id="@item" value="@item">@item</option>
+                                    <option value="@item">@item</option>
                                 }
                             </select>
                         </div>
@@ -31,12 +31,13 @@
                             <select asp-for="SelectedRegion" class="form-control" multiple>
                                 @foreach (var item in Model.regionesName)
                                 {
-                                    <option id="@item" value="@item">@item</option>
+                                    <option value="@item">@item</option>
                                 }
                             </select>
                         </div>
                     </div>
-                    <button class="button" type="submit" onclick="oneOfAllAtLeast()"><span>Crear</span></button>
+                    <button class="button" type="submit" onclick="oneOfAllAtLeast()"><span>Modificar</span></button>
+                </div>
             </form>
         </CENTER>
     </div>
