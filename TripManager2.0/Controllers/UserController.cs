@@ -185,6 +185,19 @@ namespace TripManager2._0.Controllers
             return RedirectToAction("ViewTrips");
         }
 
+        [HttpGet]
+        [Authorize("Institucion")]
+        public async Task<IActionResult> Invite()
+        {
+            return View(new InvitationViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Invitation(InvitationViewModel vm)
+        {
+            //TODO: [TENORIO] Add the invitation logic here
+            return RedirectToAction("Welcome");
+        }
     }
 }
 

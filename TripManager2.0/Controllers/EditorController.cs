@@ -158,6 +158,18 @@ namespace TripManager2._0.Controllers
             return RedirectToAction("Welcome", "User");
         }
 
-
+        public IActionResult EditVisa()
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var visas = (getter.GetAll("Visa") as IEnumerable<Visa>);
+            return View(visas);
+        }
+        public IActionResult Visa(int Id)
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var visa = (getter.GetAll("Visa") as IEnumerable<Visa>).Where(x=>x.VisaID==Id).Single();
+            return View(visa);
+        }
+       
     }
 }

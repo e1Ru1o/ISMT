@@ -24,14 +24,15 @@
                 <tr>
                     @Html.Partial("Pais", item)
                     <td>
-                        <button type="submit" name="id" class="button" value=@item.PaisID> Eliminar</button>
+                        <a href="/Admin/UpdatePais?key=@item.PaisID" class="button"> <span>Update </span></a>
                     </td>
                 </tr>
 
             }
             <tr>
                 <td>
-                    @Html.ActionLink("Agregar", "AddPais", "Admin", new NameOnlyViewModel())
+                    <a href="/Admin/AddPais" class="button"> <span>Agregar </span></a>
+                  
                 </td>
                 <td></td>
                 <td></td>
@@ -39,7 +40,3 @@
         </table>
     </form>
 </div>
-<script>
-    document.getElementsByTagName("a").addClass("button")
-
-</script>
