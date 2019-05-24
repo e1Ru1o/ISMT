@@ -25,7 +25,7 @@ namespace ServiceLayer.WorkFlowServices
         private readonly GetterUtils _getterUtils;
 
         private readonly RunnerWriteDb<ItinerarioCommand, Itinerario> _runnerItinerario;
-        private readonly RunnerWriteDb<ViajeCommand, ViajeInvitado> _runnerViaje;
+        private readonly RunnerWriteDb<ViajeCommand, Viaje> _runnerViaje;
         private readonly RunnerWriteDb<ViajeInvitado, ViajeInvitado> _runnerViajeInvitado;
 
         private readonly ItinerarioDbAccess _itinerarioDbAccess;
@@ -46,7 +46,7 @@ namespace ServiceLayer.WorkFlowServices
 
             _runnerItinerario = new RunnerWriteDb<ItinerarioCommand, Itinerario>(
                 new RegisterItinerarioAction(new ItinerarioDbAccess(_context)), _context);
-            _runnerViaje = new RunnerWriteDb<ViajeCommand, ViajeInvitado>(
+            _runnerViaje = new RunnerWriteDb<ViajeCommand, Viaje>(
                 new RegisterViajeAction(new ViajeDbAccess(_context)), _context);
             _runnerViajeInvitado = new RunnerWriteDb<ViajeInvitado, ViajeInvitado>(
                 new RegisterViajeInvitadoAction(_viajeInvitadoDbAccess), _context);
@@ -294,6 +294,34 @@ namespace ServiceLayer.WorkFlowServices
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             _workflowManagerLocal.ManageItinerarioPendiente(itinerario);
+        }
+
+        public int RegisterViajeInvitado(Usuario user, string name, string procedencia, string motivo, DateTime fecha)
+        {
+            var vi = new ViajeInvitado()
+            {
+                FechaLLegada = new DateTime?(fecha),
+                Usuario = user,
+                Nombre = name,
+                Procedencia = procedencia,
+                Motivo = motivo
+            };
+
+            var viaje = _runnerViajeInvitado.RunAction(vi);
+
+            if (_runnerViajeInvitado.HasErrors)
+            {
+                return -1;
+            }
+
+            return viaje.ViajeInvitadoID;
+        }
+
+        public ViajeInvitado UpdateViajeInvitado(ViajeInvitado entity, ViajeInvitado toUpd)
+        {
+            var viaje = _viajeInvitadoDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return viaje;
         }
     }
 }
