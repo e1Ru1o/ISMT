@@ -36,7 +36,7 @@ namespace BizLogic.WorkflowManager
             else if (claimTipoUsuario == "JefeArea")
                viajeInvitado.Estado = Estado.PendienteAprobacionDecano; 
             else if (claimTipoUsuario == "Decano")
-                viajeInvitado.Estado = Estado.PendienteAprobacionDecano;
+                viajeInvitado.Estado = Estado.PendienteAprobacionRector;
             else
                 viajeInvitado.Estado = Estado.PendienteRealizacion;
 
