@@ -168,14 +168,18 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetItinerarioNotFinished(user)
+            var vm = new PendingTripViewModel();
+            vm.Users = services.GetItinerarioNotFinished(user)
                 .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID));
-            return View(data);
+            vm.Visitants = services.GetViajeInvitadoNotFinished(user)
+                .Select(x => new InvitationViewModel(x));
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewTrips(int vId, int action)
+        public async Task<IActionResult> ViewTrips(int vId, int action, int uType)
         {
+            //TODO: [JUANDA] use `uType` to preccess UserTips(0) or InvitationTrips(1)
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
             if (action == 0)
