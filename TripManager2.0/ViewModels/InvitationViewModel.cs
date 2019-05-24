@@ -17,7 +17,7 @@ namespace TripManager2._0.ViewModels
             Procedencia = v.Procedencia;
             End = v.FechaLLegada.Value;
             //TODO: [JUANDA] Check the property name of Estado in ViajeInvitado
-            Status = v.Estado.ToString();
+            Status = "sabroso";
             ID = v.ViajeInvitadoID;
         }
 
@@ -26,6 +26,9 @@ namespace TripManager2._0.ViewModels
 
         [Required]
         public string Procedencia { get; set; }
+
+        [Required]
+        public DateTime Start { get; set; }
 
         [Required]
         public DateTime End { get; set; }
