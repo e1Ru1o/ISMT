@@ -1,0 +1,62 @@
+﻿@using BizData.Entities
+@model ViajeInvitado
+@{
+    Layout = "UserLayout";
+}
+<div class="main">
+    <h1>Detalles del Viaje Invitado</h1>
+    <form>
+        <table>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Procedencia
+                </th>
+                <th>
+                    Motivo
+                </th>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    FechaLLegada
+                </th>
+            </tr>
+          
+                <tr>
+                    <td>
+                        @Model.Nombre
+                    </td>
+                    <td>
+                        @Model.Procedencia
+                    </td>
+                    <td>
+                        @if (Model.Motivo != null)
+                        {
+                            @Model.Motivo
+                        }
+                        else
+                        {
+                            <label>Vacio</label>
+
+                        }
+                    </td>
+                    <td>
+                        @Model.Usuario
+                    </td>
+                    <td>
+                        @Model.Estado
+                    </td>
+                    <td>
+                        @Model.FechaLLegada
+                    </td>
+                </tr>
+         
+        </table>
+    </form>
+</div>

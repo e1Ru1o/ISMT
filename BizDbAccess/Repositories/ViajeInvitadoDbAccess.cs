@@ -44,14 +44,14 @@ namespace BizDbAccess.Repositories
             return toUpd;
         }
 
-        public ViajeInvitado GetViajeInvitado(long id)
+        public ViajeInvitado GetViajeInvitado(int id)
         {
             return _context.ViajesInvitados.Find(id);
         }
 
-        public ViajeInvitado GetViajeInvitado(string nombre, string procedencia)
+        public ViajeInvitado GetViajeInvitado(string nombre, string procedencia, DateTime? fecha)
         {
-            return _context.ViajesInvitados.Where(vi => vi.Nombre == nombre && vi.Procedencia == procedencia).SingleOrDefault();
+            return _context.ViajesInvitados.Where(vi => vi.Nombre == nombre && vi.Procedencia == procedencia && vi.FechaLLegada == fecha).SingleOrDefault();
         }
 
         public IEnumerable<ViajeInvitado> GetViajesInvitadoEstado(Estado estado, Usuario usuario)
