@@ -35,27 +35,11 @@
                         </select>
                    </div>
             </div>
-            <button class="button" type="submit" onclick="check_selected()"><span>Crear</span></button>
+            <button class="button" type="submit" onclick="oneOfAllAtLeast()"><span>Crear</span></button>
         </CENTER>
     </form>
 </div>
 
 <script>
-    var op = document.getElementsByTagName('option');
-    for (var i = 0; i < op.length; ++i)
-        op[i].selected = false;
-
-    function check_selected() {
-        var sel = document.getElementsByTagName('select');
-        sel[0].required = false;
-        sel[1].required = false;
-
-        var op = document.getElementsByTagName('option');
-        var count = 0;
-        for (var i = 0; i < op.length; ++i)
-            if (op[i].selected)
-                ++count;
-        if (count == 0)
-            sel[0].required = true;
-    }
+    clean_selects();
 </script>

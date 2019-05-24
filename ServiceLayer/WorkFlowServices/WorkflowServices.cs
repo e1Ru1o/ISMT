@@ -26,6 +26,7 @@ namespace ServiceLayer.WorkFlowServices
 
         private readonly RunnerWriteDb<ItinerarioCommand, Itinerario> _runnerItinerario;
         private readonly RunnerWriteDb<ViajeCommand, Viaje> _runnerViaje;
+        private readonly RunnerWriteDb<ViajeInvitado, ViajeInvitado> _runnerViajeInvitado;
 
         private readonly ItinerarioDbAccess _itinerarioDbAccess;
         private readonly ViajeDbAccess _viajeDbAccess;
@@ -33,6 +34,7 @@ namespace ServiceLayer.WorkFlowServices
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly UserDbAccess _userDbAccess;
         private readonly VisaDbAccess _visaDbAccess;
+        private readonly ViajeInvitadoDbAccess _viajeInvitadoDbAccess;
 
         private readonly WorkflowManagerLocal _workflowManagerLocal;
 
@@ -46,6 +48,8 @@ namespace ServiceLayer.WorkFlowServices
                 new RegisterItinerarioAction(new ItinerarioDbAccess(_context)), _context);
             _runnerViaje = new RunnerWriteDb<ViajeCommand, Viaje>(
                 new RegisterViajeAction(new ViajeDbAccess(_context)), _context);
+            _runnerViajeInvitado = new RunnerWriteDb<ViajeInvitado, ViajeInvitado>(
+                new RegisterViajeInvitadoAction(_viajeInvitadoDbAccess), _context);
 
             _itinerarioDbAccess = new ItinerarioDbAccess(_context);
             _viajeDbAccess = new ViajeDbAccess(_context);
@@ -54,6 +58,7 @@ namespace ServiceLayer.WorkFlowServices
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
             _workflowManagerLocal = new WorkflowManagerLocal(context);
             _visaDbAccess = new VisaDbAccess(context);
+            _viajeInvitadoDbAccess = new ViajeInvitadoDbAccess(context);
         }
 
        public int RegisterItinerarioAsync(ItinerarioCommand cmd)
@@ -289,6 +294,34 @@ namespace ServiceLayer.WorkFlowServices
         {
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             _workflowManagerLocal.ManageItinerarioPendiente(itinerario);
+        }
+
+        public int RegisterViajeInvitado(Usuario user, string name, string procedencia, string motivo, DateTime fecha)
+        {
+            var vi = new ViajeInvitado()
+            {
+                FechaLLegada = new DateTime?(fecha),
+                Usuario = user,
+                Nombre = name,
+                Procedencia = procedencia,
+                Motivo = motivo
+            };
+
+            var viaje = _runnerViajeInvitado.RunAction(vi);
+
+            if (_runnerViajeInvitado.HasErrors)
+            {
+                return -1;
+            }
+
+            return viaje.ViajeInvitadoID;
+        }
+
+        public ViajeInvitado UpdateViajeInvitado(ViajeInvitado entity, ViajeInvitado toUpd)
+        {
+            var viaje = _viajeInvitadoDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return viaje;
         }
     }
 }

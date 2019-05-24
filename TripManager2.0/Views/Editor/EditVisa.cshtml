@@ -1,0 +1,51 @@
+﻿@using BizData.Entities
+@using BizLogic.Shared
+@model IEnumerable<Visa>
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Visa";
+}
+<div class="main">
+    <h1>Visas</h1>
+    <form method="post">
+        <table>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                   Detalles
+                </th>
+                <th>
+                    Editar
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        
+                        <a href="/Editor/Visa?Id=@item.VisaID" class="button"><span>Detalles</span></a>
+                    </td>
+                    <td>
+
+                        <a href="/Editor/UpdateVisa?Id=@item.VisaID" class="button"><span>Editar</span></a>
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td>
+                 <a href="/Editor/CreateVisa" class="button"><span>Agregar</span></a>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+</div>

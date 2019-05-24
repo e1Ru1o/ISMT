@@ -144,7 +144,6 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public IActionResult CreateVisa(VisaViewModel vm)
         {
-            //TODO: [TENORIO] save the visa. Remember that one of the two list may be null
             AdminService service = new AdminService(_context, _userManager, _getterUtils);
             VisaCommand cmd = new VisaCommand()
             {
@@ -158,6 +157,46 @@ namespace TripManager2._0.Controllers
             return RedirectToAction("Welcome", "User");
         }
 
+        [Authorize("Visa")]
+        public IActionResult EditVisa()
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var visas = (getter.GetAll("Visa") as IEnumerable<Visa>);
+            return View(visas);
+        }
 
+        [Authorize("Visa")]
+        public IActionResult Visa(int Id)
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var visa = (getter.GetAll("Visa") as IEnumerable<Visa>).Where(x=>x.VisaID==Id).Single();
+            return View(visa);
+        }
+       
+        [HttpGet]
+        [Authorize("Visa")]
+        public IActionResult UpdateVisa(int id)
+        {
+            var getter = new GetterAll(_getterUtils, _context);
+            var data = new EditVisaViewModel();
+            data.paisesNames = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
+            data.regionesName = getter.GetAll("Region").Select(x => (x as Region).Nombre);
+            var visa = getter.GetAll("Visa")
+                .Select(x => (x as Visa))
+                .Where(x => x.VisaID == id)
+                .Single();
+            if(visa.Paises != null)
+                data.SelectedPais = visa.Paises.Select(x => x.Pais.Nombre);
+            if (visa.Regiones != null)
+                data.SelectedPais = visa.Regiones.Select(x => x.Region.Nombre);
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateVisa(EditVisaViewModel vm)
+        {
+            //TODO: [TENORIO] add update logic here. remember to obtain a logued user
+            return RedirectToAction("Welcome");
+        }
     }
 }

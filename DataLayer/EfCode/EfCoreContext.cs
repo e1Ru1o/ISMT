@@ -23,6 +23,7 @@ namespace DataLayer.EfCode
         public DbSet<Pais> Paises { get; set; }
         public DbSet<Pais_Visa> Paises_Visas { get; set; }
         public DbSet<Visa> Visas { get; set; }
+        public DbSet<ViajeInvitado> ViajesInvitados { get; set; }
         public DbSet<Historial> Historial { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
