@@ -32,7 +32,7 @@
 
         <div class="dropdown badge">
             <span class="badge">@Model.Notifications</span>
-            <button onclick="NotificationsFunction()" class="dropbtn">Notificaciones</button>
+            <button onclick="NotificationsFunction()" class="dropbtn" style="background-color:blue">Notificaciones</button>
             <div id="myDropdown" class="dropdown-content">
                 @if (User.HasClaim("Permission", "Admin"))
                 {
