@@ -4,7 +4,7 @@
 
 @{
     Layout = "UserLayout";
-    ViewData["Title"] = "Pais";
+    ViewData["Title"] = "Region";
 }
 <div class="main">
 
@@ -22,7 +22,9 @@
         @foreach (var item in Model)
             {
             <tr>
-                @Html.Partial("Region", item)
+              <td>
+                  @item.Nombre
+              </td>
                 <td>
                     <a href="/Admin/UpdateRegion?id=@item.RegionID" class="button"><span>Update</span></a>
                 </td>

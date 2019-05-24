@@ -18,6 +18,7 @@ using BizLogic.Workflow;
 using ServiceLayer.WorkFlowServices;
 using System.Security.Claims;
 
+
 namespace TripManager2._0.Controllers
 {
     [Authorize("Admin")]
@@ -298,6 +299,12 @@ namespace TripManager2._0.Controllers
             return View(viajes);
         }
 
+        public IActionResult Historial()
+        {
+
+            WorkflowServices services = new WorkflowServices(_context, _userManager,_getterUtils, _signInManager);
+            return View(services.GetHistorial());
+        }
     }
 }
 

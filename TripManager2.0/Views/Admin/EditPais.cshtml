@@ -22,7 +22,12 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    @Html.Partial("Pais", item)
+                    <td>
+                        @item.Nombre
+                    </td>
+                    <td>
+                        @item.Region.Nombre
+                    </td>
                     <td>
                         <a href="/Admin/UpdatePais?key=@item.PaisID" class="button"> <span>Update </span></a>
                     </td>
@@ -32,7 +37,7 @@
             <tr>
                 <td>
                     <a href="/Admin/AddPais" class="button"> <span>Agregar </span></a>
-                  
+
                 </td>
                 <td></td>
                 <td></td>
