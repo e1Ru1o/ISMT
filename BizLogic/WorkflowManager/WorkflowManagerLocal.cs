@@ -29,15 +29,25 @@ namespace BizLogic.WorkflowManager
                 Itinerario = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
-                Fecha = DateTime.Now,
-                Comentario = comentario
+                Fecha = DateTime.Now
             };
 
             if (action == Action.Aprobar)
             {
+                itinerario.Estado = Estado.PendienteAprobacionDecano;
                 historial_entity.Estado = Estado.AprobadoJefeArea;
                 _historial.Add(historial_entity);
-                itinerario.Estado = Estado.PendienteAprobacionDecano;
+                _context.Commit();
+
+                historial_entity = new Historial
+                {
+                    Estado = Estado.PendienteAprobacionDecano,
+                    Itinerario = itinerario,
+                    UsuarioTarget = itinerario.Usuario,
+                    Usuario = usuario,
+                    Fecha = DateTime.Now
+                };
+                _historial.Add(historial_entity);
                 _context.Commit();
 
                 return;
@@ -45,9 +55,9 @@ namespace BizLogic.WorkflowManager
 
             if (action == Action.Rechazar)
             {
+                itinerario.Estado = Estado.Pendiente;
                 historial_entity.Estado = Estado.Pendiente;
                 _historial.Add(historial_entity);
-                itinerario.Estado = Estado.Pendiente;
                 _context.Commit();
                 return;
             }
@@ -62,15 +72,25 @@ namespace BizLogic.WorkflowManager
                 Itinerario = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
-                Fecha = DateTime.Now,
-                Comentario = comentario
+                Fecha = DateTime.Now
             };
 
             if (action == Action.Aprobar)
             {
+                itinerario.Estado = Estado.PendienteAprobacionRector;
                 historial_entity.Estado = Estado.AprobadoDecano;
                 _historial.Add(historial_entity);
-                itinerario.Estado = Estado.PendienteAprobacionRector;
+                _context.Commit();
+
+                historial_entity = new Historial
+                {
+                    Estado = Estado.PendienteAprobacionRector,
+                    Itinerario = itinerario,
+                    UsuarioTarget = itinerario.Usuario,
+                    Usuario = usuario,
+                    Fecha = DateTime.Now
+                };
+                _historial.Add(historial_entity);
                 _context.Commit();
 
                 return;
@@ -78,9 +98,9 @@ namespace BizLogic.WorkflowManager
 
             if (action == Action.Rechazar)
             {
-                historial_entity.Estado = itinerario.Estado;
-                _historial.Add(historial_entity);
                 itinerario.Estado = Estado.Pendiente;
+                historial_entity.Estado = Estado.Pendiente;
+                _historial.Add(historial_entity);
                 _context.Commit();
                 return;
             }
@@ -102,9 +122,21 @@ namespace BizLogic.WorkflowManager
 
             if (action == Action.Aprobar)
             {
+                itinerario.Estado = Estado.PendientePasaporte;
                 historial_entity.Estado = Estado.AprobadoRector;
                 _historial.Add(historial_entity);
-                itinerario.Estado = Estado.PendientePasaporte;
+                _context.Commit();
+
+                historial_entity = new Historial
+                {
+                    Estado = Estado.PendientePasaporte,
+                    Itinerario = itinerario,
+                    UsuarioTarget = itinerario.Usuario,
+                    Usuario = usuario,
+                    Fecha = DateTime.Now,
+                    Comentario = comentario
+                };
+                _historial.Add(historial_entity);
                 _context.Commit();
 
                 ManageActionPasaporte(itinerario.Usuario, Action.Ignorar, null, null);
@@ -142,9 +174,18 @@ namespace BizLogic.WorkflowManager
                         {
                             itinerario.Update = 1;
                             itinerario.Estado = Estado.PendienteVisas;
+
+                            historial_entity = new Historial
+                            {
+                                Estado = Estado.PendienteVisas,
+                                Itinerario = itinerario,
+                                UsuarioTarget = usuarioItinerario,
+                                Fecha = DateTime.Now,
+                            };
+                            _historial.Add(historial_entity);
+                            _context.Commit();
                         }
 
-                    _context.Commit();
                     ManageVisas(usuarioItinerario);
                 }
 
@@ -315,7 +356,7 @@ namespace BizLogic.WorkflowManager
             _historial.Add(historial_entity);
             _context.Commit();
         }
-        
+
         public void CrearViaje(Itinerario itinerario, string claimTipoUsuario)
         {
             var historial_entity = new Historial
@@ -326,34 +367,75 @@ namespace BizLogic.WorkflowManager
                 Fecha = DateTime.Now
             };
             _historial.Add(historial_entity);
+            _context.Commit();
 
             itinerario.Update = 1;
 
             if (claimTipoUsuario == "Trabajador")
             {
                 itinerario.Estado = Estado.PendienteAprobacionJefeArea;
+
+                historial_entity = new Historial
+                {
+                    Estado = Estado.PendienteAprobacionJefeArea,
+                    Itinerario = itinerario,
+                    UsuarioTarget = itinerario.Usuario,
+                    Fecha = DateTime.Now
+                };
+                _historial.Add(historial_entity);
                 _context.Commit();
+
                 return;
             }
 
             if (claimTipoUsuario == "JefeArea")
             {
                 itinerario.Estado = Estado.PendienteAprobacionDecano;
+
+                historial_entity = new Historial
+                {
+                    Estado = Estado.PendienteAprobacionDecano,
+                    Itinerario = itinerario,
+                    UsuarioTarget = itinerario.Usuario,
+                    Fecha = DateTime.Now
+                };
+                _historial.Add(historial_entity);
                 _context.Commit();
+
                 return;
             }
 
             if (claimTipoUsuario == "Decano")
             {
                 itinerario.Estado = Estado.PendienteAprobacionRector;
+
+                historial_entity = new Historial
+                {
+                    Estado = Estado.PendienteAprobacionRector,
+                    Itinerario = itinerario,
+                    UsuarioTarget = itinerario.Usuario,
+                    Fecha = DateTime.Now
+                };
+                _historial.Add(historial_entity);
                 _context.Commit();
+
                 return;
             }
 
             if (claimTipoUsuario == "Rector")
             {
                 itinerario.Estado = Estado.PendientePasaporte;
+
+                historial_entity = new Historial
+                {
+                    Estado = Estado.PendientePasaporte,
+                    Itinerario = itinerario,
+                    UsuarioTarget = itinerario.Usuario,
+                    Fecha = DateTime.Now
+                };
+                _historial.Add(historial_entity);
                 _context.Commit();
+
                 ManageActionPasaporte(itinerario.Usuario, Action.Ignorar, null, null);
                 return;
             }
