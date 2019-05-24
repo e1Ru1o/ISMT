@@ -184,10 +184,9 @@ namespace TripManager2._0.Controllers
                 .Select(x => (x as Visa))
                 .Where(x => x.VisaID == id)
                 .Single();
-            if(visa.Paises != null)
-                data.SelectedPais = visa.Paises.Select(x => x.Pais.Nombre);
-            if (visa.Regiones != null)
-                data.SelectedPais = visa.Regiones.Select(x => x.Region.Nombre);
+            data.SelectedPais = visa.Paises != null ? visa.Paises.Select(x => x.Pais.Nombre) : new List<string>();
+            data.SelectedPais = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
+                
             return View(data);
         }
 
