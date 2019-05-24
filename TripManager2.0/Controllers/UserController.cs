@@ -195,7 +195,11 @@ namespace TripManager2._0.Controllers
         [HttpPost]
         public async Task<IActionResult> Invitation(InvitationViewModel vm)
         {
-            //TODO: [TENORIO] Add the invitation logic here
+            WorkflowServices services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            var user = await _userManager.GetUserAsync(User);
+
+            int id = services.RegisterViajeInvitado(user, vm.Name, vm.Procedencia, vm.Motivo, vm.End);
+            
             return RedirectToAction("Welcome");
         }
     }

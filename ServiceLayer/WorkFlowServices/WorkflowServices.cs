@@ -295,5 +295,33 @@ namespace ServiceLayer.WorkFlowServices
             var itinerario = _itinerarioDbAccess.GetItinerario(itinerarioId);
             _workflowManagerLocal.ManageItinerarioPendiente(itinerario);
         }
+
+        public int RegisterViajeInvitado(Usuario user, string name, string procedencia, string motivo, DateTime fecha)
+        {
+            var vi = new ViajeInvitado()
+            {
+                FechaLLegada = new DateTime?(fecha),
+                Usuario = user,
+                Nombre = name,
+                Procedencia = procedencia,
+                Motivo = motivo
+            };
+
+            var viaje = _runnerViajeInvitado.RunAction(vi);
+
+            if (_runnerViajeInvitado.HasErrors)
+            {
+                return -1;
+            }
+
+            return viaje.ViajeInvitadoID;
+        }
+
+        public ViajeInvitado UpdateViajeInvitado(ViajeInvitado entity, ViajeInvitado toUpd)
+        {
+            var viaje = _viajeInvitadoDbAccess.Update(entity, toUpd);
+            _context.Commit();
+            return viaje;
+        }
     }
 }
