@@ -35,8 +35,10 @@ namespace ServiceLayer.WorkFlowServices
         private readonly UserDbAccess _userDbAccess;
         private readonly VisaDbAccess _visaDbAccess;
         private readonly ViajeInvitadoDbAccess _viajeInvitadoDbAccess;
+        private readonly HistorialDbAccess _historialDbAccess;
 
         private readonly WorkflowManagerLocal _workflowManagerLocal;
+        private readonly WorkflowManagerGuest _workflowManagerGuest;
 
         public WorkflowServices(IUnitOfWork context, UserManager<Usuario> userManager, GetterUtils getterUtils, SignInManager<Usuario> signInManager)
         {
@@ -56,12 +58,20 @@ namespace ServiceLayer.WorkFlowServices
             _paisDbAccess = new PaisDbAccess(_context);
             _institucionDbAccess = new InstitucionDbAccess(_context);
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
-            _workflowManagerLocal = new WorkflowManagerLocal(context);
             _visaDbAccess = new VisaDbAccess(context);
             _viajeInvitadoDbAccess = new ViajeInvitadoDbAccess(context);
+            _historialDbAccess = new HistorialDbAccess(context);
+
+            _workflowManagerLocal = new WorkflowManagerLocal(context);
+            _workflowManagerGuest = new WorkflowManagerGuest(context);
         }
 
-       public int RegisterItinerarioAsync(ItinerarioCommand cmd)
+        public IEnumerable<Historial> GetHistorial()
+        {
+            return _historialDbAccess.GetAll();
+        }
+
+        public int RegisterItinerarioAsync(ItinerarioCommand cmd)
         {
             var iters = _userDbAccess.GetAllItinerarios();
             cmd.Usuario = _userDbAccess.GetUsuario(cmd.UsuarioID); //await _userManager.FindByIdAsync(cmd.UsuarioID);
@@ -313,8 +323,14 @@ namespace ServiceLayer.WorkFlowServices
             {
                 return -1;
             }
-
+            
             return viaje.ViajeInvitadoID;
+        }
+
+        public void CreateViajeInvitadoWorkflow(int viajeInvidtadoId, string claimTipoInstitucion)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvidtadoId);
+            _workflowManagerGuest.CrearViaje(viajeInvitado, claimTipoInstitucion);
         }
 
         public ViajeInvitado UpdateViajeInvitado(ViajeInvitado entity, ViajeInvitado toUpd)

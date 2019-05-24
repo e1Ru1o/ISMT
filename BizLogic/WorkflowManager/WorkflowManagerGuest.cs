@@ -18,12 +18,12 @@ namespace BizLogic.WorkflowManager
             _historial = new HistorialDbAccess(_context);
         }
 
-        public void CrearViaje(Itinerario itinerario, string claimTipoUsuario)
+        public void CrearViaje(ViajeInvitado itinerario, string claimTipoUsuario)
         {
             var historial_entity = new Historial
             {
                 Estado = Estado.Creado,
-                Itinerario = itinerario,
+                ViajeInvitado = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now
             };
@@ -42,7 +42,7 @@ namespace BizLogic.WorkflowManager
             historial_entity = new Historial
             {
                 Estado = itinerario.Estado,
-                Itinerario = itinerario,
+                ViajeInvitado = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now
             };
@@ -50,11 +50,11 @@ namespace BizLogic.WorkflowManager
             _context.Commit();
         }
 
-        public void ManageActionJefeArea(Itinerario itinerario, Action action, Usuario usuario, string comentario)
+        public void ManageActionJefeArea(ViajeInvitado itinerario, Action action, Usuario usuario, string comentario)
         {
             var historial_entity = new Historial
             {
-                Itinerario = itinerario,
+                ViajeInvitado = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
                 Fecha = DateTime.Now
@@ -70,7 +70,7 @@ namespace BizLogic.WorkflowManager
                 historial_entity = new Historial
                 {
                     Estado = itinerario.Estado,
-                    Itinerario = itinerario,
+                    ViajeInvitado = itinerario,
                     UsuarioTarget = itinerario.Usuario,
                     Fecha = DateTime.Now
                 };
@@ -89,11 +89,11 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public void ManageActionDecano(Itinerario itinerario, Action action, Usuario usuario, string comentario)
+        public void ManageActionDecano(ViajeInvitado itinerario, Action action, Usuario usuario, string comentario)
         {
             var historial_entity = new Historial
             {
-                Itinerario = itinerario,
+                ViajeInvitado = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
                 Fecha = DateTime.Now,
@@ -110,7 +110,7 @@ namespace BizLogic.WorkflowManager
                 historial_entity = new Historial
                 {
                     Estado = itinerario.Estado,
-                    Itinerario = itinerario,
+                    ViajeInvitado = itinerario,
                     UsuarioTarget = itinerario.Usuario,
                     Fecha = DateTime.Now
                 };
@@ -130,12 +130,12 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public void ManageActionRector(Itinerario itinerario, Action action, Usuario usuario, string comentario)
+        public void ManageActionRector(ViajeInvitado itinerario, Action action, Usuario usuario, string comentario)
         {
             var historial_entity = new Historial
             {
                 Estado = Estado.AprobadoRector,
-                Itinerario = itinerario,
+                ViajeInvitado = itinerario,
                 Usuario = usuario,
                 Fecha = DateTime.Now,
                 Comentario = comentario
@@ -151,7 +151,7 @@ namespace BizLogic.WorkflowManager
                 historial_entity = new Historial
                 {
                     Estado = itinerario.Estado,
-                    Itinerario = itinerario,
+                    ViajeInvitado = itinerario,
                     UsuarioTarget = itinerario.Usuario,
                     Fecha = DateTime.Now
                 };
@@ -171,14 +171,14 @@ namespace BizLogic.WorkflowManager
             }
         }
 
-        public void ManageActionRealizacion(Itinerario itinerario)
+        public void ManageActionRealizacion(ViajeInvitado itinerario)
         {
             itinerario.Estado = Estado.Realizado;
 
             var historial_entity = new Historial
             {
                 Estado = itinerario.Estado,
-                Itinerario = itinerario,
+                ViajeInvitado = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Fecha = DateTime.Now
             };
@@ -186,14 +186,14 @@ namespace BizLogic.WorkflowManager
             _context.Commit();
         }
 
-        public void CancelarItinerario(Itinerario itinerario, Usuario usuario, string comentario)
+        public void CancelarItinerario(ViajeInvitado itinerario, Usuario usuario, string comentario)
         {
             itinerario.Estado = Estado.Cancelado;
 
             var historial_entity = new Historial
             {
                 Estado = itinerario.Estado,
-                Itinerario = itinerario,
+                ViajeInvitado = itinerario,
                 UsuarioTarget = itinerario.Usuario,
                 Usuario = usuario,
                 Fecha = DateTime.Now,

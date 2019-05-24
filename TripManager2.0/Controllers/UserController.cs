@@ -190,7 +190,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize("Institucion")]
-        public async Task<IActionResult> Invite()
+        public IActionResult Invite()
         {
             return View(new InvitationViewModel());
         }
@@ -202,7 +202,8 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             int id = services.RegisterViajeInvitado(user, vm.Name, vm.Procedencia, vm.Motivo, vm.End);
-            
+            services.CreateViajeInvitadoWorkflow(id, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
+
             return RedirectToAction("Welcome");
         }
     }
