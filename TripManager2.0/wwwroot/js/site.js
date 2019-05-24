@@ -68,6 +68,6 @@ function oneOfAllAtLeast() {
     for (var i = 0; i < op.length; ++i)
         if (op[i].selected)
             ++count;
-    if (count == 0)
+    if (count === 0)
         sel[0].required = true;
 }

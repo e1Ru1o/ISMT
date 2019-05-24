@@ -178,7 +178,7 @@ namespace TripManager2._0.Controllers
         public IActionResult UpdateVisa(int id)
         {
             var getter = new GetterAll(_getterUtils, _context);
-            var data = new EditVisaViewModel();
+            var data = new EditVisaViewModel() { id = id };
             data.paisesNames = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
             data.regionesName = getter.GetAll("Region").Select(x => (x as Region).Nombre);
             var visa = getter.GetAll("Visa")
