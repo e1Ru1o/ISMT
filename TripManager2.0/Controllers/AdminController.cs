@@ -298,6 +298,12 @@ namespace TripManager2._0.Controllers
             return View(viajes);
         }
 
+        public IActionResult Historial()
+        {
+
+            var his = new List<Historial>();
+            return View(his);
+        }
     }
 }
 
