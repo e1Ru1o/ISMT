@@ -85,6 +85,14 @@ namespace BizDbAccess.Authentication
             return itinerarios;
         }
 
+        public IEnumerable<ViajeInvitado> GetViajesInvitadosNotFinished(Usuario usuario)
+        {
+            var viajeInvitado = from it in usuario.ViajesInvitado
+                              where it.Estado != Estado.Realizado && it.Estado != Estado.Cancelado
+                              select it;
+            return viajeInvitado;
+        }
+
         public IEnumerable<Itinerario> GetItinerariosDone(Usuario usuario)
         {
             var itinerarios = from it in usuario.Itinerarios

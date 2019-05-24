@@ -1,66 +1,125 @@
-@model IEnumerable<TripViewModel>
+@model PendingTripViewModel
 
 @{
     Layout = "UserLayout";
     ViewData["Title"] = "Viajes";
 }
 
-<div class="main">
-    <form method="post">
-        <input hidden="hidden" id="vId" name="vId">
-        <input hidden="hidden" id="op" name="action">
-        <h1>Viajes actuales</h1>
-        <table>
-            <tr>
-                <th>
-                    Fecha de viaje
-                </th>
-                <th>
-                    Estado
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            @foreach (var item in Model)
-            {
-                <tr id=@item.ID>
-                    <td>
-                        @item.Identifier
-                    </td>
-                    <td>
-                        @item.Status
-                    </td>
-                    <td>
-                        <a href="/Admin/Viaje?id=@item.ID" class="button"><span>Detalles</span></a>
-                    </td>
-                    <td>
-                        <button class="button" type="submit" onclick="setValues(this, '0');"><span>Cancelar</span></button>
-                    </td>
-                    <td>
-                        @if (item.Status == "Pendiente")
-                        {
-                            <button class="button" type="submit" onclick="setValues(this, '1');"><span>Listo</span></button>
-                        }
-                        else if (item.Status == "PendienteRealizacion")
-                        {
-                            <button class="button" type="submit" onclick="setValues(this, '2');"><span>Finalizar</span></button>
-                        }
-                    </td>
+<body>
+    <div class="main">
 
+        <form method="post">
+            <input hidden="hidden" id="vId" name="vId">
+            <input hidden="hidden" id="op" name="action">
+            <input hidden="hidden" id="uType" name="uType">
+            <h1>Viajes actuales</h1>
+            <table>
+                <tr>
+                    <th>
+                        Fecha de viaje
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
-            }
-        </table>
+                @foreach (var item in Model.Users)
+            {
+                    <tr id=@item.ID>
+                        <td>
+                            @item.Identifier
+                        </td>
+                        <td>
+                            @item.Status
+                        </td>
+                        <td>
+                            <a href="/Admin/Viaje?id=@item.ID" class="button"><span>Detalles</span></a>
+                        </td>
+                        <td>
+                            <button class="button" type="submit" onclick="setValues(this, '0', '0');"><span>Cancelar</span></button>
+                        </td>
+                        <td>
+                            @if (item.Status == "Pendiente")
+                            {
+                                <button class="button" type="submit" onclick="setValues(this, '1', '0');"><span>Listo</span></button>
+                            }
+                            else if (item.Status == "PendienteRealizacion")
+                            {
+                                <button class="button" type="submit" onclick="setValues(this, '2', '0');"><span>Finalizar</span></button>
+                            }
+                        </td>
 
-    </form>
-</div>
+                    </tr>
+                }
+            </table>
 
-<script>
-    function setValues(caller, action) {
-        getRowId(caller, 'vId')
-        document.getElementById('op').value = action;
-    }
-</script>
+            <br />
+
+            <h1>Invitaciones</h1>
+            <table>
+                <tr>
+                    <th>
+                        Fecha de viaje
+                    </th>
+                    <th>
+                        Fecha de viaje
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.Visitants)
+            {
+                    <tr id=@item.ID>
+                        <td>
+                            @item.End
+                        </td>
+                        <td>
+                            @item.Status
+                        </td>
+                        <td>
+                            @{//TODO: [KARL LEWIS] Connect this button with the correct view to see Invitation Details
+                            }
+                            <a href="/Admin/ViajeInvitado?id=@item.ID" class="button"><span>Detalles</span></a>
+                        </td>
+                        <td>
+                            <button class="button" type="submit" onclick="setValues(this, '0', '1');"><span>Cancelar</span></button>
+                        </td>
+                        <td>
+                            @if (item.Status == "Pendiente")
+                            {
+                                <button class="button" type="submit" onclick="setValues(this, '1', '1');"><span>Listo</span></button>
+                            }
+                            else if (item.Status == "PendienteRealizacion")
+                            {
+                                <button class="button" type="submit" onclick="setValues(this, '2', '1');"><span>Finalizar</span></button>
+                            }
+                        </td>
+
+                    </tr>
+                                }
+                <br />
+
+            </table>
+        </form>
+    </div>
+</body>
+
+@section Scripts{ 
+    <script>
+        function setValues(caller, action, uType) {
+            getRowId(caller, 'vId')
+            document.getElementById('uType').value = uType;
+            document.getElementById('op').value = action;
+        }
+    </script>
+}
+
 
 
 
