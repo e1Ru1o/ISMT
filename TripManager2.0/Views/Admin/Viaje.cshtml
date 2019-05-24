@@ -21,6 +21,9 @@
                 <th>
                     Fecha de Fin
                 </th>
+                <th>
+                   Motivo
+                </th>
             </tr>
             @foreach (var item in Model)
             {
@@ -36,6 +39,9 @@
                     </td>
                     <td>
                         @item.FechaFin
+                    </td>
+                    <td>
+                        @item.MotivoViaje
                     </td>
                 </tr>
             }
