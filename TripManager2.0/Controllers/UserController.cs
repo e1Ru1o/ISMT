@@ -50,6 +50,7 @@ namespace TripManager2._0.Controllers
             vm.UserPendings = t.UserPendings;
             vm.ViajesUpdated = t.ViajesUpdated;
             int notifications = 0;
+            var notificationsList = new List<string>();
 
             if (vm.ViajesUpdated.Any())
             {
@@ -61,6 +62,7 @@ namespace TripManager2._0.Controllers
                     {
                         data[i].Update = 0;
                         _workflowServices.UpdateItinerario(data[i], data[i]);
+                        notificationsList.Add($"Viaje del {data[i].FechaInicio} --> {data[i].FechaFin} tiene ahora estado {data[i].Estado}");
                     }
                 }
 
@@ -72,6 +74,7 @@ namespace TripManager2._0.Controllers
                     {
                         data[i].Update = 0;
                         _workflowServices.UpdateItinerario(data[i], data[i]);
+                        notificationsList.Add($"Viaje del {data[i].FechaInicio} --> {data[i].FechaFin} tiene ahora estado {data[i].Estado}");
                     }
                 }
 
@@ -83,6 +86,7 @@ namespace TripManager2._0.Controllers
                     {
                         data[i].Update = 0;
                         _workflowServices.UpdateItinerario(data[i], data[i]);
+                        notificationsList.Add($"Viaje del {data[i].FechaInicio} --> {data[i].FechaFin} tiene ahora estado {data[i].Estado}");
                     }
                 }
 
@@ -94,6 +98,7 @@ namespace TripManager2._0.Controllers
                     {
                         data[i].Update = 0;
                         _workflowServices.UpdateItinerario(data[i], data[i]);
+                        notificationsList.Add($"Viaje del {data[i].FechaInicio} --> {data[i].FechaFin} tiene ahora estado {data[i].Estado}");
                     }
                 }
 
@@ -105,6 +110,7 @@ namespace TripManager2._0.Controllers
                     {
                         data[i].Update = 0;
                         _workflowServices.UpdateItinerario(data[i], data[i]);
+                        notificationsList.Add($"Viaje del {data[i].FechaInicio} --> {data[i].FechaFin} tiene ahora estado {data[i].Estado}");
                     }
                 }
 
@@ -120,6 +126,7 @@ namespace TripManager2._0.Controllers
                 }
             }
             vm.Notifications = notifications;
+            vm.NotificationsList = notificationsList;
 
             return View(vm);
         }
@@ -206,7 +213,7 @@ namespace TripManager2._0.Controllers
 
         [HttpGet]
         [Authorize("Institucion")]
-        public async Task<IActionResult> Invitation()
+        public IActionResult Invitation()
         {
             return View(new InvitationViewModel());
         }
@@ -217,8 +224,10 @@ namespace TripManager2._0.Controllers
             WorkflowServices services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
 
-            int id = services.RegisterViajeInvitado(user, vm.Name, vm.Procedencia, vm.Motivo, vm.End);
-            services.CreateViajeInvitadoWorkflow(id, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
+            int id = services.RegisterViajeInvitado(user.Id, vm.Name, vm.Procedencia, vm.Motivo, vm.End);
+
+            if (id != -1)
+                services.CreateViajeInvitadoWorkflow(id, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
 
             return RedirectToAction("Welcome");
         }
