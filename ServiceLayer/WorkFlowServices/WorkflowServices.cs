@@ -51,7 +51,7 @@ namespace ServiceLayer.WorkFlowServices
             _runnerViaje = new RunnerWriteDb<ViajeCommand, Viaje>(
                 new RegisterViajeAction(new ViajeDbAccess(_context)), _context);
             _runnerViajeInvitado = new RunnerWriteDb<ViajeInvitado, ViajeInvitado>(
-                new RegisterViajeInvitadoAction(_viajeInvitadoDbAccess), _context);
+                new RegisterViajeInvitadoAction(new ViajeInvitadoDbAccess(_context)), _context);
 
             _itinerarioDbAccess = new ItinerarioDbAccess(_context);
             _viajeDbAccess = new ViajeDbAccess(_context);
@@ -306,8 +306,9 @@ namespace ServiceLayer.WorkFlowServices
             _workflowManagerLocal.ManageItinerarioPendiente(itinerario);
         }
 
-        public int RegisterViajeInvitado(Usuario user, string name, string procedencia, string motivo, DateTime fecha)
+        public int RegisterViajeInvitado(string userId, string name, string procedencia, string motivo, DateTime fecha)
         {
+            var user = _userDbAccess.GetUsuario(userId);
             var vi = new ViajeInvitado()
             {
                 FechaLLegada = new DateTime?(fecha),
@@ -415,6 +416,11 @@ namespace ServiceLayer.WorkFlowServices
         {
             var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
             _workflowManagerGuest.RealizarViajeInvitado(viajeInvitado);
+        }
+
+        public ViajeInvitado GetViajeInvitado(int viajeInvitadoId)
+        {
+            return _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
         }
     }
 }

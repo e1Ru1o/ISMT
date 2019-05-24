@@ -499,6 +499,8 @@ namespace BizLogic.WorkflowManager
             var historial_entity = new Historial
             {
                 Estado = itinerario.Estado,
+                UsuarioTarget = itinerario.Usuario,
+                Usuario = itinerario.Usuario,
                 Itinerario = itinerario,
                 Fecha = DateTime.Now
             };
