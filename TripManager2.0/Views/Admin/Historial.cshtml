@@ -130,7 +130,7 @@
                 <td>
                     @if (item.ViajeInvitado != null)
                     {
-                        @item.ViajeInvitado.Estado
+                        <a href="/Admin/ViajeInvitado?id=@item.ViajeInvitado.ViajeInvitadoID"><span>Detalles</span></a>
                     }
                     else
                     {

@@ -1,10 +1,10 @@
 ﻿@using BizData.Entities
-@model IEnumerable<ViajeInvitado>
+@model ViajeInvitado
 @{
     Layout = "UserLayout";
 }
 <div class="main">
-    <h1>Detalles de Itinerario</h1>
+    <h1>Detalles del Viaje Invitado</h1>
     <form>
         <table>
             <tr>
@@ -27,19 +27,18 @@
                     FechaLLegada
                 </th>
             </tr>
-            @foreach (var item in Model)
-            {
+          
                 <tr>
                     <td>
-                        @item.Nombre
+                        @Model.Nombre
                     </td>
                     <td>
-                        @item.Procedencia
+                        @Model.Procedencia
                     </td>
                     <td>
-                        @if (item.Motivo != null)
+                        @if (Model.Motivo != null)
                         {
-                            @item.Motivo
+                            @Model.Motivo
                         }
                         else
                         {
@@ -48,16 +47,16 @@
                         }
                     </td>
                     <td>
-                        @item.Usuario
+                        @Model.Usuario
                     </td>
                     <td>
-                        @item.Estado
+                        @Model.Estado
                     </td>
                     <td>
-                        @item.FechaLLegada
+                        @Model.FechaLLegada
                     </td>
                 </tr>
-            }
+         
         </table>
     </form>
 </div>
