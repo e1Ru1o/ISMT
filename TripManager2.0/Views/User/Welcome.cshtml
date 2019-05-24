@@ -5,10 +5,12 @@
     Layout = "UserLayout";
     ViewData["Title"] = "Usuarios";
     var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+    var notifications = new List<string>();
 }
 
 <head>
     <title>Signed up</title>
+
 </head>
 <body>
     <CENTER>
@@ -18,9 +20,6 @@
                 Desde aquí podrá usar todas las herramientas que la aplicación ofrece.
             </p>
             <br />
-            <h2>Notificaciones:</h2>
-            <br />
-
         }
         else
         {
@@ -28,103 +27,83 @@
                 Desde aquí podrá regular la aplicación.
             </p>
             <br />
-            <h2>Notificaciones:</h2>
-            <br />
-            <h4>Usuarios Pendientes de autorización:</h4>
+        }
+        <br />
 
-            if (!Model.UserPendings.Any())
-            {
-                <p>No hay usuarios pendientes.</p>
-                <br />
-            }
-            else
-            {
-                int cant = Model.UserPendings.Count();
-
-                if (cant == 1)
+        <div class="dropdown badge">
+            <span class="badge">@Model.Notifications</span>
+            <button onclick="NotificationsFunction()" class="dropbtn">Notificaciones</button>
+            <div id="myDropdown" class="dropdown-content">
+                @if (User.HasClaim("Permission", "Admin"))
                 {
-                    <p>Hay @cant usuario pendiente.</p>
+                    if (!Model.UserPendings.Any())
+                    {
+                        <a style="color:darkblue; font-size:large">No hay usuarios pendientes</a>
+                    }
+                    else
+                    {
+                        int cant = Model.UserPendings.Count();
+
+                        if (cant == 1)
+                        {
+                            <a>Hay @cant usuario pendiente</a>
+                        }
+                        else
+                        {
+                            <a>Hay @cant usuarios pendientes</a>
+                        }
+                    }
+                }
+                @if (!Model.ViajesUpdated.Any())
+                {
+                    <a style="color:darkblue; font-size:large">No hay cambios en los viajes</a>
                 }
                 else
                 {
-                    <p>Hay @cant usuarios pendientes.</p>
+                    <a style="color:darkblue; font-size:large">Cambios en los viajes</a>
+                    foreach (var item in Model.NotificationsList)
+                    {
+                        <a>@item</a>
+                    }
                 }
-
-                <br />
-
-            }
-        }
-
-       @if (!Model.ViajesUpdated.Any())
-        {
-            <p>No hay cambios en los viajes.</p>
-        }
-        else
-        {
-
-            if (User.Claims.Where(c => c.Type == "Visa").Any())
-            {
-                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteVisas).ToList())
+                @if (misViajes.Count() == 0)
                 {
-                        <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
+                    <a style="color:darkblue; font-size:large">Sus viajes no han sido modificados</a>
                 }
-            }
-
-            if (User.Claims.Where(c => c.Type == "Passport").Any())
-            {
-                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendientePasaporte).ToList())
+                else
                 {
-                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-
+                    <a style="color:darkblue; font-size:large">Sus viajes</a>
+                    foreach (var item in misViajes)
+                    {
+                        <a>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</a>
+                    }
                 }
-            }
-
-            if (User.HasClaim("Institucion", "JefeArea"))
-            {
-                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionJefeArea).ToList())
-                {
-                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                }
-            }
-
-            if (User.HasClaim("Institucion", "Decano"))
-            {
-                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionDecano).ToList())
-                {
-                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                }
-            }
-
-            if (User.HasClaim("Institucion", "Rector"))
-            {
-                foreach (var item in Model.ViajesUpdated.Where(v => v.Estado == BizData.Entities.Estado.PendienteAprobacionRector).ToList())
-                {
-                    <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-                }
-            }
-        
-        }
-        
-
-        <br />
-        <h2>Sus Viajes:</h2>
-        
-
-        @if (misViajes.Count() == 0)
-        {
-            <p>Sus viajes no han sido modificados.</p>
-        }
-        else
-        {
-            foreach (var item in misViajes)
-            {
-                <p>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</p>
-            }
-
-        }
-
-        
+            </div>
+        </div>
+            
     </CENTER>
+
+    <script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function NotificationsFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+            }
+        }
+        }
+    }
+    </script>
 </body>
 
 
