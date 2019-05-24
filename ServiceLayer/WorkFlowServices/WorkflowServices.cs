@@ -270,13 +270,13 @@ namespace ServiceLayer.WorkFlowServices
             _context.Commit();
         }
 
-        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action)
+        public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action, string comentario)
         {
             var visa = _visaDbAccess.GetVisa(visaId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             var updator = _userDbAccess.GetUsuario(updaterId);
 
-            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name);
+            _workflowManagerLocal.ManageActionVisas(usuario, action, updator, visa.Name, comentario);
         }
 
         public IEnumerable<(Usuario, IEnumerable<Visa>)> GetVisasUsuarioVisasPendiente(Usuario usuario)
@@ -396,6 +396,25 @@ namespace ServiceLayer.WorkFlowServices
         public IEnumerable<ViajeInvitado> GetViajesInvitadosEstado(Estado estado, Usuario user)
         {
             return _viajeInvitadoDbAccess.GetViajesInvitadoEstado(estado, user);
+        }
+
+        public void CancelViajeInvitado(int viajeInvitadoId, string usuarioId, string comentario)
+        {
+            var trip = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId) ;
+            var usuario = _userDbAccess.GetUsuario(usuarioId);
+            _workflowManagerGuest.CancelarViajeInvitado(trip, usuario, comentario);
+        }
+
+        public void ContinuarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.ManageViajeInvitadoPendiente(viajeInvitado);
+        }
+
+        public void RealizarViajeInvitado(int viajeInvitadoId)
+        {
+            var viajeInvitado = _viajeInvitadoDbAccess.GetViajeInvitado(viajeInvitadoId);
+            _workflowManagerGuest.RealizarViajeInvitado(viajeInvitado);
         }
     }
 }

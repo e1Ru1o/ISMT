@@ -64,12 +64,24 @@ namespace TripManager2._0.Controllers
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
 
-            if (action == 0)
-                services.ManageActionAprobar(tripId, user.Id, "");
-            else if (action == 1)
-                services.ManageActionRechazar(tripId, user.Id, "");
+            if (uType == 0)
+            {
+                if (action == 0)
+                    services.ManageActionAprobar(tripId, user.Id, motivo);
+                else if (action == 1)
+                    services.ManageActionRechazar(tripId, user.Id, motivo);
+                else
+                    services.CancelItinerario(tripId, user.Id, motivo);
+            }
             else
-                services.CancelItinerario(tripId, user.Id, "");
+            {
+                if (action == 0)
+                    services.ManageActionAprobarViajeInvitado(tripId, user.Id, motivo);
+                else if (action == 1)
+                    services.ManageActionRechazarViajeInvitado(tripId, user.Id, motivo);
+                else
+                    services.CancelViajeInvitado(tripId, user.Id, motivo);
+            }
 
             return Redirect("AuthorizeTrip");
         }
@@ -85,7 +97,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action,, int uType, string motivo)
+        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action, int uType, string motivo)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
@@ -93,12 +105,12 @@ namespace TripManager2._0.Controllers
             if (action == 0)
             {
                 services.SetPassportToUser(usuarioId);
-                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Aprobar, "");
+                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Aprobar, motivo);
             }
             else if (action == 1)
-                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Rechazar, "");
+                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Rechazar, motivo);
             else
-                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Cancelar, "");
+                services.ManageActionPasaporte(usuarioId, user.Id, BizLogic.WorkflowManager.Action.Cancelar, motivo);
 
             return Redirect("AuthorizePassport");
         }
@@ -123,12 +135,12 @@ namespace TripManager2._0.Controllers
             if (action == 0)
             {
                 services.SetVisaToUser(uID, vID, user.Id);
-                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Aprobar);
+                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Aprobar, motivo);
             }
             else if (action == 1)
-                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Rechazar);
-            
-            
+                services.ManageActionVisa(uID, user.Id, vID, BizLogic.WorkflowManager.Action.Rechazar, motivo);
+
+
             return RedirectToAction("GiveVisa");
         }
 
@@ -139,7 +151,7 @@ namespace TripManager2._0.Controllers
             var getter = new GetterAll(_getterUtils, _context);
             var countries = getter.GetAll("Pais").Select(x => (x as Pais).Nombre);
             var regions = getter.GetAll("Region").Select(x => (x as Region).Nombre);
-            return View(new VisaViewModel() { paisesNames = countries, regionesName = regions});
+            return View(new VisaViewModel() { paisesNames = countries, regionesName = regions });
         }
 
         [HttpPost]
@@ -170,10 +182,10 @@ namespace TripManager2._0.Controllers
         public IActionResult Visa(int Id)
         {
             var getter = new GetterAll(_getterUtils, _context);
-            var visa = (getter.GetAll("Visa") as IEnumerable<Visa>).Where(x=>x.VisaID==Id).Single();
+            var visa = (getter.GetAll("Visa") as IEnumerable<Visa>).Where(x => x.VisaID == Id).Single();
             return View(visa);
         }
-       
+
         [HttpGet]
         [Authorize("Visa")]
         public IActionResult UpdateVisa(int id)
@@ -189,7 +201,7 @@ namespace TripManager2._0.Controllers
             data.Nombre = visa.Name;
             data.SelectedPais = visa.Paises != null ? visa.Paises.Select(x => x.Pais.Nombre) : new List<string>();
             data.SelectedPais = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
-                
+
             return View(data);
         }
 
