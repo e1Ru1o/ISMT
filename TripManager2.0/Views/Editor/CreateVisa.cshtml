@@ -6,42 +6,44 @@
     ViewData["Title"] = "Nueva Visa";
 }
 
-<div class="main">
-    <form method="post">
-        <CENTER>
-            <h1>Nueva visa</h1>
-            <div class="form-group">
-                <label asp-for="Nombre">Nombre</label>
-                <input asp-for="Nombre" class="form-control col-md-4" required/>
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-                <div style="display: flex; justify-content: center;">
-                    <div class="form-group">
-                        <label asp-for="paisesNames">Paises</label>
-                        <select asp-for="paisesNames" class="form-control" multiple>
-                            @foreach (var item in Model.paisesNames)
-                            {
-                                <option value="@item">@item</option>
-                            }
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label>Regiones:</label>
-                        <select asp-for="regionesName" class="form-control" multiple>
-                            @foreach (var item in Model.regionesName)
-                            {
-                                <option value="@item">@item</option>
-                            }
-                        </select>
-                   </div>
-            </div>
-            <button class="button" type="submit" onclick="oneOfAllAtLeast()"><span>Crear</span></button>
-        </CENTER>
-    </form>
-</div>
+<body>
+    <div class="main">
+        <form method="post">
+            <CENTER>
+                <h1>Nueva visa</h1>
+                <div class="form-group">
+                    <label asp-for="Nombre">Nombre</label>
+                    <input asp-for="Nombre" class="form-control col-md-4" required />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                    <div style="display: flex; justify-content: center;">
+                        <div class="form-group">
+                            <label asp-for="paisesNames">Paises</label>
+                            <select asp-for="paisesNames" class="form-control" multiple>
+                                @foreach (var item in Model.paisesNames)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                        </div>
 
-<script>
-    var op = document.getElementsByTagName('option');
-    for (var i = 0; i < op.length; ++i)
-        op[i].selected = false;
-</script>
+                        <div>
+                            <label>Regiones:</label>
+                            <select asp-for="regionesName" class="form-control" multiple>
+                                @foreach (var item in Model.regionesName)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <button class="button" type="submit" onclick="oneOfAllAtLeast()"><span>Crear</span></button>
+            </CENTER>
+        </form>
+    </div>
+</body>
+
+@section Scripts {
+    <script>
+        clean_selects();
+    </script>
+}

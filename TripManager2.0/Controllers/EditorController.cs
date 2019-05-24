@@ -49,15 +49,17 @@ namespace TripManager2._0.Controllers
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
-            var data = services.GetItinerariosEstado(
+            var vm = new PendingUserTripViewModel();
+            vm.Users = services.GetItinerariosEstado(
                 Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"),
                 user
             ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, x.Usuario));
-            return View(data);
+            vm.Visitants = new List<InvitationViewModel>();
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizeTrip(int tripId, int action)
+        public async Task<IActionResult> AuthorizeTrip(int tripId, int action, int uType, string motivo)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
@@ -83,7 +85,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action)
+        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action, string motivo)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
@@ -113,7 +115,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GiveVisa(string uID, int vID, int action)
+        public async Task<IActionResult> GiveVisa(string uID, int vID, int action, string motivo)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);

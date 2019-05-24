@@ -171,8 +171,7 @@ namespace TripManager2._0.Controllers
             var vm = new PendingTripViewModel();
             vm.Users = services.GetItinerarioNotFinished(user)
                 .Select(x => new TripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID));
-            vm.Visitants = services.GetViajeInvitadoNotFinished(user)
-                .Select(x => new InvitationViewModel(x));
+            vm.Visitants = new List<InvitationViewModel>();
             return View(vm);
         }
 
