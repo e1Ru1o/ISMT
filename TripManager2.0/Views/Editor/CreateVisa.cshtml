@@ -41,5 +41,7 @@
 </div>
 
 <script>
-    clean_selects();
+    var op = document.getElementsByTagName('option');
+    for (var i = 0; i < op.length; ++i)
+        op[i].selected = false;
 </script>
