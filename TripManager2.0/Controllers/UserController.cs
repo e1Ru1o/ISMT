@@ -180,8 +180,11 @@ namespace TripManager2._0.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (action == 0)
                 services.CancelItinerario(vId, user.Id, "El usuario cancelo su viaje");
-            else
+            else if (action == 1)
                 services.ContinuarItinerario(vId);
+            else
+                services.RealizarItinerario(vId);
+
             return RedirectToAction("ViewTrips");
         }
 
