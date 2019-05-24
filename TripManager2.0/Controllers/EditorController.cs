@@ -85,7 +85,7 @@ namespace TripManager2._0.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action,, int uType, string motivo)
+        public async Task<IActionResult> AuthorizePassport(string usuarioId, int action, int uType, string motivo)
         {
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
@@ -188,7 +188,7 @@ namespace TripManager2._0.Controllers
                 .Single();
             data.Nombre = visa.Name;
             data.SelectedPais = visa.Paises != null ? visa.Paises.Select(x => x.Pais.Nombre) : new List<string>();
-            data.SelectedPais = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
+            data.SelectedRegion = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
                 
             return View(data);
         }
