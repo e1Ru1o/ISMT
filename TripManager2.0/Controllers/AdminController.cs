@@ -305,6 +305,12 @@ namespace TripManager2._0.Controllers
             WorkflowServices services = new WorkflowServices(_context, _userManager,_getterUtils, _signInManager);
             return View(services.GetHistorial());
         }
+        public IActionResult ViajeInvitado(int id)
+        {
+
+            WorkflowServices services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            return View(services.GetViajeInvitado(id));
+        }
     }
 }
 
