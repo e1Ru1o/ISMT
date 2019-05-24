@@ -52,3 +52,22 @@ function dismark_selection() {
         op[i].selected = false;
 }
 
+function clean_selects() {
+    var op = document.getElementsByTagName('option');
+    for (var i = 0; i < op.length; ++i)
+        op[i].selected = false;
+}
+
+function oneOfAllAtLeast() {
+    var sel = document.getElementsByTagName('select');
+    sel[0].required = false;
+    sel[1].required = false;
+
+    var op = document.getElementsByTagName('option');
+    var count = 0;
+    for (var i = 0; i < op.length; ++i)
+        if (op[i].selected)
+            ++count;
+    if (count === 0)
+        sel[0].required = true;
+}

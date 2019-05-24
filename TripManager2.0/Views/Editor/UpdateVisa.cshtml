@@ -1,0 +1,41 @@
+﻿@model EditVisaViewModel
+
+@{
+    Layout = "Userlayout";
+    ViewData["Title"] = "Editar";
+}
+
+<div class="main">
+    <CENTER>
+        <form method="post">
+            <input name="id" hidden="hidden" value="@Model.id" />
+            <div class="form-group">
+                <label asp-for="Nombre">Nombre:</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+
+                <div style="display: flex; justify-content: center;">
+                    <div class="form-group">
+                        <label asp-for="SelectedPais">Paises</label>
+                        <select asp-for="SelectedPais" class="form-control" multiple>
+                            @foreach (var item in Model.paisesNames)
+                            {
+                                <option id="@item" value="@item">@item</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div>
+                        <label asp-for="SelectedRegion">Regiones:</label>
+                        <select asp-for="SelectedRegion" class="form-control" multiple>
+                            @foreach (var item in Model.regionesName)
+                            {
+                                <option id="@item" value="@item">@item</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <button class="button" type="submit" onclick="oneOfAllAtLeast()"><span>Crear</span></button>
+        </form>
+    </CENTER>
+</div>

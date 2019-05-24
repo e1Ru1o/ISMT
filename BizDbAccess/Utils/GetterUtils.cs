@@ -22,6 +22,7 @@ namespace BizDbAccess.Utils
                 { "Pais", "PaisDbAccess"},
                 { "Region", "RegionDbAccess" },
                 { "Viaje", "ViajeDbAccess" },
+                { "ViajeInvitado", "ViajeInvitadoDbAccess" },
                 { "Visa", "VisaDbAccess" },
                 { "Usuario", "UserDbAccess" }
             };
