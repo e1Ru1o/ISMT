@@ -35,8 +35,6 @@ namespace BizDbAccess.Repositories
                 throw new InvalidOperationException("Visa to be updated not exist");
 
             toUpd.Name = entity.Name ?? toUpd.Name;
-            toUpd.Paises = toUpd.Paises == null ? entity.Paises : (toUpd.Paises.Concat(entity.Paises)).ToList();
-            toUpd.Usuarios = toUpd.Usuarios == null || toUpd.Usuarios.Count() == 0 ? entity.Usuarios : (toUpd.Usuarios.Concat(entity.Usuarios)).ToList();
 
             _context.Visas.Update(toUpd);
             return toUpd;
