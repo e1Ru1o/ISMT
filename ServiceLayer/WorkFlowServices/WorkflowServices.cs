@@ -25,7 +25,8 @@ namespace ServiceLayer.WorkFlowServices
         private readonly GetterUtils _getterUtils;
 
         private readonly RunnerWriteDb<ItinerarioCommand, Itinerario> _runnerItinerario;
-        private readonly RunnerWriteDb<ViajeCommand, Viaje> _runnerViaje;
+        private readonly RunnerWriteDb<ViajeCommand, ViajeInvitado> _runnerViaje;
+        private readonly RunnerWriteDb<ViajeInvitado, ViajeInvitado> _runnerViajeInvitado;
 
         private readonly ItinerarioDbAccess _itinerarioDbAccess;
         private readonly ViajeDbAccess _viajeDbAccess;
@@ -33,6 +34,7 @@ namespace ServiceLayer.WorkFlowServices
         private readonly InstitucionDbAccess _institucionDbAccess;
         private readonly UserDbAccess _userDbAccess;
         private readonly VisaDbAccess _visaDbAccess;
+        private readonly ViajeInvitadoDbAccess _viajeInvitadoDbAccess;
 
         private readonly WorkflowManagerLocal _workflowManagerLocal;
 
@@ -44,8 +46,10 @@ namespace ServiceLayer.WorkFlowServices
 
             _runnerItinerario = new RunnerWriteDb<ItinerarioCommand, Itinerario>(
                 new RegisterItinerarioAction(new ItinerarioDbAccess(_context)), _context);
-            _runnerViaje = new RunnerWriteDb<ViajeCommand, Viaje>(
+            _runnerViaje = new RunnerWriteDb<ViajeCommand, ViajeInvitado>(
                 new RegisterViajeAction(new ViajeDbAccess(_context)), _context);
+            _runnerViajeInvitado = new RunnerWriteDb<ViajeInvitado, ViajeInvitado>(
+                new RegisterViajeInvitadoAction(_viajeInvitadoDbAccess), _context);
 
             _itinerarioDbAccess = new ItinerarioDbAccess(_context);
             _viajeDbAccess = new ViajeDbAccess(_context);
@@ -54,6 +58,7 @@ namespace ServiceLayer.WorkFlowServices
             _userDbAccess = new UserDbAccess(_context, signInManager, userManager);
             _workflowManagerLocal = new WorkflowManagerLocal(context);
             _visaDbAccess = new VisaDbAccess(context);
+            _viajeInvitadoDbAccess = new ViajeInvitadoDbAccess(context);
         }
 
        public int RegisterItinerarioAsync(ItinerarioCommand cmd)

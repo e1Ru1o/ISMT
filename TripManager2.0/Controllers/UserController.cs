@@ -51,7 +51,7 @@ namespace TripManager2._0.Controllers
             vm.ViajesUpdated = t.ViajesUpdated;
             int notifications = 0;
 
-            if (vm.ViajesUpdated.Any() && User.HasClaim("Permission", "Common"))
+            if (vm.ViajesUpdated.Any())
             {
                 if (User.Claims.Where(c => c.Type == "Visa").Any())
                 {
