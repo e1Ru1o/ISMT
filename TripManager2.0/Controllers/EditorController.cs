@@ -200,8 +200,8 @@ namespace TripManager2._0.Controllers
                 .Single();
             data.Nombre = visa.Name;
             data.SelectedPais = visa.Paises != null ? visa.Paises.Select(x => x.Pais.Nombre) : new List<string>();
-            data.SelectedPais = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
-
+            data.SelectedRegion = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
+            
             return View(data);
         }
 
