@@ -21,6 +21,8 @@ namespace BizLogic.WorkflowManager
 
         public void CrearViaje(ViajeInvitado viajeInvitado, string claimTipoUsuario)
         {
+            viajeInvitado.Update = 1;
+
             var historial_entity = new Historial
             {
                 Estado = Estado.Creado,
@@ -53,6 +55,8 @@ namespace BizLogic.WorkflowManager
 
         public void ManageActionJefeArea(ViajeInvitado viajeInvitado, Action action, Usuario usuario, string comentario)
         {
+            viajeInvitado.Update = 1;
+
             var historial_entity = new Historial
             {
                 ViajeInvitado = viajeInvitado,
@@ -92,6 +96,8 @@ namespace BizLogic.WorkflowManager
 
         public void ManageActionDecano(ViajeInvitado viajeInvitado, Action action, Usuario usuario, string comentario)
         {
+            viajeInvitado.Update = 1;
+
             var historial_entity = new Historial
             {
                 ViajeInvitado = viajeInvitado,
@@ -133,6 +139,8 @@ namespace BizLogic.WorkflowManager
 
         public void ManageActionRector(ViajeInvitado viajeInvitado, Action action, Usuario usuario, string comentario)
         {
+            viajeInvitado.Update = 1;
+
             var historial_entity = new Historial
             {
                 Estado = Estado.AprobadoRector,
@@ -174,6 +182,7 @@ namespace BizLogic.WorkflowManager
 
         public void RealizarViajeInvitado(ViajeInvitado viajeInvitado)
         {
+            viajeInvitado.Update = 1;
             viajeInvitado.Estado = Estado.Realizado;
 
             var historial_entity = new Historial
@@ -189,6 +198,7 @@ namespace BizLogic.WorkflowManager
 
         public void CancelarViajeInvitado(ViajeInvitado viajeInvitado, Usuario usuario, string comentario)
         {
+            viajeInvitado.Update = 1;
             viajeInvitado.Estado = Estado.Cancelado;
 
             var historial_entity = new Historial
@@ -208,7 +218,10 @@ namespace BizLogic.WorkflowManager
         {
             var estado = viajeInvitado.Historial.OrderBy(hist => hist.Fecha);
             viajeInvitado.Estado = estado.ElementAt(estado.Count() - 2).Estado;
+            viajeInvitado.Update = 1;
             _context.Commit();
+
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
 
             var historial_entity = new Historial()
             {
@@ -219,6 +232,22 @@ namespace BizLogic.WorkflowManager
             };
             _historial.Add(historial_entity);
             _context.Commit();
+        }
+
+        private void SaveHistorial(ViajeInvitado viajeInvitado, Usuario usuario, Estado estado, string comentario)
+        {
+            var historial_entity = new Historial
+            {
+                Estado = estado,
+                ViajeInvitado = viajeInvitado,
+                UsuarioTarget = viajeInvitado.Usuario,
+                Usuario = usuario,
+                Fecha = DateTime.Now,
+                Comentario = comentario
+            };
+            _historial.Add(historial_entity);
+            _context.Commit();
+
         }
     }
 }
