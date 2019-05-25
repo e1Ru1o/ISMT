@@ -33,6 +33,9 @@
                 Itinerario Estado
             </th>
             <th>
+                Detalles Itinerario 
+            </th>
+            <th>
                 Viaje Invitado
             </th>
         </tr>
@@ -113,9 +116,21 @@
                     }
                 </td>
                 <td>
+                    @if (item.Itinerario != null)
+                    {
+                        <a href="/Admin/Viaje?id=@item.Itinerario.ItinerarioID" class="button"><span>Detalles</span></a>
+
+                    }
+                    else
+                    {
+
+                        <label> vacio </label>
+                    }
+                </td>
+                <td>
                     @if (item.ViajeInvitado != null)
                     {
-                        @item.ViajeInvitado.Estado
+                        <a href="/Admin/ViajeInvitado?id=@item.ViajeInvitado.ViajeInvitadoID"><span>Detalles</span></a>
                     }
                     else
                     {

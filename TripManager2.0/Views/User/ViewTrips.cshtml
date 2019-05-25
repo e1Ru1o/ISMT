@@ -64,9 +64,6 @@
                         Fecha de viaje
                     </th>
                     <th>
-                        Fecha de viaje
-                    </th>
-                    <th>
                         Estado
                     </th>
                     <th></th>
@@ -74,7 +71,7 @@
                     <th></th>
                 </tr>
                 @foreach (var item in Model.Visitants)
-            {
+                {
                     <tr id=@item.ID>
                         <td>
                             @item.End
@@ -102,9 +99,7 @@
                         </td>
 
                     </tr>
-                                }
-                <br />
-
+                 }
             </table>
         </form>
     </div>

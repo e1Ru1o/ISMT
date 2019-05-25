@@ -200,8 +200,8 @@ namespace TripManager2._0.Controllers
                 .Single();
             data.Nombre = visa.Name;
             data.SelectedPais = visa.Paises != null ? visa.Paises.Select(x => x.Pais.Nombre) : new List<string>();
-            data.SelectedPais = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
-
+            data.SelectedRegion = visa.Regiones != null ? visa.Regiones.Select(x => x.Region.Nombre) : new List<string>();
+            
             return View(data);
         }
 
@@ -217,9 +217,10 @@ namespace TripManager2._0.Controllers
                 Name = vm.Nombre
             };
 
-            if (vm.SelectedRegion != null || vm.SelectedRegion.Count() > 0)
+            if (vm.SelectedRegion != null && vm.SelectedRegion.Count() > 0)
             {
                 var regiones = (IEnumerable<Region>)getter.GetAll("Region");
+                var regiones_visas = (IEnumerable<Region_Visa>)getter.GetAll("Region_Visa");
                 List<Region_Visa> regiones_visa = new List<Region_Visa>();
 
                 foreach (var name in vm.SelectedRegion)
@@ -227,16 +228,21 @@ namespace TripManager2._0.Controllers
                     {
                         if (region.Nombre == name)
                         {
-                            regiones_visa.Add(new Region_Visa() { Region = region, Visa = toUpd });
+                            var old = regiones_visas.Where(rv => rv.Region.Nombre == name && rv.Visa.Name == toUpd.Name).SingleOrDefault();
+                            if (old != null)
+                                regiones_visa.Add(old);
+                            else
+                                regiones_visa.Add(new Region_Visa() { Region = region, Visa = toUpd });
                             break;
                         }
                     }
                 toUpd.Regiones = regiones_visa;
             }
 
-            if (vm.SelectedPais != null || vm.SelectedPais.Count() > 0)
+            if (vm.SelectedPais != null && vm.SelectedPais.Count() > 0)
             {
                 var paises = (IEnumerable<Pais>)getter.GetAll("Pais");
+                var paises_visas = (IEnumerable<Pais_Visa>)getter.GetAll("Pais_Visa");
                 List<Pais_Visa> paises_visa = new List<Pais_Visa>();
 
                 foreach (var name in vm.SelectedPais)
@@ -244,14 +250,19 @@ namespace TripManager2._0.Controllers
                     {
                         if (pais.Nombre == name)
                         {
-                            paises_visa.Add(new Pais_Visa() { Pais = pais, Visa = toUpd });
+                            var old = paises_visas.Where(pv => pv.Pais.Nombre == name && pv.Visa.Name == toUpd.Name).SingleOrDefault();
+                            if (old != null)
+                                paises_visa.Add(old);
+                            else
+                                paises_visa.Add(new Pais_Visa() { Pais = pais, Visa = toUpd });
+                            break;
                         }
                     }
                 toUpd.Paises = paises_visa;
             }
 
             service.UpdateVisa(entity, toUpd);
-            return RedirectToAction("Welcome");
+            return RedirectToAction("EditVisa");
         }
     }
 }
