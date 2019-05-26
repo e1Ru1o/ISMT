@@ -21,15 +21,9 @@ namespace BizLogic.WorkflowManager
 
         public void CrearViaje(ViajeInvitado viajeInvitado, string claimTipoUsuario)
         {
-            var historial_entity = new Historial
-            {
-                Estado = Estado.Creado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
+            viajeInvitado.Update = 1;
+
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
 
             if (claimTipoUsuario == "Trabajador")
                viajeInvitado.Estado = Estado.PendienteAprobacionJefeArea;
@@ -40,160 +34,101 @@ namespace BizLogic.WorkflowManager
             else
                 viajeInvitado.Estado = Estado.PendienteRealizacion;
 
-            historial_entity = new Historial
-            {
-                Estado = viajeInvitado.Estado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
         }
 
         public void ManageActionJefeArea(ViajeInvitado viajeInvitado, Action action, Usuario usuario, string comentario)
         {
-            var historial_entity = new Historial
-            {
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Usuario = usuario,
-                Fecha = DateTime.Now
-            };
-
+            viajeInvitado.Update = 1;
+            
             if (action == Action.Aprobar)
             {
+                SaveHistorial(viajeInvitado, usuario, Estado.AprobadoJefeArea, comentario);
                 viajeInvitado.Estado = Estado.PendienteAprobacionDecano;
-                historial_entity.Estado = Estado.AprobadoJefeArea;
-                _historial.Add(historial_entity);
-                _context.Commit();
-
-                historial_entity = new Historial
-                {
-                    Estado = viajeInvitado.Estado,
-                    ViajeInvitado = viajeInvitado,
-                    UsuarioTarget = viajeInvitado.Usuario,
-                    Fecha = DateTime.Now
-                };
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
 
             if (action == Action.Rechazar)
             {
                 viajeInvitado.Estado = Estado.Pendiente;
-                historial_entity.Estado = viajeInvitado.Estado;
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
         }
 
         public void ManageActionDecano(ViajeInvitado viajeInvitado, Action action, Usuario usuario, string comentario)
         {
-            var historial_entity = new Historial
-            {
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Usuario = usuario,
-                Fecha = DateTime.Now,
-                Comentario = comentario
-            };
+            viajeInvitado.Update = 1;
 
             if (action == Action.Aprobar)
             {
+                SaveHistorial(viajeInvitado, usuario, Estado.AprobadoDecano, comentario);
                 viajeInvitado.Estado = Estado.PendienteAprobacionRector;
-                historial_entity.Estado = Estado.AprobadoDecano;
-                _historial.Add(historial_entity);
-                _context.Commit();
-
-                historial_entity = new Historial
-                {
-                    Estado = viajeInvitado.Estado,
-                    ViajeInvitado = viajeInvitado,
-                    UsuarioTarget = viajeInvitado.Usuario,
-                    Fecha = DateTime.Now
-                };
-                _historial.Add(historial_entity);
-                _context.Commit();
-
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
 
             if (action == Action.Rechazar)
             {
                 viajeInvitado.Estado = Estado.Pendiente;
-                historial_entity.Estado = viajeInvitado.Estado;
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
         }
 
         public void ManageActionRector(ViajeInvitado viajeInvitado, Action action, Usuario usuario, string comentario)
         {
-            var historial_entity = new Historial
-            {
-                Estado = Estado.AprobadoRector,
-                ViajeInvitado = viajeInvitado,
-                Usuario = usuario,
-                Fecha = DateTime.Now,
-                Comentario = comentario
-            };
+            viajeInvitado.Update = 1;
 
             if (action == Action.Aprobar)
             {
+                SaveHistorial(viajeInvitado, usuario, Estado.AprobadoRector, comentario);
                 viajeInvitado.Estado = Estado.PendienteRealizacion;
-                historial_entity.Estado = Estado.AprobadoRector;
-                _historial.Add(historial_entity);
-                _context.Commit();
-
-                historial_entity = new Historial
-                {
-                    Estado = viajeInvitado.Estado,
-                    ViajeInvitado = viajeInvitado,
-                    UsuarioTarget = viajeInvitado.Usuario,
-                    Fecha = DateTime.Now
-                };
-                _historial.Add(historial_entity);
-                _context.Commit();
-
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
 
             if (action == Action.Rechazar)
             {
                 viajeInvitado.Estado = Estado.Pendiente;
-                historial_entity.Estado = viajeInvitado.Estado;
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
         }
 
         public void RealizarViajeInvitado(ViajeInvitado viajeInvitado)
         {
+            viajeInvitado.Update = 1;
             viajeInvitado.Estado = Estado.Realizado;
 
-            var historial_entity = new Historial
-            {
-                Estado = viajeInvitado.Estado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
         }
 
         public void CancelarViajeInvitado(ViajeInvitado viajeInvitado, Usuario usuario, string comentario)
         {
+            viajeInvitado.Update = 1;
             viajeInvitado.Estado = Estado.Cancelado;
+            _context.Commit();
 
+            SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
+        }
+
+        public void ManageViajeInvitadoPendiente(ViajeInvitado viajeInvitado)
+        {
+            var estado = viajeInvitado.Historial.OrderBy(hist => hist.Fecha);
+            viajeInvitado.Estado = estado.ElementAt(estado.Count() - 2).Estado;
+            viajeInvitado.Update = 1;
+            _context.Commit();
+
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
+        }
+
+        private void SaveHistorial(ViajeInvitado viajeInvitado, Usuario usuario, Estado estado, string comentario)
+        {
             var historial_entity = new Historial
             {
-                Estado = viajeInvitado.Estado,
+                Estado = estado,
                 ViajeInvitado = viajeInvitado,
                 UsuarioTarget = viajeInvitado.Usuario,
                 Usuario = usuario,
@@ -202,23 +137,7 @@ namespace BizLogic.WorkflowManager
             };
             _historial.Add(historial_entity);
             _context.Commit();
-        }
 
-        public void ManageViajeInvitadoPendiente(ViajeInvitado viajeInvitado)
-        {
-            var estado = viajeInvitado.Historial.OrderBy(hist => hist.Fecha);
-            viajeInvitado.Estado = estado.ElementAt(estado.Count() - 2).Estado;
-            _context.Commit();
-
-            var historial_entity = new Historial()
-            {
-                Estado = viajeInvitado.Estado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
         }
     }
 }
