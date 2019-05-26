@@ -31,7 +31,7 @@
         <br />
 
         <div class="dropdown badge">
-            <span class="badge">@Model.Notifications</span>
+            <span id="num" class="badge">@Model.Notifications</span>
             <button onclick="NotificationsFunction()" class="dropbtn" style="background-color:blue">Notificaciones</button>
             <div id="myDropdown" class="dropdown-content">
                 @if (User.HasClaim("Permission", "Admin"))
@@ -78,6 +78,18 @@
                         <a>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</a>
                     }
                 }
+                @if (!Model.Invitados.Any())
+                {
+                    <a style="color:darkblue; font-size:large">No hay cambios en los viajes invitados</a>
+                }
+                else
+                {
+                    <a style="color:darkblue; font-size:large">Sus viajes invitados</a>
+                    foreach (var item in Model.Invitados)
+                    {
+                        <a>@item</a>
+                    }
+                }
             </div>
         </div>
             
@@ -88,6 +100,8 @@
     toggle between hiding and showing the dropdown content */
     function NotificationsFunction() {
         document.getElementById("myDropdown").classList.toggle("show");
+        var sp = document.getElementById("num");
+        sp.innerHTML = 0;
     }
 
     // Close the dropdown if the user clicks outside of it

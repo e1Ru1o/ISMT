@@ -51,6 +51,7 @@ namespace TripManager2._0.Controllers
             vm.ViajesUpdated = t.ViajesUpdated;
             int notifications = 0;
             var notificationsList = new List<string>();
+            var Invitados = new List<string>();
 
             if (vm.ViajesUpdated.Any())
             {
@@ -125,9 +126,26 @@ namespace TripManager2._0.Controllers
                     }
                 }
             }
+            
+            if (t.InvitadosUpdated.Any())
+            {
+                var misInvitados = t.InvitadosUpdated.Where(vi => vi.Usuario.Email == User.Identity.Name).ToList();
+                notifications += misInvitados.Count();
+                if (misInvitados.Count != 0)
+                {
+                    for (int i = 0; i < misInvitados.Count(); i++)
+                    {
+                        //misInvitados[i].Update = 0;
+                        _workflowServices.UpdateViajeInvitado(misInvitados[i], misInvitados[i]);
+                        Invitados.Add($"Viaje del invitado {misInvitados[i].Nombre} con fecha {misInvitados[i].FechaLLegada} tiene ahora estado {misInvitados[i].Estado}");
+                    }
+                }
+            }
+
             vm.Notifications = notifications;
             vm.NotificationsList = notificationsList;
-
+            vm.Invitados = Invitados;
+            
             return View(vm);
         }
 
@@ -167,7 +185,7 @@ namespace TripManager2._0.Controllers
             services.CalculateDates(services.GetItinerario(iterID));
             services.CreateItinerarioWorkflow(iterID, User.Claims.Where(x => x.Type == "Institucion").Single().Value);
 
-            return RedirectToAction("Welcome");
+            return RedirectToAction("ViewTrips");
         }
 
         [HttpGet]
