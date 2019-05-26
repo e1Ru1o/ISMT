@@ -128,7 +128,7 @@ namespace TripManager2._0.Controllers
                 {
                     for (int i = 0; i < misInvitados.Count(); i++)
                     {
-                        //misInvitados[i].Update = 0;
+                        misInvitados[i].Update = 0;
                         _workflowServices.UpdateViajeInvitado(misInvitados[i], misInvitados[i]);
                         InvitadosPropios.Add($"Viaje del invitado {misInvitados[i].Nombre} con fecha {misInvitados[i].FechaLLegada} tiene ahora estado {misInvitados[i].Estado}");
                     }
@@ -139,7 +139,7 @@ namespace TripManager2._0.Controllers
                 {
                     for (int i = 0; i < invitados.Count(); i++)
                     {
-                        //invitados[i].Update = 0;
+                        invitados[i].Update = 0;
                         _workflowServices.UpdateViajeInvitado(invitados[i], invitados[i]);
                         InvitadosAjenos.Add($"Viaje del invitado {invitados[i].Nombre} con fecha {invitados[i].FechaLLegada} tiene ahora estado {invitados[i].Estado}");
                     }

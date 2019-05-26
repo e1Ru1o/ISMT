@@ -242,8 +242,7 @@ namespace ServiceLayer.AdminServices
             GetterAll getter = new GetterAll(_getterUtils, _context);
 
             List<Itinerario> ViajesUpdated = getter.GetAll("Itinerario").Where(i => (i as Itinerario).Update != 0).Select(i => i as Itinerario).ToList();
-            //TODO: Change GetHashCode for updated.
-            List<ViajeInvitado> InvitadosUpdated = getter.GetAll("ViajeInvitado").Where(vi => (vi as ViajeInvitado).GetHashCode() != 0).Select(vi => vi as ViajeInvitado).ToList();
+            List<ViajeInvitado> InvitadosUpdated = getter.GetAll("ViajeInvitado").Where(vi => (vi as ViajeInvitado).Update != 0).Select(vi => vi as ViajeInvitado).ToList();
 
 
             return (UserPendings, ViajesUpdated, InvitadosUpdated);
