@@ -16,6 +16,8 @@ namespace TripManager2._0.ViewModels
 
         public List<string> NotificationsList { get; set; }
 
-        public List<string> Invitados { get; set; }
+        public List<string> InvitadosPropios { get; set; }
+
+        public List<string> InvitadosAjenos { get; set; }
     }
 }

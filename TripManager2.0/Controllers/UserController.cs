@@ -49,16 +49,15 @@ namespace TripManager2._0.Controllers
             var t = await _adminService.FillNotificationsAsync();
             vm.UserPendings = t.UserPendings;
             vm.ViajesUpdated = t.ViajesUpdated;
-            int notifications = 0;
             var notificationsList = new List<string>();
-            var Invitados = new List<string>();
+            var InvitadosPropios = new List<string>();
+            var InvitadosAjenos = new List<string>();
 
             if (vm.ViajesUpdated.Any())
             {
                 if (User.Claims.Where(c => c.Type == "Visa").Any())
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteVisas).ToList();
-                    notifications += data.Count();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteVisas && v.Usuario.Email != User.Identity.Name).ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -69,8 +68,7 @@ namespace TripManager2._0.Controllers
 
                 if (User.Claims.Where(c => c.Type == "Passport").Any())
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendientePasaporte).ToList();
-                    notifications += data.Count();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendientePasaporte && v.Usuario.Email != User.Identity.Name).ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -81,8 +79,7 @@ namespace TripManager2._0.Controllers
 
                 if (User.HasClaim("Institucion", "JefeArea"))
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea).ToList();
-                    notifications += data.Count();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea && v.Usuario.Email != User.Identity.Name).ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -93,8 +90,7 @@ namespace TripManager2._0.Controllers
 
                 if (User.HasClaim("Institucion", "Decano"))
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano).ToList();
-                    notifications += data.Count();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano && v.Usuario.Email != User.Identity.Name).ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -105,8 +101,7 @@ namespace TripManager2._0.Controllers
 
                 if (User.HasClaim("Institucion", "Rector"))
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector).ToList();
-                    notifications += data.Count();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector && v.Usuario.Email != User.Identity.Name).ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -116,7 +111,6 @@ namespace TripManager2._0.Controllers
                 }
 
                 var misViajes = vm.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
-                notifications += misViajes.Count();
                 if (misViajes.Count() != 0)
                 {
                     for (int i = 0; i < misViajes.Count(); i++)
@@ -130,21 +124,31 @@ namespace TripManager2._0.Controllers
             if (t.InvitadosUpdated.Any())
             {
                 var misInvitados = t.InvitadosUpdated.Where(vi => vi.Usuario.Email == User.Identity.Name).ToList();
-                notifications += misInvitados.Count();
                 if (misInvitados.Count != 0)
                 {
                     for (int i = 0; i < misInvitados.Count(); i++)
                     {
                         //misInvitados[i].Update = 0;
                         _workflowServices.UpdateViajeInvitado(misInvitados[i], misInvitados[i]);
-                        Invitados.Add($"Viaje del invitado {misInvitados[i].Nombre} con fecha {misInvitados[i].FechaLLegada} tiene ahora estado {misInvitados[i].Estado}");
+                        InvitadosPropios.Add($"Viaje del invitado {misInvitados[i].Nombre} con fecha {misInvitados[i].FechaLLegada} tiene ahora estado {misInvitados[i].Estado}");
+                    }
+                }
+
+                var invitados = t.InvitadosUpdated.Where(vi => vi.Usuario.Email != User.Identity.Name).ToList();
+                if (invitados.Count != 0)
+                {
+                    for (int i = 0; i < invitados.Count(); i++)
+                    {
+                        //invitados[i].Update = 0;
+                        _workflowServices.UpdateViajeInvitado(invitados[i], invitados[i]);
+                        InvitadosAjenos.Add($"Viaje del invitado {invitados[i].Nombre} con fecha {invitados[i].FechaLLegada} tiene ahora estado {invitados[i].Estado}");
                     }
                 }
             }
 
-            vm.Notifications = notifications;
             vm.NotificationsList = notificationsList;
-            vm.Invitados = Invitados;
+            vm.InvitadosPropios = InvitadosPropios;
+            vm.InvitadosAjenos = InvitadosAjenos;
             
             return View(vm);
         }
