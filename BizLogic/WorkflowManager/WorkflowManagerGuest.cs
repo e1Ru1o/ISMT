@@ -23,15 +23,7 @@ namespace BizLogic.WorkflowManager
         {
             viajeInvitado.Update = 1;
 
-            var historial_entity = new Historial
-            {
-                Estado = Estado.Creado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
 
             if (claimTipoUsuario == "Trabajador")
                viajeInvitado.Estado = Estado.PendienteAprobacionJefeArea;
@@ -42,54 +34,25 @@ namespace BizLogic.WorkflowManager
             else
                 viajeInvitado.Estado = Estado.PendienteRealizacion;
 
-            historial_entity = new Historial
-            {
-                Estado = viajeInvitado.Estado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
         }
 
         public void ManageActionJefeArea(ViajeInvitado viajeInvitado, Action action, Usuario usuario, string comentario)
         {
             viajeInvitado.Update = 1;
-
-            var historial_entity = new Historial
-            {
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Usuario = usuario,
-                Fecha = DateTime.Now
-            };
-
+            
             if (action == Action.Aprobar)
             {
+                SaveHistorial(viajeInvitado, usuario, Estado.AprobadoJefeArea, comentario);
                 viajeInvitado.Estado = Estado.PendienteAprobacionDecano;
-                historial_entity.Estado = Estado.AprobadoJefeArea;
-                _historial.Add(historial_entity);
-                _context.Commit();
-
-                historial_entity = new Historial
-                {
-                    Estado = viajeInvitado.Estado,
-                    ViajeInvitado = viajeInvitado,
-                    UsuarioTarget = viajeInvitado.Usuario,
-                    Fecha = DateTime.Now
-                };
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
 
             if (action == Action.Rechazar)
             {
                 viajeInvitado.Estado = Estado.Pendiente;
-                historial_entity.Estado = viajeInvitado.Estado;
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
         }
@@ -98,41 +61,18 @@ namespace BizLogic.WorkflowManager
         {
             viajeInvitado.Update = 1;
 
-            var historial_entity = new Historial
-            {
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Usuario = usuario,
-                Fecha = DateTime.Now,
-                Comentario = comentario
-            };
-
             if (action == Action.Aprobar)
             {
+                SaveHistorial(viajeInvitado, usuario, Estado.AprobadoDecano, comentario);
                 viajeInvitado.Estado = Estado.PendienteAprobacionRector;
-                historial_entity.Estado = Estado.AprobadoDecano;
-                _historial.Add(historial_entity);
-                _context.Commit();
-
-                historial_entity = new Historial
-                {
-                    Estado = viajeInvitado.Estado,
-                    ViajeInvitado = viajeInvitado,
-                    UsuarioTarget = viajeInvitado.Usuario,
-                    Fecha = DateTime.Now
-                };
-                _historial.Add(historial_entity);
-                _context.Commit();
-
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
 
             if (action == Action.Rechazar)
             {
                 viajeInvitado.Estado = Estado.Pendiente;
-                historial_entity.Estado = viajeInvitado.Estado;
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
         }
@@ -141,41 +81,18 @@ namespace BizLogic.WorkflowManager
         {
             viajeInvitado.Update = 1;
 
-            var historial_entity = new Historial
-            {
-                Estado = Estado.AprobadoRector,
-                ViajeInvitado = viajeInvitado,
-                Usuario = usuario,
-                Fecha = DateTime.Now,
-                Comentario = comentario
-            };
-
             if (action == Action.Aprobar)
             {
+                SaveHistorial(viajeInvitado, usuario, Estado.AprobadoRector, comentario);
                 viajeInvitado.Estado = Estado.PendienteRealizacion;
-                historial_entity.Estado = Estado.AprobadoRector;
-                _historial.Add(historial_entity);
-                _context.Commit();
-
-                historial_entity = new Historial
-                {
-                    Estado = viajeInvitado.Estado,
-                    ViajeInvitado = viajeInvitado,
-                    UsuarioTarget = viajeInvitado.Usuario,
-                    Fecha = DateTime.Now
-                };
-                _historial.Add(historial_entity);
-                _context.Commit();
-
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
 
             if (action == Action.Rechazar)
             {
                 viajeInvitado.Estado = Estado.Pendiente;
-                historial_entity.Estado = viajeInvitado.Estado;
-                _historial.Add(historial_entity);
-                _context.Commit();
+                SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
                 return;
             }
         }
@@ -185,33 +102,16 @@ namespace BizLogic.WorkflowManager
             viajeInvitado.Update = 1;
             viajeInvitado.Estado = Estado.Realizado;
 
-            var historial_entity = new Historial
-            {
-                Estado = viajeInvitado.Estado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
+            SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
         }
 
         public void CancelarViajeInvitado(ViajeInvitado viajeInvitado, Usuario usuario, string comentario)
         {
             viajeInvitado.Update = 1;
             viajeInvitado.Estado = Estado.Cancelado;
-
-            var historial_entity = new Historial
-            {
-                Estado = viajeInvitado.Estado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Usuario = usuario,
-                Fecha = DateTime.Now,
-                Comentario = comentario
-            };
-            _historial.Add(historial_entity);
             _context.Commit();
+
+            SaveHistorial(viajeInvitado, usuario, viajeInvitado.Estado, comentario);
         }
 
         public void ManageViajeInvitadoPendiente(ViajeInvitado viajeInvitado)
@@ -222,16 +122,6 @@ namespace BizLogic.WorkflowManager
             _context.Commit();
 
             SaveHistorial(viajeInvitado, null, viajeInvitado.Estado, null);
-
-            var historial_entity = new Historial()
-            {
-                Estado = viajeInvitado.Estado,
-                ViajeInvitado = viajeInvitado,
-                UsuarioTarget = viajeInvitado.Usuario,
-                Fecha = DateTime.Now
-            };
-            _historial.Add(historial_entity);
-            _context.Commit();
         }
 
         private void SaveHistorial(ViajeInvitado viajeInvitado, Usuario usuario, Estado estado, string comentario)
