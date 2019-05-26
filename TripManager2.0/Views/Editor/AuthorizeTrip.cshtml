@@ -15,7 +15,7 @@
             <input hidden="hidden" id="uType" name="uType">
 
             <div>
-                <h1>Viajes actuales</h1>
+                <h1>Solicitudes de viajes</h1>
                 <table>
                     <tr>
                         <th>
@@ -54,17 +54,17 @@
                                 <button class="button" type="button" onclick="show(this, '1', '0');"><span>Rechazar</span></button>
                             </td>
                             <td>
-                                <button class="button" type="submit" onclick="show(this, '2', '0');"><span>Cancelar</span></button>
+                                <button class="button" type="button" onclick="show(this, '2', '0');"><span>Cancelar</span></button>
                             </td>
                         </tr>
                     }
                 </table>
             </div>
 
-            <br />
+            <hr />
 
             <div>
-                <h1>Invitados</h1>
+                <h1>Invitaciones solicitadas</h1>
                 <table>
                     <tr>
                         <th>
@@ -100,10 +100,10 @@
                                 <button class="button" type="submit" onclick="setValues(this, '0', '1');"><span>Aprobar</span></button>
                             </td>
                             <td>
-                                <button class="button" type="submit" onclick="show(this, '1', '1');"><span>Rechazar</span></button>
+                                <button class="button" type="button" onclick="show(this, '1', '1');"><span>Rechazar</span></button>
                             </td>
                             <td>
-                                <button class="button" type="submit" onclick="show(this, '2', '1');"><span>Cancelar</span></button>
+                                <button class="button" type="button" onclick="show(this, '2', '1');"><span>Cancelar</span></button>
                             </td>
                         </tr>
                     }
@@ -116,7 +116,7 @@
 
 @section Scripts{ 
     <script>
-        check_tables(['Ningún usuario pendiente de aprobación', 'Ningún invitado pendiente de aprobación']);
+        check_tables(['No hay usuarios pendientes de aprobación', 'No hay invitados pendientes de aprobación']);
 
         function setValues(caller, option, uType) {
             getRowId(caller, 'trip');

@@ -57,7 +57,7 @@
                 </table>
             </div>
 
-            <br />
+            <hr />
 
             <div>
                 <h1>Invitaciones</h1>
@@ -111,7 +111,7 @@
 
 @section Scripts{
     <script>
-        check_tables(['No se esta procesando ningún viaje', 'No se tiene ningún Invitado']);
+        check_tables(['No posee viajes en curso', 'No posee viajes de invitados']);
 
         function setValues(caller, action, uType) {
             getRowId(caller, 'vId')

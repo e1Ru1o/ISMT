@@ -46,12 +46,6 @@ function getRowId(caller, id) {
     document.getElementById(id).value = caller.parentElement.parentElement.id;
 }
 
-function dismark_selection() {
-    var op = doc.getElementsByTagName('option');
-    for (var i = 0; i < op.length; ++i)
-        op[i].selected = false;
-}
-
 function clean_selects() {
     var op = document.getElementsByTagName('option');
     for (var i = 0; i < op.length; ++i)
@@ -81,10 +75,6 @@ function closeDialog() {
 function check_tables(data) {
     console.log(data)
     var tb = document.getElementsByTagName('table');
-    console.log(tb);
-    console.log(tb.length);
-    console.log(tb[0].parentElement);
-    console.log(tb[1].parentElement);
     for (var i = tb.length - 1; i >= 0; i--) {
         var rows = tb[i].getElementsByTagName('tr').length;
         if (rows === 1) {

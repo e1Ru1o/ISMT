@@ -92,7 +92,7 @@ namespace TripManager2._0.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
-            return View(new RegisterUsuarioCommand());
+            return View();
         }
 
         [HttpPost]
@@ -135,7 +135,7 @@ namespace TripManager2._0.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
-            return View(new LoginViewModel());
+            return View();
         }
 
         [HttpPost]

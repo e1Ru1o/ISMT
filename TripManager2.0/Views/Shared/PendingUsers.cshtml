@@ -9,44 +9,52 @@
 }
 
 <div class="main">
-    <h1>Usuarios Pendientes</h1>
     <section>
         <form method="post">
-            <table id="myTable">
-                <tr>
-                    <th>
-                        Nombre
-                    </th>
-                    <th>
-                        Apellido
-                    </th>
-                    <th>
-                        Correo
-                    </th>
-                 
-                    <th>
-
-                    </th>
-                </tr>
-                @foreach (var item in Model.Usuarios)
-                {
+            <div>
+                <h1>Usuarios Pendientes</h1>
+                <table id="myTable">
                     <tr>
-                        <td>
-                            @item.FirstName
-                        </td>
-                        <td>
-                            @item.FirstLastName
-                        </td>
-                        <td>
-                            @item.UserName
-                        </td>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Apellido
+                        </th>
+                        <th>
+                            Correo
+                        </th>
 
-                        <td>
-                            <button class="button" type="submit" value="@item.Id" name="userID">   <span>Autorizar</span> </button>
-                        </td>
+                        <th>
+
+                        </th>
                     </tr>
-                }
-            </table>
+                    @foreach (var item in Model.Usuarios)
+                    {
+                        <tr>
+                            <td>
+                                @item.FirstName
+                            </td>
+                            <td>
+                                @item.FirstLastName
+                            </td>
+                            <td>
+                                @item.UserName
+                            </td>
+
+                            <td>
+                                <button class="button" type="submit" value="@item.Id" name="userID">   <span>Autorizar</span> </button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </form>
     </section>
 </div>
+
+@section Scripts{ 
+    <script>
+        check_tables(['Todos los usuarios han sido registrados previamente'])
+    </script>
+}
