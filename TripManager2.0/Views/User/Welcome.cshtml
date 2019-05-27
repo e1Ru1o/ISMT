@@ -1,10 +1,15 @@
 ﻿@using TripManager2._0.ViewModels
+@using BizData.Entities
 @model WelcomeViewModel
 
 @{
     Layout = "UserLayout";
     ViewData["Title"] = "Usuarios";
-    var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+    var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name
+                                                && (v.Estado == Estado.Pendiente ||
+                                                    v.Estado == Estado.Cancelado ||
+                                                    v.Estado == Estado.PendienteRealizacion))
+                                                    .ToList();
     var notifications = new List<string>();
 }
 
@@ -38,7 +43,7 @@
             @if (!User.HasClaim("Institucion", "Trabajador"))
             {
                 <div class="dropdown badge">
-                    <span id="num1" class="badge">@Model.ViajesUpdated.Count()</span>
+                    <span id="num1" class="badge">@Model.NotificationsList.Count()</span>
                     <button onclick="NotificationsFunction('num1', 'myDropdown1')" class="dropbtn" style="background-color:red">Cambios en los viajes</button>
                     <div id="myDropdown1" class="dropdown-content">
                         @if (!Model.ViajesUpdated.Any())
@@ -101,26 +106,30 @@
             <br />
             <br />
 
-            <div class="dropdown badge">
-                <span id="num4" class="badge">@Model.InvitadosPropios.Count()</span>
-                <button onclick="NotificationsFunction('num4', 'myDropdown4')" class="dropbtn" style="background-color:seagreen">Cambios en los viajes invitados</button>
-                <div id="myDropdown4" class="dropdown-content">
-                    @if (!Model.InvitadosPropios.Any())
-                    {
-                        <a style="color:darkblue; font-size:large">No hay cambios en los viajes invitados</a>
-                    }
-                    else
-                    {
-                        <a style="color:darkblue; font-size:large">Sus viajes invitados</a>
-                        foreach (var item in Model.InvitadosPropios)
+            @if (!User.HasClaim("Institucion", "Trabajador"))
+            {
+                <div class="dropdown badge">
+                    <span id="num4" class="badge">@Model.InvitadosAjenos.Count()</span>
+                    <button onclick="NotificationsFunction('num4', 'myDropdown4')" class="dropbtn" style="background-color:seagreen">Cambios en los viajes invitados</button>
+                    <div id="myDropdown4" class="dropdown-content">
+                        @if (!Model.InvitadosPropios.Any())
                         {
-                            <a>@item</a>
+                            <a style="color:darkblue; font-size:large">No hay cambios en los viajes invitados</a>
                         }
-                    }
+                        else
+                        {
+                            <a style="color:darkblue; font-size:large">Los viajes invitados</a>
+                            foreach (var item in Model.InvitadosAjenos)
+                            {
+                                <a>@item</a>
+                            }
+                        }
+                    </div>
                 </div>
-            </div>
-            <br />
-            <br />
+                <br />
+                <br />
+            }
+
             @if (User.HasClaim("Permission", "Admin"))
             {
                 <div class="dropdown badge">

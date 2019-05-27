@@ -68,16 +68,20 @@
             var row = caller.parentElement.parentElement;
             var td = row.getElementsByTagName('td');
             var op = row.getElementsByTagName('option');
-            for (var i = 0; i < op.length; ++i) {
-                if (op[i].selected) {
-                    var inputs = document.getElementsByTagName('input');
-                    inputs[2].value = td[0].id;
-                    inputs[3].value = op[i].value;
-                    inputs[4].value = action;
-                    return;
+
+            var inputs = document.getElementsByTagName('input');
+            inputs[2].value = td[0].id;
+            inputs[4].value = action;
+
+            if (action != '1') {
+                for (var i = 0; i < op.length; ++i) {
+                    if (op[i].selected) {
+                        inputs[3].value = op[i].value;
+                        return;
+                    }
                 }
+                row.getElementsByTagName('select')[0].required = true;
             }
-            row.getElementsByTagName('select')[0].required = true;
         }
         function show(caller) {
             var dialog = document.getElementById("rzn");
