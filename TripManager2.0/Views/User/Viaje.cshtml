@@ -1,66 +1,56 @@
 ﻿@using BizData.Entities
-@model ViajeInvitado
+@model IEnumerable<Viaje>
+
 @{
     Layout = "UserLayout";
 }
+
 <div class="main">
-    <h1>Detalles del Viaje Invitado</h1>
+    <h1>Detalles de Itinerario</h1>
     <form>
         <table>
             <tr>
                 <th>
-                    Nombre
+                    Pais
                 </th>
                 <th>
-                    Procedencia
+                    Ciudad
+                </th>
+                <th>
+                    Fecha de Inicio
+                </th>
+                <th>
+                    Fecha de Fin
                 </th>
                 <th>
                     Motivo
                 </th>
-                <th>
-                    Usuario
-                </th>
-                <th>
-                    Estado
-                </th>
-                <th>
-                    FechaLLegada
-                </th>
             </tr>
-          
+            @foreach (var item in Model)
+            {
                 <tr>
                     <td>
-                        @Model.Nombre
+                        @item.Pais.Nombre
                     </td>
                     <td>
-                        @Model.Procedencia
+                        @item.Ciudad
                     </td>
                     <td>
-                        @if (Model.Motivo != null)
-                        {
-                            @Model.Motivo
-                        }
-                        else
-                        {
-                            <label>Vacio</label>
-
-                        }
+                        @item.FechaInicio
                     </td>
                     <td>
-                        @Model.Usuario
+                        @item.FechaFin
                     </td>
                     <td>
-                        @Model.Estado
-                    </td>
-                    <td>
-                        @Model.FechaLLegada
+                        @item.MotivoViaje
                     </td>
                 </tr>
-         
+            }
         </table>
     </form>
     <hr />
-
+    @{
+        var hist = Model.Take(1).Single().Itinerario.Historial;}
     <div>
         <h1>Historial</h1>
         <table>
@@ -80,9 +70,13 @@
                 <th>
                     Fecha
                 </th>
-       
+              
+                <th>
+                    Itinerario Estado
+                </th>
+                
             </tr>
-            @foreach (var item in Model.Historial)
+            @foreach (var item in hist)
             {
                 <tr>
                     <td>
@@ -112,7 +106,7 @@
                         @if (item.Comentario != null)
 
                 {
-                            @item.UsuarioTargetId
+                            @item.Comentario
                         }
                         else
                         {
@@ -125,9 +119,18 @@
                     <td>
                         @item.Fecha
                     </td>
-            
-                   
-           
+                 
+                    <td>
+                        @if (item.Itinerario != null)
+                        {
+                            @item.Itinerario.Estado
+                        }
+                        else
+                        {
+
+                            <label>vacio</label>
+                        }
+                    </td>
                 </tr>
             }
         </table>

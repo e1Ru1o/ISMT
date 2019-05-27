@@ -70,7 +70,7 @@
                         @if (item.Comentario != null)
 
                 {
-                            @item.UsuarioTargetId
+                            @item.Comentario
                         }
                         else
                         {
@@ -119,7 +119,7 @@
                     <td>
                         @if (item.Itinerario != null)
                         {
-                            <a href="/Admin/Viaje?id=@item.Itinerario.ItinerarioID" class="button"><span>Detalles</span></a>
+                            <a href="/User/Viaje?id=@item.Itinerario.ItinerarioID" class="button"><span>Detalles</span></a>
 
                         }
                         else
@@ -131,7 +131,7 @@
                     <td>
                         @if (item.ViajeInvitado != null)
                         {
-                            <a href="/Admin/ViajeInvitado?id=@item.ViajeInvitado.ViajeInvitadoID"><span>Detalles</span></a>
+                            <a href="/User/ViajeInvitado?id=@item.ViajeInvitado.ViajeInvitadoID"><span>Detalles</span></a>
                         }
                         else
                         {
