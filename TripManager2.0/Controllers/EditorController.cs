@@ -50,11 +50,11 @@ namespace TripManager2._0.Controllers
             var services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
             var user = await _userManager.GetUserAsync(User);
             var vm = new PendingUserTripViewModel();
-            vm.Users = services.GetItinerariosEstado(
-                Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"),
-                user
-            ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, x.Usuario));
-            vm.Visitants = new List<InvitationViewModel>();
+            Estado state = Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}");
+            vm.Users = services.GetItinerariosEstado(state, user)
+                .Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, x.Usuario));
+            vm.Visitants = services.GetViajesInvitadosEstado(state, user)
+                .Select(x => new InvitationViewModel(x));
             return View(vm);
         }
 

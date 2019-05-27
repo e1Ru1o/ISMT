@@ -110,7 +110,11 @@ namespace TripManager2._0.Controllers
                     }
                 }
 
-                var misViajes = vm.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name).ToList();
+                var misViajes = vm.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name
+                                                         && (v.Estado == Estado.Pendiente ||
+                                                             v.Estado == Estado.Cancelado ||
+                                                             v.Estado == Estado.PendienteRealizacion))
+                                                             .ToList();
                 if (misViajes.Count() != 0)
                 {
                     for (int i = 0; i < misViajes.Count(); i++)
@@ -123,7 +127,11 @@ namespace TripManager2._0.Controllers
             
             if (t.InvitadosUpdated.Any())
             {
-                var misInvitados = t.InvitadosUpdated.Where(vi => vi.Usuario.Email == User.Identity.Name).ToList();
+                var misInvitados = t.InvitadosUpdated.Where(vi => vi.Usuario.Email == User.Identity.Name
+                                                               && (vi.Estado == Estado.Pendiente ||
+                                                                   vi.Estado == Estado.Cancelado ||
+                                                                   vi.Estado == Estado.PendienteRealizacion))
+                                                                   .ToList();
                 if (misInvitados.Count != 0)
                 {
                     for (int i = 0; i < misInvitados.Count(); i++)
