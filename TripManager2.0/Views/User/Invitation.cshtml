@@ -1,0 +1,35 @@
+﻿@model InvitationViewModel;
+
+@{ 
+    Layout = "UserLayout";
+    ViewData["Title"] = "Invitacion";
+}
+
+<body>
+    <div class="main">
+        <CENTER>
+            <h1>Nueva Invitación</h1>
+            <form method="post">
+                <div class="form-group">
+                    <label asp-for="Name">Nombre del Invitado:</label>
+                    <input asp-for="Name" class="form-control col-md-3" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+
+                    <label asp-for="Procedencia">Procedencia:</label>
+                    <input asp-for="Procedencia" class="form-control col-md-3" />
+                    <span asp-validation-for="Procedencia" class="text-danger"></span>
+
+                    <label asp-for="End">Fecha de llegada:</label>
+                    <input asp-for="End" class="form-control col-md-3" />
+                    <span asp-validation-for="End" class="text-danger"></span>
+
+                    <label asp-for="Motivo">Motivo(Opcional):</label>
+                    <input asp-for="Motivo" class="form-control col-md-4" />
+                    <span asp-validation-for="Motivo" class="text-danger"></span>
+
+                    <button class="button" type="submit">Invitar</button>
+                </div>
+            </form>
+        </CENTER>
+    </div>
+</body>

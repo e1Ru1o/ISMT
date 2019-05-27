@@ -23,6 +23,7 @@ namespace DataLayer.EfCode
         public DbSet<Pais> Paises { get; set; }
         public DbSet<Pais_Visa> Paises_Visas { get; set; }
         public DbSet<Visa> Visas { get; set; }
+        public DbSet<ViajeInvitado> ViajesInvitados { get; set; }
         public DbSet<Historial> Historial { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -42,7 +43,17 @@ namespace DataLayer.EfCode
                 .IsRequired();
             //.IsRequired(false)
             //.OnDelete(DeleteBehavior.SetNull);
-            
+
+            builder.Entity<Historial>()
+                    .HasOne(hist => hist.Usuario)
+                    .WithMany(user => user.HistorialUpdater)
+                    .HasForeignKey(hist => hist.UsuarioId);
+
+            builder.Entity<Historial>()
+                    .HasOne(hist => hist.UsuarioTarget)
+                    .WithMany(user => user.HistorialTarget)
+                    .HasForeignKey(hist => hist.UsuarioTargetId);
+
             //TODO: Config the new entities if is needed.
         }
 

@@ -1,0 +1,154 @@
+﻿@using BizData.Entities
+@model IEnumerable<Historial>
+@{
+    ViewData["Title"] = "Historial";
+    Layout = "UserLayout";
+}
+<div class="main">
+    <div>
+        <h1>Historial</h1>
+        <table>
+            <tr>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Usuario Afectado
+                </th>
+                <th>
+                    Comentario
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    Estado Actual
+                </th>
+                <th>
+                    Fecha
+                </th>
+                <th>
+                    Itinerario Fecha de Inicio
+                </th>
+                <th>
+                    Itinerario Fecha de Fin
+                </th>
+               
+                <th>
+                    Detalles Itinerario
+                </th>
+                <th>
+                    Viaje Invitado
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.Usuario != null)
+
+                        {
+                            @item.Usuario.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.UsuarioTarget != null)
+
+                        {
+                            @item.UsuarioTarget.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+
+                    </td>
+                    <td>
+                        @if (item.Comentario != null)
+
+                {
+                            @item.Comentario
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @item.Estado
+                    </td>
+                    <td>
+                        @if (item.Itinerario != null)
+                        {
+                            @item.Itinerario.Estado
+                        }
+                        else
+                        {
+
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @item.Fecha
+                    </td>
+                    <td>
+                        @if (item.Itinerario != null)
+                        {
+                            @item.Itinerario.FechaInicio
+                        }
+                        else
+                        {
+
+                            <label> vacio </label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Itinerario != null)
+                        {
+                            @item.Itinerario.FechaFin
+                        }
+                        else
+                        {
+
+                            <label> vacio </label>
+                        }
+                    </td>
+
+                    <td>
+                        @if (item.Itinerario != null)
+                        {
+                            <a href="/User/Viaje?id=@item.Itinerario.ItinerarioID" class="button"><span>Detalles</span></a>
+
+                        }
+                        else
+                        {
+
+                            <label> vacio </label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.ViajeInvitado != null)
+                        {
+                            <a href="/User/ViajeInvitado?id=@item.ViajeInvitado.ViajeInvitadoID"><span>Detalles</span></a>
+                        }
+                        else
+                        {
+
+                            <label>vacio</label>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        check_tables(['No han ocurrido eventos']);
+    </script>
+}

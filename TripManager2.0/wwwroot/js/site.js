@@ -46,3 +46,46 @@ function getRowId(caller, id) {
     document.getElementById(id).value = caller.parentElement.parentElement.id;
 }
 
+function clean_selects() {
+    var op = document.getElementsByTagName('option');
+    for (var i = 0; i < op.length; ++i)
+        op[i].selected = false;
+}
+
+function oneOfAllAtLeast() {
+    var sel = document.getElementsByTagName('select');
+    sel[0].required = false;
+    sel[1].required = false;
+
+    var op = document.getElementsByTagName('option');
+    var count = 0;
+    for (var i = 0; i < op.length; ++i)
+        if (op[i].selected)
+            ++count;
+    if (count === 0)
+        sel[0].required = true;
+}
+
+function closeDialog() {
+    var dialog = document.getElementById("rzn");
+    document.getElementById('mot').value = document.getElementById('msg').value;
+    dialog.close();
+}
+
+function check_tables(data) {
+    console.log(data)
+    var tb = document.getElementsByTagName('table');
+    for (var i = tb.length - 1; i >= 0; i--) {
+        var rows = tb[i].getElementsByTagName('tr').length;
+        if (rows === 1) {
+            var container = tb[i].parentElement.parentElement;
+            var msg = document.createElement('CENTER'); {
+                var h = document.createElement('h1'); {
+                    h.innerHTML = data[i];
+                }
+                msg.appendChild(h);
+            }
+            container.replaceChild(msg, tb[i].parentElement);
+        }
+    }
+}

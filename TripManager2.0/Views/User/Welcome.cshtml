@@ -1,19 +1,188 @@
 ﻿@using TripManager2._0.ViewModels
-@model UserViewModel
+@using BizData.Entities
+@model WelcomeViewModel
 
 @{
     Layout = "UserLayout";
     ViewData["Title"] = "Usuarios";
+    var misViajes = Model.ViajesUpdated.Where(v => v.Usuario.Email == User.Identity.Name
+                                                && (v.Estado == Estado.Pendiente ||
+                                                    v.Estado == Estado.Cancelado ||
+                                                    v.Estado == Estado.PendienteRealizacion))
+                                                    .ToList();
+    var notifications = new List<string>();
 }
 
 <head>
     <title>Signed up</title>
+
 </head>
 <body>
     <CENTER>
-        <h1>No tienes notificaciones.</h1>
-        <h1>La verdad es q ni lo se ;-)</h1>
+        @if (!User.HasClaim("Institucion", "None"))
+        {
+            @if (User.HasClaim("Permission", "Common"))
+            {
+                <p>
+                    Desde aquí podrá usar todas las herramientas que la aplicación ofrece.
+                </p>
+                <br />
+            }
+            else
+            {
+                <p>
+                    Desde aquí podrá regular la aplicación.
+                </p>
+                <br />
+            }
+            <br />
+            <h2>Notificaciones</h2>
+            <br />
+            <br />
+
+            @if (!User.HasClaim("Institucion", "Trabajador"))
+            {
+                <div class="dropdown badge">
+                    <span id="num1" class="badge">@Model.NotificationsList.Count()</span>
+                    <button onclick="NotificationsFunction('num1', 'myDropdown1')" class="dropbtn" style="background-color:red">Cambios en los viajes</button>
+                    <div id="myDropdown1" class="dropdown-content">
+                        @if (!Model.ViajesUpdated.Any())
+                        {
+                            <a style="color:darkblue; font-size:large">No hay cambios en los viajes</a>
+                        }
+                        else
+                        {
+                            <a style="color:darkblue; font-size:large">Cambios en los viajes</a>
+                            foreach (var item in Model.NotificationsList)
+                            {
+                                <a>@item</a>
+                            }
+                        }
+                    </div>
+                </div>
+                <br />
+                <br />
+            }
+
+            <div class="dropdown badge">
+                <span id="num2" class="badge">@misViajes.Count()</span>
+                <button onclick="NotificationsFunction('num2', 'myDropdown2')" class="dropbtn" style="background-color:orangered">Cambios en sus viajes</button>
+                <div id="myDropdown2" class="dropdown-content">                
+                    @if (misViajes.Count() == 0)
+                    {
+                        <a style="color:darkblue; font-size:large">Sus viajes no han sido modificados</a>
+                    }
+                    else
+                    {
+                        <a style="color:darkblue; font-size:large">Sus viajes</a>
+                        foreach (var item in misViajes)
+                        {
+                            <a>Viaje del @item.FechaInicio --> @item.FechaFin tiene ahora estado @item.Estado</a>
+                        }
+                    }               
+                </div>
+            </div>
+            <br />
+            <br />
+
+            <div class="dropdown badge">
+                <span id="num3" class="badge">@Model.InvitadosPropios.Count()</span>
+                <button onclick="NotificationsFunction('num3', 'myDropdown3')" class="dropbtn" style="background-color:green">Cambios en sus viajes invitados</button>
+                <div id="myDropdown3" class="dropdown-content">               
+                    @if (!Model.InvitadosPropios.Any())
+                    {
+                        <a style="color:darkblue; font-size:large">No hay cambios en los viajes invitados</a>
+                    }
+                    else
+                    {
+                        <a style="color:darkblue; font-size:large">Sus viajes invitados</a>
+                        foreach (var item in Model.InvitadosPropios)
+                        {
+                            <a>@item</a>
+                        }
+                    }
+                </div>
+            </div>
+            <br />
+            <br />
+
+            @if (!User.HasClaim("Institucion", "Trabajador"))
+            {
+                <div class="dropdown badge">
+                    <span id="num4" class="badge">@Model.InvitadosAjenos.Count()</span>
+                    <button onclick="NotificationsFunction('num4', 'myDropdown4')" class="dropbtn" style="background-color:seagreen">Cambios en los viajes invitados</button>
+                    <div id="myDropdown4" class="dropdown-content">
+                        @if (!Model.InvitadosPropios.Any())
+                        {
+                            <a style="color:darkblue; font-size:large">No hay cambios en los viajes invitados</a>
+                        }
+                        else
+                        {
+                            <a style="color:darkblue; font-size:large">Los viajes invitados</a>
+                            foreach (var item in Model.InvitadosAjenos)
+                            {
+                                <a>@item</a>
+                            }
+                        }
+                    </div>
+                </div>
+                <br />
+                <br />
+            }
+
+            @if (User.HasClaim("Permission", "Admin"))
+            {
+                <div class="dropdown badge">
+                    <span id="num0" class="badge">@Model.UserPendings.Count()</span>
+                    <button onclick="NotificationsFunction('num0', 'myDropdown0')" class="dropbtn" style="background-color:blue">Usuarios Pendientes</button>
+                    <div id="myDropdown0" class="dropdown-content">
+                        @if (!Model.UserPendings.Any())
+                        {
+                            <a style="color:darkblue; font-size:large">No hay usuarios pendientes</a>
+                        }
+                        else
+                        {
+                            int cant = Model.UserPendings.Count();
+
+                            if (cant == 1)
+                            {
+                                <a>Hay @cant usuario pendiente</a>
+                            }
+                            else
+                            {
+                                <a>Hay @cant usuarios pendientes</a>
+                            }
+                        }
+                    </div>
+                </div>
+            }          
+        }
+            
     </CENTER>
+
+    <script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function NotificationsFunction(id, drop) {
+        document.getElementById(drop).classList.toggle("show");
+        var sp = document.getElementById(id);
+        sp.innerHTML = 0;     
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+            }
+        }
+        }
+    }
+    </script>
 </body>
 
 

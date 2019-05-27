@@ -1,0 +1,93 @@
+﻿@using BizData.Entities
+@model IEnumerable<(Usuario, IEnumerable<Visa>)>
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Nueva Visa";
+}
+
+<body>
+    <div class="main">
+        <form method="post">
+            @Html.Partial("Razon")
+            <input name="uID" name="uID" hidden="hidden" />
+            <input name="vID" hidden="hidden" />
+            <input name="action" hidden="hidden" />
+
+            <div>
+                <h1>Otorgar Visas</h1>
+                <table>
+                    <tr>
+                        <th>
+                            Usuario
+                        </th>
+                        <th>
+                            Visas Utiles
+                        </th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    @foreach (var (usr, visas) in Model)
+            {
+                        <tr>
+                            <td id="@usr.Id">
+                                @usr.FirstName @usr.SecondName
+                            </td>
+                            <td>
+                                <select asp-for="@visas">
+                                    @foreach (var item in visas)
+                                    {
+                                        <option value="@item.VisaID">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <button class="button" type="submit" onclick="setValues(this, '0')">Otorgar</button>
+                            </td>
+                            <td>
+                                <button class="button" type="button" onclick="show(this)">Rechazar</button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </form>
+    </div>
+</body>
+
+@section Scripts{ 
+    <script>
+        check_tables(['No hay usuarios solicitando visa']);
+        clean_selects();
+
+        function setValues(caller, action) {
+            var sel = document.getElementsByTagName('select')
+            for (var i = 0; i < sel.length; ++i)
+                sel[i].requiere = false;
+
+            var row = caller.parentElement.parentElement;
+            var td = row.getElementsByTagName('td');
+            var op = row.getElementsByTagName('option');
+
+            var inputs = document.getElementsByTagName('input');
+            inputs[2].value = td[0].id;
+            inputs[4].value = action;
+
+            if (action != '1') {
+                for (var i = 0; i < op.length; ++i) {
+                    if (op[i].selected) {
+                        inputs[3].value = op[i].value;
+                        return;
+                    }
+                }
+                row.getElementsByTagName('select')[0].required = true;
+            }
+        }
+        function show(caller) {
+            var dialog = document.getElementById("rzn");
+            setValues(caller, '1');
+            dialog.showModal();
+        }
+    </script>
+}
+

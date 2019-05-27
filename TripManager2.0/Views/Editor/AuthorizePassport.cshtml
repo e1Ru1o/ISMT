@@ -1,0 +1,79 @@
+﻿@using BizData.Entities
+@model IEnumerable<Usuario>
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Pasaportes";
+}
+
+<body>
+    <div class="main">
+        <form method="post">
+            @Html.Partial("Razon")
+            <input hidden="hidden" id="op" name="action">
+            <input hidden="hidden" id="uId" name="usuarioId">
+            <div>
+                <h1>Pasaportes Pendientes</h1>
+                <table>
+                    <tr>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Apellido
+                        </th>
+                        <th>
+                            Correo
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="@item.Id">
+                            <td>
+                                @item.FirstName
+                            </td>
+                            <td>
+                                @item.FirstLastName
+                            </td>
+                            <td>
+                                @item.Email
+                            </td>
+                            <td>
+                                <button class="button" type="submit" onclick="setValues(this, '0');"><span>Aprobar</span></button>
+                            </td>
+                            <td>
+                                <button class="button" type="button" onclick="show(this, '1');"><span>Rechazar</span></button>
+                            </td>
+                            <td>
+                                <button class="button" type="button" onclick="show(this, '2');"><span>Cancelar</span></button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </form>
+    </div>
+</body>
+
+@section Scripts{
+    <script>
+        check_tables(['No hay usuarios solicitando pasaporte']);
+
+        function setValues(caller, option) {
+            getRowId(caller, 'uId');
+            document.getElementById('op').value = option;
+        }
+        function show(caller, option) {
+            var dialog = document.getElementById("rzn");
+            setValues(caller, option);
+            dialog.showModal();
+        }
+    </script>
+}

@@ -38,7 +38,7 @@ namespace BizDbAccess.Repositories
             toUpd.FechaInicio = entity.FechaInicio ?? toUpd.FechaInicio;
             toUpd.Usuario = entity.Usuario ?? toUpd.Usuario;
             toUpd.Update = entity.Update;
-            toUpd.Viajes =  entity.Viajes == null ? entity.Viajes : (toUpd.Viajes.Concat(entity.Viajes)).ToList();
+            toUpd.Viajes =  toUpd.Viajes == null || toUpd.Viajes.Count() == 0 ? entity.Viajes : (toUpd.Viajes.Concat(entity.Viajes)).ToList();
 
             _context.Itinerarios.Update(toUpd);
             return toUpd;

@@ -1,0 +1,48 @@
+﻿@using BizData.Entities
+@using BizLogic.Shared
+@model IEnumerable<Region>
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Region";
+}
+<div class="main">
+    <div>
+        <h1>Region</h1>
+        <table border="0">
+            <tr>
+
+                <th>
+                    Nombre
+                </th>
+
+                <th>
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Nombre
+                    </td>
+                    <td>
+                        <a href="/Admin/UpdateRegion?id=@item.RegionID" class="button"><span>Update</span></a>
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td>
+                    <a href="/Admin/AddRegion" class="button"> <span>Agregar </span></a>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        check_tables(['No se han registrado regiones']);
+    </script>
+}

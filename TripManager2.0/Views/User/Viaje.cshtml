@@ -1,0 +1,140 @@
+﻿@using BizData.Entities
+@model IEnumerable<Viaje>
+
+@{
+    Layout = "UserLayout";
+}
+
+<div class="main">
+    <h1>Detalles de Itinerario</h1>
+    <form>
+        <table>
+            <tr>
+                <th>
+                    Pais
+                </th>
+                <th>
+                    Ciudad
+                </th>
+                <th>
+                    Fecha de Inicio
+                </th>
+                <th>
+                    Fecha de Fin
+                </th>
+                <th>
+                    Motivo
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Pais.Nombre
+                    </td>
+                    <td>
+                        @item.Ciudad
+                    </td>
+                    <td>
+                        @item.FechaInicio
+                    </td>
+                    <td>
+                        @item.FechaFin
+                    </td>
+                    <td>
+                        @item.MotivoViaje
+                    </td>
+                </tr>
+            }
+        </table>
+    </form>
+    <hr />
+    @{
+        var hist = Model.Take(1).Single().Itinerario.Historial;}
+    <div>
+        <h1>Historial</h1>
+        <table>
+            <tr>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Usuario Afectado
+                </th>
+                <th>
+                    Comentario
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    Estado Actual
+                </th>
+                <th>
+                    Fecha
+                </th>
+              
+              
+                
+            </tr>
+            @foreach (var item in hist)
+            {
+                <tr>
+                    <td>
+                        @if (item.Usuario != null)
+
+                        {
+                            @item.Usuario.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.UsuarioTarget != null)
+
+                        {
+                            @item.UsuarioTarget.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+
+                    </td>
+                    <td>
+                        @if (item.Comentario != null)
+
+                {
+                            @item.Comentario
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @item.Estado
+                    </td>
+                    <td>
+                        @if (item.Itinerario != null)
+                        {
+                            @item.Itinerario.Estado
+                        }
+                        else
+                        {
+
+                            <label>vacio</label>
+                        }
+                    </td>
+
+                    <td>
+                        @item.Fecha
+                    </td>
+              
+                </tr>
+            }
+        </table>
+    </div>
+</div>

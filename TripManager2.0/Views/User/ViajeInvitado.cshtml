@@ -1,0 +1,135 @@
+﻿@using BizData.Entities
+@model ViajeInvitado
+@{
+    Layout = "UserLayout";
+}
+<div class="main">
+    <h1>Detalles del Viaje Invitado</h1>
+    <form>
+        <table>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Procedencia
+                </th>
+                <th>
+                    Motivo
+                </th>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    FechaLLegada
+                </th>
+            </tr>
+          
+                <tr>
+                    <td>
+                        @Model.Nombre
+                    </td>
+                    <td>
+                        @Model.Procedencia
+                    </td>
+                    <td>
+                        @if (Model.Motivo != null)
+                        {
+                            @Model.Motivo
+                        }
+                        else
+                        {
+                            <label>Vacio</label>
+
+                        }
+                    </td>
+                    <td>
+                        @Model.Usuario
+                    </td>
+                    <td>
+                        @Model.Estado
+                    </td>
+                    <td>
+                        @Model.FechaLLegada
+                    </td>
+                </tr>
+         
+        </table>
+    </form>
+    <hr />
+
+    <div>
+        <h1>Historial</h1>
+        <table>
+            <tr>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Usuario Afectado
+                </th>
+                <th>
+                    Comentario
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    Fecha
+                </th>
+       
+            </tr>
+            @foreach (var item in Model.Historial)
+            {
+                <tr>
+                    <td>
+                        @if (item.Usuario != null)
+
+                        {
+                            @item.Usuario.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.UsuarioTarget != null)
+
+                        {
+                            @item.UsuarioTarget.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+
+                    </td>
+                    <td>
+                        @if (item.Comentario != null)
+
+                {
+                            @item.Comentario
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @item.Estado
+                    </td>
+                    <td>
+                        @item.Fecha
+                    </td>
+            
+                   
+           
+                </tr>
+            }
+        </table>
+    </div>
+</div>

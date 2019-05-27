@@ -1,0 +1,22 @@
+﻿<script>
+    function fly() {
+        var ww = screen.width;
+
+        var plane= document.getElementById("plane");
+        //window.defaultStatus = "(" + planeStyle.left + "," + planeStyle.top + ")";
+
+        if (parseInt(plane.style.left) > ww) {
+            plane.style.left = 0;
+
+        } else {
+            plane.style.left = 12;
+            console.log(plane.style.left);
+            plane.style.top = parseInt(plane.style.top);
+        }
+
+    }
+</script>
+
+<div id="plane">
+    <img src="~/fotos/plain.png">
+</div>
