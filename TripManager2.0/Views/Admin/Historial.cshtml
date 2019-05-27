@@ -44,10 +44,10 @@
             {
                 <tr>
                     <td>
-                        @if (item.UsuarioId != null)
+                        @if (item.Usuario != null)
 
                         {
-                            @item.UsuarioId
+                            @item.Usuario.Email
                         }
                         else
                         {
@@ -55,10 +55,10 @@
                         }
                     </td>
                     <td>
-                        @if (item.UsuarioTargetId != null)
+                        @if (item.UsuarioTarget != null)
 
                         {
-                            @item.UsuarioTargetId
+                            @item.UsuarioTarget.Email
                         }
                         else
                         {
