@@ -272,7 +272,9 @@ namespace ServiceLayer.WorkFlowServices
 
         public void ManageActionVisa(string usuarioId, string updaterId, int visaId, BizLogic.WorkflowManager.Action action, string comentario)
         {
-            var visa = _visaDbAccess.GetVisa(visaId);
+            var visa = new Visa();
+            if(action != BizLogic.WorkflowManager.Action.Rechazar)
+                visa = _visaDbAccess.GetVisa(visaId);
             var usuario = _userDbAccess.GetUsuario(usuarioId);
             var updator = _userDbAccess.GetUsuario(updaterId);
 
