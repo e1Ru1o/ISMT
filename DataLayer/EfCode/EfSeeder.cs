@@ -46,8 +46,8 @@ namespace DataLayer.EfCode
                 await _userManager.AddClaimAsync(raul, new Claim("Permission", "Admin"));
                 await _userManager.AddClaimAsync(raul, new Claim("Pending", "false"));
                 await _userManager.AddClaimAsync(raul, new Claim("Institucion", "Rector"));
-                await _userManager.AddClaimAsync(raul, new Claim("Passport", "true"));
-                await _userManager.AddClaimAsync(raul, new Claim("Visa", "true"));
+                await _userManager.AddClaimAsync(raul, new Claim("Passport", "True"));
+                await _userManager.AddClaimAsync(raul, new Claim("Visa", "True"));
 
                 var pancho = new Usuario()
                 {
@@ -63,8 +63,8 @@ namespace DataLayer.EfCode
                 await _userManager.AddClaimAsync(pancho, new Claim("Permission", "Admin"));
                 await _userManager.AddClaimAsync(pancho, new Claim("Pending", "false"));
                 await _userManager.AddClaimAsync(pancho, new Claim("Institucion", "Rector"));
-                await _userManager.AddClaimAsync(pancho, new Claim("Passport", "true"));
-                await _userManager.AddClaimAsync(pancho, new Claim("Visa", "true"));
+                await _userManager.AddClaimAsync(pancho, new Claim("Passport", "True"));
+                await _userManager.AddClaimAsync(pancho, new Claim("Visa", "True"));
 
                 var marta = new Usuario()
                 {
@@ -80,8 +80,8 @@ namespace DataLayer.EfCode
                 await _userManager.AddClaimAsync(marta, new Claim("Permission", "Admin"));
                 await _userManager.AddClaimAsync(marta, new Claim("Pending", "false"));
                 await _userManager.AddClaimAsync(marta, new Claim("Institucion", "Rector"));
-                await _userManager.AddClaimAsync(marta, new Claim("Passport", "true"));
-                await _userManager.AddClaimAsync(marta, new Claim("Visa", "true"));
+                await _userManager.AddClaimAsync(marta, new Claim("Passport", "True"));
+                await _userManager.AddClaimAsync(marta, new Claim("Visa", "True"));
 
                 // Regiones
                 var region = new Region { Nombre = "Ninguna"};

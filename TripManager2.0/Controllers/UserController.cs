@@ -57,7 +57,11 @@ namespace TripManager2._0.Controllers
             {
                 if (User.Claims.Where(c => c.Type == "Visa").Any())
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteVisas && v.Usuario.Email != User.Identity.Name).ToList();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteVisas && v.Usuario.Email != User.Identity.Name
+                                                        && !(v.Estado == Estado.Pendiente ||
+                                                           v.Estado == Estado.Cancelado ||
+                                                           v.Estado == Estado.PendienteRealizacion))
+                                                           .ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -68,7 +72,11 @@ namespace TripManager2._0.Controllers
 
                 if (User.Claims.Where(c => c.Type == "Passport").Any())
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendientePasaporte && v.Usuario.Email != User.Identity.Name).ToList();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendientePasaporte && v.Usuario.Email != User.Identity.Name
+                                                        && !(v.Estado == Estado.Pendiente ||
+                                                           v.Estado == Estado.Cancelado ||
+                                                           v.Estado == Estado.PendienteRealizacion))
+                                                           .ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -79,7 +87,11 @@ namespace TripManager2._0.Controllers
 
                 if (User.HasClaim("Institucion", "JefeArea"))
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea && v.Usuario.Email != User.Identity.Name).ToList();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionJefeArea && v.Usuario.Email != User.Identity.Name
+                                                        && !(v.Estado == Estado.Pendiente ||
+                                                           v.Estado == Estado.Cancelado ||
+                                                           v.Estado == Estado.PendienteRealizacion))
+                                                           .ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -90,7 +102,11 @@ namespace TripManager2._0.Controllers
 
                 if (User.HasClaim("Institucion", "Decano"))
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano && v.Usuario.Email != User.Identity.Name).ToList();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionDecano && v.Usuario.Email != User.Identity.Name
+                                                        && !(v.Estado == Estado.Pendiente ||
+                                                           v.Estado == Estado.Cancelado ||
+                                                           v.Estado == Estado.PendienteRealizacion))
+                                                           .ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
@@ -101,7 +117,11 @@ namespace TripManager2._0.Controllers
 
                 if (User.HasClaim("Institucion", "Rector"))
                 {
-                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector && v.Usuario.Email != User.Identity.Name).ToList();
+                    var data = vm.ViajesUpdated.Where(v => v.Estado == Estado.PendienteAprobacionRector && v.Usuario.Email != User.Identity.Name
+                                                       && !(v.Estado == Estado.Pendiente ||
+                                                           v.Estado == Estado.Cancelado ||
+                                                           v.Estado == Estado.PendienteRealizacion))
+                                                           .ToList();
                     for (int i = 0; i < data.Count(); i++)
                     {
                         data[i].Update = 0;
