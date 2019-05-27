@@ -229,7 +229,7 @@ namespace ServiceLayer.AdminServices
             _context.Commit();
         }
 
-        public async Task<(List<string> UserPendings, List<Itinerario> ViajesUpdated)> FillNotificationsAsync()
+        public async Task<(List<string> UserPendings, List<Itinerario> ViajesUpdated, List<ViajeInvitado> InvitadosUpdated)> FillNotificationsAsync()
         {
             //check for pending users
             List<string> UserPendings = new List<string>();
@@ -242,8 +242,10 @@ namespace ServiceLayer.AdminServices
             GetterAll getter = new GetterAll(_getterUtils, _context);
 
             List<Itinerario> ViajesUpdated = getter.GetAll("Itinerario").Where(i => (i as Itinerario).Update != 0).Select(i => i as Itinerario).ToList();
+            List<ViajeInvitado> InvitadosUpdated = getter.GetAll("ViajeInvitado").Where(vi => (vi as ViajeInvitado).Update != 0).Select(vi => vi as ViajeInvitado).ToList();
 
-            return (UserPendings, ViajesUpdated);
+
+            return (UserPendings, ViajesUpdated, InvitadosUpdated);
         }
 
     }

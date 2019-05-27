@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataLayer.Migrations
 {
-    public partial class FinalSprint270 : Migration
+    public partial class FinalSprint300 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -221,6 +221,30 @@ namespace DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ViajesInvitados",
+                columns: table => new
+                {
+                    ViajeInvitadoID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FechaLLegada = table.Column<DateTime>(nullable: true),
+                    Procedencia = table.Column<string>(nullable: true),
+                    Nombre = table.Column<string>(nullable: true),
+                    Motivo = table.Column<string>(nullable: true),
+                    Estado = table.Column<int>(nullable: false),
+                    UsuarioId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ViajesInvitados", x => x.ViajeInvitadoID);
+                    table.ForeignKey(
+                        name: "FK_ViajesInvitados_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Paises",
                 columns: table => new
                 {
@@ -303,7 +327,8 @@ namespace DataLayer.Migrations
                     Comentario = table.Column<string>(nullable: true),
                     Estado = table.Column<int>(nullable: false),
                     Fecha = table.Column<DateTime>(nullable: false),
-                    ItinerarioID = table.Column<int>(nullable: true)
+                    ItinerarioID = table.Column<int>(nullable: true),
+                    ViajeInvitadoID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -325,6 +350,12 @@ namespace DataLayer.Migrations
                         column: x => x.UsuarioTargetId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Historial_ViajesInvitados_ViajeInvitadoID",
+                        column: x => x.ViajeInvitadoID,
+                        principalTable: "ViajesInvitados",
+                        principalColumn: "ViajeInvitadoID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -446,6 +477,11 @@ namespace DataLayer.Migrations
                 column: "UsuarioTargetId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Historial_ViajeInvitadoID",
+                table: "Historial",
+                column: "ViajeInvitadoID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Itinerarios_UsuarioId",
                 table: "Itinerarios",
                 column: "UsuarioId");
@@ -499,6 +535,11 @@ namespace DataLayer.Migrations
                 name: "IX_Viajes_PaisID",
                 table: "Viajes",
                 column: "PaisID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ViajesInvitados_UsuarioId",
+                table: "ViajesInvitados",
+                column: "UsuarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -535,6 +576,9 @@ namespace DataLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ViajesInvitados");
 
             migrationBuilder.DropTable(
                 name: "Visas");

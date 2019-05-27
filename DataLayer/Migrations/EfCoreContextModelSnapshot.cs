@@ -283,6 +283,8 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Procedencia");
 
+                    b.Property<int>("Update");
+
                     b.Property<string>("UsuarioId");
 
                     b.HasKey("ViajeInvitadoID");

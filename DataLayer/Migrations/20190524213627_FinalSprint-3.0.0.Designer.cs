@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20190524202938_FinalSprint2.9")]
-    partial class FinalSprint29
+    [Migration("20190524213627_FinalSprint-3.0.0")]
+    partial class FinalSprint300
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
