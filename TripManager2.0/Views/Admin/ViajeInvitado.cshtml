@@ -59,4 +59,77 @@
          
         </table>
     </form>
+    <hr />
+
+    <div>
+        <h1>Historial</h1>
+        <table>
+            <tr>
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Usuario Afectado
+                </th>
+                <th>
+                    Comentario
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    Fecha
+                </th>
+       
+            </tr>
+            @foreach (var item in Model.Historial)
+            {
+                <tr>
+                    <td>
+                        @if (item.Usuario != null)
+
+                        {
+                            @item.Usuario.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.UsuarioTarget != null)
+
+                        {
+                            @item.UsuarioTarget.Email
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+
+                    </td>
+                    <td>
+                        @if (item.Comentario != null)
+
+                {
+                            @item.UsuarioTargetId
+                        }
+                        else
+                        {
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
+                        @item.Estado
+                    </td>
+                    <td>
+                        @item.Fecha
+                    </td>
+            
+                   
+           
+                </tr>
+            }
+        </table>
+    </div>
 </div>

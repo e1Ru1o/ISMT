@@ -8,7 +8,6 @@
 
 <body>
     <div class="main">
-        <h1>Otorgar Visas</h1>
         <form method="post">
             @Html.Partial("Razon")
             <input name="uID" name="uID" hidden="hidden" />
@@ -16,6 +15,7 @@
             <input name="action" hidden="hidden" />
 
             <div>
+                <h1>Otorgar Visas</h1>
                 <table>
                     <tr>
                         <th>
@@ -57,7 +57,7 @@
 
 @section Scripts{ 
     <script>
-        check_tables(['Ningún usuario requiere visa']);
+        check_tables(['No hay usuarios solicitando visa']);
         clean_selects();
 
         function setValues(caller, action) {
