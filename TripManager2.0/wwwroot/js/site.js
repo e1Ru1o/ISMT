@@ -46,12 +46,6 @@ function getRowId(caller, id) {
     document.getElementById(id).value = caller.parentElement.parentElement.id;
 }
 
-function dismark_selection() {
-    var op = doc.getElementsByTagName('option');
-    for (var i = 0; i < op.length; ++i)
-        op[i].selected = false;
-}
-
 function clean_selects() {
     var op = document.getElementsByTagName('option');
     for (var i = 0; i < op.length; ++i)
@@ -76,4 +70,22 @@ function closeDialog() {
     var dialog = document.getElementById("rzn");
     document.getElementById('mot').value = document.getElementById('msg').value;
     dialog.close();
+}
+
+function check_tables(data) {
+    console.log(data)
+    var tb = document.getElementsByTagName('table');
+    for (var i = tb.length - 1; i >= 0; i--) {
+        var rows = tb[i].getElementsByTagName('tr').length;
+        if (rows === 1) {
+            var container = tb[i].parentElement.parentElement;
+            var msg = document.createElement('CENTER'); {
+                var h = document.createElement('h1'); {
+                    h.innerHTML = data[i];
+                }
+                msg.appendChild(h);
+            }
+            container.replaceChild(msg, tb[i].parentElement);
+        }
+    }
 }

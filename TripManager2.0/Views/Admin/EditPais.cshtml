@@ -9,39 +9,47 @@
 <div class="main">
     <h1>Paises</h1>
     <form method="post">
-        <table>
-            <tr>
-                <th>
-                    Nombre
-                </th>
-                <th>
-                    Region
-                </th>
-                <th></th>
-            </tr>
-            @foreach (var item in Model)
+        <div>
+            <table>
+                <tr>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Region
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
             {
+                    <tr>
+                        <td>
+                            @item.Nombre
+                        </td>
+                        <td>
+                            @item.Region.Nombre
+                        </td>
+                        <td>
+                            <a href="/Admin/UpdatePais?key=@item.PaisID" class="button"> <span>Update </span></a>
+                        </td>
+                    </tr>
+
+                }
                 <tr>
                     <td>
-                        @item.Nombre
+                        <a href="/Admin/AddPais" class="button"> <span>Agregar </span></a>
+
                     </td>
-                    <td>
-                        @item.Region.Nombre
-                    </td>
-                    <td>
-                        <a href="/Admin/UpdatePais?key=@item.PaisID" class="button"> <span>Update </span></a>
-                    </td>
+                    <td></td>
+                    <td></td>
                 </tr>
-
-            }
-            <tr>
-                <td>
-                    <a href="/Admin/AddPais" class="button"> <span>Agregar </span></a>
-
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
+            </table>
+        </div>
     </form>
 </div>
+
+@section Scripts{ 
+    <script>
+        check_tables(['No se han registrado paises de destino']);
+    </script>
+}
