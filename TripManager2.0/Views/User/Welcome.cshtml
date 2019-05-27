@@ -19,7 +19,7 @@
 </head>
 <body>
     <CENTER>
-        @if (!User.HasClaim("Institucion", "None"))
+        @if (User.Claims.Any(x => x.Type == "Institucion"))
         {
             @if (User.HasClaim("Permission", "Common"))
             {
