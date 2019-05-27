@@ -36,9 +36,6 @@ namespace TripManager2._0.Controllers
         public async Task<IActionResult> LoginHelper()
         {
             var user = await _userManager.GetUserAsync(User);
-            var uvm = new UserViewModel();
-            uvm.SetViewModel(user);
-            uvm.SetPermissions(await _userManager.GetClaimsAsync(user));
 
             if (User.HasClaim("Pending", "false"))
             {
@@ -48,7 +45,7 @@ namespace TripManager2._0.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Welcome", "User", uvm);
+                    return RedirectToAction("Welcome", "User");
                 }
             }
             else
