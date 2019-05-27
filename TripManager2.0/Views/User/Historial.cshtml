@@ -22,6 +22,9 @@
                     Estado
                 </th>
                 <th>
+                    Estado Actual
+                </th>
+                <th>
                     Fecha
                 </th>
                 <th>
@@ -30,9 +33,7 @@
                 <th>
                     Itinerario Fecha de Fin
                 </th>
-                <th>
-                    Itinerario Estado
-                </th>
+               
                 <th>
                     Detalles Itinerario
                 </th>
@@ -81,6 +82,17 @@
                         @item.Estado
                     </td>
                     <td>
+                        @if (item.Itinerario != null)
+                        {
+                            @item.Itinerario.Estado
+                        }
+                        else
+                        {
+
+                            <label>vacio</label>
+                        }
+                    </td>
+                    <td>
                         @item.Fecha
                     </td>
                     <td>
@@ -105,17 +117,7 @@
                             <label> vacio </label>
                         }
                     </td>
-                    <td>
-                        @if (item.Itinerario != null)
-                        {
-                            @item.Itinerario.Estado
-                        }
-                        else
-                        {
 
-                            <label>vacio</label>
-                        }
-                    </td>
                     <td>
                         @if (item.Itinerario != null)
                         {
