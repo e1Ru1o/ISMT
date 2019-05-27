@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20190524013444_FinalSprint-2.8.0")]
-    partial class FinalSprint280
+    [Migration("20190524213627_FinalSprint-3.0.0")]
+    partial class FinalSprint300
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,6 +39,8 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("UsuarioTargetId");
 
+                    b.Property<int?>("ViajeInvitadoID");
+
                     b.HasKey("HistorialID");
 
                     b.HasIndex("ItinerarioID");
@@ -46,6 +48,8 @@ namespace DataLayer.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.HasIndex("UsuarioTargetId");
+
+                    b.HasIndex("ViajeInvitadoID");
 
                     b.ToTable("Historial");
                 });
@@ -271,6 +275,8 @@ namespace DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Estado");
+
                     b.Property<DateTime?>("FechaLLegada");
 
                     b.Property<string>("Motivo");
@@ -424,6 +430,10 @@ namespace DataLayer.Migrations
                     b.HasOne("BizData.Entities.Usuario", "UsuarioTarget")
                         .WithMany("HistorialTarget")
                         .HasForeignKey("UsuarioTargetId");
+
+                    b.HasOne("BizData.Entities.ViajeInvitado", "ViajeInvitado")
+                        .WithMany("Historial")
+                        .HasForeignKey("ViajeInvitadoID");
                 });
 
             modelBuilder.Entity("BizData.Entities.Itinerario", b =>
@@ -493,7 +503,7 @@ namespace DataLayer.Migrations
             modelBuilder.Entity("BizData.Entities.ViajeInvitado", b =>
                 {
                     b.HasOne("BizData.Entities.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("ViajesInvitado")
                         .HasForeignKey("UsuarioId");
                 });
 
