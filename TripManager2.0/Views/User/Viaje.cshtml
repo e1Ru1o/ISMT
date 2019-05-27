@@ -68,12 +68,13 @@
                     Estado
                 </th>
                 <th>
+                    Estado Actual
+                </th>
+                <th>
                     Fecha
                 </th>
               
-                <th>
-                    Itinerario Estado
-                </th>
+              
                 
             </tr>
             @foreach (var item in hist)
@@ -117,10 +118,6 @@
                         @item.Estado
                     </td>
                     <td>
-                        @item.Fecha
-                    </td>
-                 
-                    <td>
                         @if (item.Itinerario != null)
                         {
                             @item.Itinerario.Estado
@@ -131,6 +128,11 @@
                             <label>vacio</label>
                         }
                     </td>
+
+                    <td>
+                        @item.Fecha
+                    </td>
+              
                 </tr>
             }
         </table>
