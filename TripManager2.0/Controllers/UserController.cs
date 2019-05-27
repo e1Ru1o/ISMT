@@ -261,6 +261,27 @@ namespace TripManager2._0.Controllers
 
             return RedirectToAction("Welcome");
         }
+        public IActionResult Viaje(int id)
+        {
+
+            GetterAll getter = new GetterAll(_getterUtils, _context);
+            var it = (getter.GetAll("Itinerario") as IEnumerable<Itinerario>).Where(x => x.ItinerarioID == id).Single();
+            var viajes = (getter.GetAll("Viaje") as IEnumerable<Viaje>).Where(x => x.Itinerario.ItinerarioID == id);
+            return View(viajes);
+        }
+
+        public IActionResult Historial()
+        {
+
+            WorkflowServices services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            return View(services.GetHistorial());
+        }
+        public IActionResult ViajeInvitado(int id)
+        {
+
+            WorkflowServices services = new WorkflowServices(_context, _userManager, _getterUtils, _signInManager);
+            return View(services.GetViajeInvitado(id));
+        }
     }
 }
 
