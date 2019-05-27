@@ -54,6 +54,7 @@ namespace TripManager2._0.Controllers
                 Enum.Parse<Estado>($"PendienteAprobacion{User.Claims.Where(x => x.Type == "Institucion").Single().Value}"),
                 user
             ).Select(x => new UserTripViewModel(x.FechaInicio.Value, x.FechaFin.Value, x.Estado.ToString(), x.ItinerarioID, x.Usuario));
+            //TODO: [JUANDA] use your Invitation API to obtain the correspondent trips that need authorization. Use the next line for that
             vm.Visitants = new List<InvitationViewModel>();
             return View(vm);
         }
