@@ -48,6 +48,7 @@
 
         function make_a_new_container(pais, idx) {
             var li = document.createElement("li"); {
+                li.id = idx;
                 var p = document.createElement("input"); {
                     p.value = pais;
                     p.readOnly = "readonly";
@@ -121,6 +122,27 @@
                         but.type = "button";
                         but.addEventListener("click", function () {
                             this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
+                            var destiny = document.getElementById("all");
+                            var all = destiny.getElementsByTagName('li');
+                            var i = 0;
+                            for (var i = 0; i < all.length; ++i) {
+                                var inputs = all[i].getElementsByTagName('input');
+                                inputs[0].name = "Country[" + i + "]";
+                                inputs[1].id = "City[" + i + "]";
+                                inputs[1].name = "City[" + i + "]";
+                                inputs[2].id = "Start[" + i + "]";
+                                inputs[2].name = "Start[" + i + "]";
+                                inputs[3].id = "End[" + i + "]";
+                                inputs[3].name = "End[" + i + "]";
+                                inputs[4].id = "Motivo[" + i + "]";
+                                inputs[4].name = "Motivo[" + i + "]";
+
+                                var labels = all[i].getElementsByTagName('label');
+                                labels[0].htmlFor = "City[" + i + "]";
+                                labels[1].htmlFor = "Start[" + i + "]";
+                                labels[2].htmlFor = "End[" + i + "]";
+                                labels[3].htmlFor = "Motivo[" + i + "]";
+                            } 
                         });
                         var sp = document.createElement("span"); {
                             sp.innerHTML = "Remove";
